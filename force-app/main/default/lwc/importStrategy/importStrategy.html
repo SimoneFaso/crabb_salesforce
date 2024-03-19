@@ -1,0 +1,35 @@
+<template>
+    <lightning-card icon-name="action:upload" title={labels.Import_Strategies}>
+        <div class="slds-text-align_center">
+            <lightning-file-upload accept={acceptedFormats} 
+                                   label={labels.Import_Strategies}
+                                   multiple={allowMultiple} 
+                                   onuploadfinished={handleUploadFinished} 
+                                   ></lightning-file-upload>
+                <br/> <br/>
+                <span style="color:red"> <b>{labels.ImportStrategyNote}</b> </span>
+        </div>
+        <div if:true={error}>
+            <span style="color:red">{error.body.message}</span>
+        </div><br/>
+
+        <div if:true={data}>
+            <lightning-datatable columns={columns} 
+                                 data={data} 
+                                 hide-checkbox-column="true" 
+                                 key-field="id"></lightning-datatable>
+        </div>
+        <div class="slds-grid  slds-grid_vertical slds-grid_vertical-align-center" if:true={adminProfile}>
+            <div class="slds-col">
+            <lightning-input style="width: 500px align:center" type="number" name="accNo" label={labels.AccountNumberToGenerate} value="10" onchange={handleNumberChange}></lightning-input></div>
+            <br/>
+            <div class="slds-col">
+            <lightning-button variant="brand" label={labels.CreateTestData} title={labels.CreateTestData} onclick={handleCreateTestData} class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand" label={labels.StartManualBatchImport} title={labels.StartManualBatchImport} onclick={handleBatchImport} class="slds-m-left_x-small"></lightning-button></div>
+            <br/><br/>
+        </div>
+        <div if:true={showLoadingSpinner} >
+             <lightning-spinner alternative-text="Uploading......" size="medium"></lightning-spinner>
+        </div>
+    </lightning-card>   
+</template>

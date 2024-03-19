@@ -1,0 +1,3 @@
+<apex:page standardController="Contratto__c" extensions="PermissionAccessCtrl">
+    <c:PermissionAccess />
+</apex:page>

@@ -1,0 +1,268 @@
+<apex:page controller="DataMapper" showHeader="true" sidebar="true" docType="html-5.0">
+	<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.bundle.min.js')}"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+<apex:form >
+
+<apex:actionFunction action="{!getObjectFields}" name="getSourceObjectFields" rerender="sourceobjectfields">
+        <apex:param name="objectName" assignTo="{!selObject}" value="" />
+</apex:actionFunction>
+<apex:actionFunction action="{!getObjectFields}" name="getTargetObjectFields" rerender="targetobjectfields">
+        <apex:param name="objectName" assignTo="{!selObject}" value="" />
+</apex:actionFunction>
+<apex:actionFunction action="{!buildSingleRelation}" name="buildSingleRelation" rerender="currentrelation,resultPanel">
+        <apex:param name="sourceObj" assignTo="{!sourceObj}" value="" />
+        <apex:param name="targetObj" assignTo="{!targetObj}" value="" />
+        <apex:param name="sourceField" assignTo="{!sourceField}" value="" />
+        <apex:param name="targetField" assignTo="{!targetField}" value="" />
+</apex:actionFunction>
+<apex:actionFunction action="{!deleteSingleRelation}" name="deleteSingleRelation" rerender="currentrelation,resultPanel">
+        <apex:param name="mappingId" assignTo="{!mappingId}" value="" />
+</apex:actionFunction>
+<apex:actionFunction action="{!deleteRelations}" name="deleteRelations" rerender="currentrelation,resultPanel">       
+</apex:actionFunction>
+</apex:form>
+<style>
+#drop {
+  min-height: 100px;
+  width: 100%;
+  border: 3px dashed #ccc;
+  margin-bottom: 10px;
+}
+</style>
+<div id="balancecontainer" class="crabbpackage">
+
+<div class="page-header">
+  <h1><span class="bi bi-shuffle" style="color: #68B3C8"></span> B.I.L. <small>Balance Integration Layer</small></h1>
+</div>
+ <div class="container-fluid">
+ 	<div class="row">
+ 		<div class="col-xs-4">
+ 			<div class="panel panel-default">
+			  <div class="panel-heading">Source Object</div>
+			  <div class="panel-body">
+			    <div class="input-group">
+				<input type="text" class="form-control" placeholder="Apply a filter" name="srch-term" id="searchsource"/>
+				<!--div class="input-group-btn">
+					<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+				</div-->
+				</div>
+
+			    <div class="dropdown">
+				  <!--<button class="btn btn-secondary dropdown-toggle"  type="button" id="dropdownSource" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+					  <button class="btn btn-secondary dropdown-toggle"  type="button" id="dropdownSource" data-bs-toggle="dropdown"  aria-expanded="false">
+
+					  Select Source Object
+				    <!--<span class="caret"></span>-->
+				  </button>
+				    <ul class="dropdown-menu" aria-labelledby="dropdownSource">
+					    <apex:repeat value="{!SourceObjectsName}" var="tobject" id="sourceobjects">
+
+					    <li><a data-object="{!tobject.value}" class="dropdown-item" href="#" onclick="setupSelObject($(this),'object',$('#dropdownSource'),getSourceObjectFields)">{!tobject.label} </a></li>
+
+					    </apex:repeat>
+
+					</ul>
+				</div>
+			  </div>
+			   <apex:outputPanel id="sourceobjectfields">
+			  <ul class="list-group bdrag">
+				<apex:repeat value="{!listOfFields}" var="tfield">
+					<!--<li class="list-group-item"><a draggable="true" href="#" ondragstart="event.dataTransfer.setData('text/plain', 'Source#{!tfield.value}')" data-object="{!tfield.value}" >{!tfield.label}</a></li>-->
+					<li><a draggable="true" href="#" ondragstart="event.dataTransfer.setData('text/plain', 'Source#{!tfield.value}')" data-object="{!tfield.value}" >{!tfield.label}</a></li>
+				</apex:repeat>  
+			  </ul>
+			  </apex:outputPanel>
+			</div>
+ 		</div>
+ 		<div class="col-xs-4">
+ 			<div class="panel panel-primary">
+			  <div class="panel-heading">Mapping</div>
+			  <div class="panel-body">
+				  <div id="drop"></div>
+				  <div class="btn-group" role="group" aria-label="...">
+					  <button type="button" class="btn btn-primary" onclick="saveCurrentRelation();">Add</button>
+					  <button type="button" class="btn btn-warning" onclick="resetCurrentRelation();">Reset</button>
+					  <button type="button" class="btn btn-danger" onclick="deleteRelations();">Remove All</button>
+				  </div>
+			  </div>	
+			</div>  
+ 		</div>
+ 		<div class="col-xs-4">
+ 			<div class="panel panel-success">
+			  <div class="panel-heading">Target Object</div>
+			  <div class="panel-body">
+			  		<div class="input-group">
+					<input type="text" class="form-control" placeholder="Apply a filter" name="srch-term" id="searchtarget"/>
+					<!--div class="input-group-btn">
+						<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+					</div-->
+					</div>
+			    	<div class="dropdown">
+					  <!--<button class="btn btn-default dropdown-toggle" data-object="" type="button" id="dropdownTarget" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownTarget" data-bs-toggle="dropdown"  aria-expanded="false">
+						Select Target Object
+					    <!--<span class="caret"></span>-->
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="dropdownTarget">
+					    <apex:repeat value="{!TargetObjectsName}" var="tobject" id="targetobjects">
+					    <li><a data-object="{!tobject.value}" class="dropdown-item" href="#" onclick="setupSelObject($(this),'object',$('#dropdownTarget'),getTargetObjectFields)">{!tobject.label}</a></li>
+					    </apex:repeat>
+					  </ul>
+					</div>
+			  </div>
+			  <apex:outputPanel id="targetobjectfields">
+			  <ul class="list-group bdrag" id='pippolo'>
+			  	<apex:repeat value="{!listOfFields}" var="tfield" >
+			  	  	<li class="list-group-item"><a draggable="true" href="#" ondragstart="event.dataTransfer.setData('text/plain', 'Target#{!tfield.value}')" data-object="{!tfield.value}" >{!tfield.label}</a></li>		    
+				</apex:repeat>
+			  </ul>
+			  </apex:outputPanel>
+			</div>
+ 		</div>
+ 	</div>
+ 	<apex:outputPanel id="resultPanel">
+ 	<div class="row">
+ 	   <apex:outputPanel rendered="{!!isRelationValid}">
+ 	    <div class="col-xs-12">
+ 			<div class="alert alert-warning" role="alert">
+ 				<strong>Warning!</strong> You need to map an External ID / Unique field for Source Object and an External ID / Unique field for the Target Object.
+ 			</div>
+ 		</div>	
+ 		</apex:outputPanel>
+ 	</div>
+ 	</apex:outputPanel>
+ 	<div class="row">
+ 		<apex:outputPanel id="currentrelation">		
+ 		<div class="col-xs-12">
+ 		  <div class="table-responsive">
+  				<table class="table">
+  				    <thead>
+                        <tr>
+                        	<th><i>Action</i></th>
+                            <th><i>{!$ObjectType.Mapping__c.fields.SourceObj__c.Label}</i></th>
+                            <th><i>{!$ObjectType.Mapping__c.fields.SourceField__c.Label}</i></th>
+                            <th><i>{!$ObjectType.Mapping__c.fields.TargetObj__c.Label}</i></th>
+                            <th><i>{!$ObjectType.Mapping__c.fields.TargetField__c.Label}</i></th>
+                            <th><i>Type match</i></th>
+                        </tr>
+                    </thead>
+  					<tbody>
+  					  <apex:repeat value="{!currRelations}" var="relation" >				    
+						<tr>
+							    <td><div class="btn-group">
+							    		<button type="button" class="btn btn-danger btn-xs" onclick="deleteSingleRelation('{!relation.Id}')">
+											<span class="bi bi-eraser-fill"></span> Delete
+										</button>
+									</div>	
+								</td>
+							<apex:repeat value="{!relation}" var="rfield">
+							<apex:variable value="{!rfield.SourceObj__c}" var="rowNum"/>
+							<apex:variable value="{!rfield.SourceField__c}" var="rowNum2"/>
+								<td>{!rfield.SourceObj__c}</td>
+								<td>{!rfield.SourceField__c}</td>
+								<td>{!rfield.TargetObj__c}</td>
+								<td>{!rfield.TargetField__c}</td>
+								<apex:outputPanel rendered="{! rfield.SourceFieldType__c != rfield.TargetFieldType__c}">
+								 <td data-toggle="tooltip" title="That is just a warning: types do not match but sync could work"><i class="bi bi-hand-thumbs-down text-danger"></i><p class="text-danger"><small> {!rfield.SourceFieldType__c} != {!rfield.TargetFieldType__c}</small></p></td>
+								</apex:outputPanel>
+								<apex:outputPanel rendered="{! rfield.SourceFieldType__c == rfield.TargetFieldType__c}">
+								 <td><i class="bi bi-hand-thumbs-up text-success"></i></td>
+								</apex:outputPanel>
+							</apex:repeat>
+						</tr>
+					  </apex:repeat>
+					</tbody>  	
+  		  		</table>
+  		  </div>				
+ 		</div>
+ 		</apex:outputPanel>
+ 	   <!-- -->
+ 	   <!--  -->
+ 	</div>
+ </div>
+</div>
+<apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+<script type="text/javascript">
+  $(document).ready(function(){
+  		console.log("DEBUG:DOM is ready");
+  		var drop = document.querySelector('#drop');
+		addEvent(drop, 'dragover', cancel);
+		addEvent(drop, 'dragenter', cancel);
+		addEvent(drop, 'drop', function (e) {
+		  if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.
+		  var contentType = e.dataTransfer.getData('Text').split('#')[0];
+		  var content = e.dataTransfer.getData('Text').split('#')[1];
+		  $("#"+contentType+"type").remove();
+		  this.innerHTML += '<p class="nonebalance" id="'+contentType+'type" data-object="'+content+'"><strong>' +contentType+' field is:'+content + '</strong></p>';
+		  return false;
+		});
+		// setup filter box
+		setupSearch('searchsource');
+		setupSearch('searchtarget');
+  });
+
+  var setupSearch = function(idDom) {
+	$("#"+idDom).keyup(function(){        
+	    var searchText = $(this).val();	        
+	    $('#balancecontainer ul > li').each(function(){            
+	        var currentLiText = $(this).text(),
+	            showCurrentLi = currentLiText.indexOf(searchText) !== -1;            
+	        $(this).toggle(showCurrentLi);
+	        
+	    });     
+	});
+  }
+
+  var resetCurrentRelation = function(){
+  	$("#dropdownSource").attr('data-object','');
+  	$("#dropdownSource").text('Select Source Object');
+  	$("#dropdownTarget").attr('data-object','');
+  	$("#dropdownTarget").text('Select Target Object');
+  	$("#Sourcetype").attr('data-object','');
+  	$("#Sourcetype").text('');
+  	$("#Targettype").attr('data-object','');
+  	$("#Targettype").text('');
+  	$(".bdrag").empty();
+  }
+ 
+
+  var setupSelObject = function(obj,objattr,selected,callback){
+  	console.log('OBJECT IS:'+obj.data(objattr));
+  	selected.text(obj.text());
+  	selected.attr('data-object',obj.data(objattr));
+  	callback(obj.data(objattr));
+  };
+
+  var saveCurrentRelation = function(){
+  	var sourceObj,targetObj,sourceField,targetField;
+  	sourceObj = $("#dropdownSource").attr('data-object');
+  	targetObj = $("#dropdownTarget").attr('data-object');
+  	sourceField = $("#Sourcetype").data('object');
+  	targetField = $("#Targettype").data('object');
+  	console.log('SourceObj:'+sourceObj+' targetObj:'+targetObj+' sourceField:'+sourceField+' targetField:'+targetField);
+  	if (sourceObj == targetObj) {
+  		alert('This kind of relation is not valid!');
+  		return;
+  	}
+  	buildSingleRelation(sourceObj,targetObj,sourceField,targetField);
+
+  }
+
+  function cancel(e) {
+	if (e.preventDefault) {
+	    e.preventDefault();
+	}
+	return false;
+  }
+
+
+</script>
+
+</apex:page>

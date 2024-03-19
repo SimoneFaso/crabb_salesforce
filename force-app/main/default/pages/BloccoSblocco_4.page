@@ -1,0 +1,81 @@
+<apex:page controller="BloccoSbloccoCTRL" docType="html-5.0">
+        
+        <apex:form id="NoRecordSToProcess">
+            <apex:pageBlock title="{!$Label.crabb_dev__page_not_reachable}" rendered="{!blankPageFlag}">    
+                <apex:pageMessage summary="{!$Label.crabb_dev__choose_type_of_operation_lock_unlock}" severity="info" strength="3"/>
+                <apex:pageblockButtons location="bottom"> 
+                        <apex:commandButton action="/apex/CRABB_DEV__Amministrazione" id="INDIETROBOTTON"  value="{!$Label.crabb_dev__management}" />                   
+                </apex:pageblockButtons>                 
+            </apex:pageBlock>    
+        </apex:form> 
+        <apex:pageBlock title="{!IF(isBlocco, $Label.crabb_dev__lock_dossier, $Label.crabb_dev__unlock_dossier)}" rendered="{! !blankPageFlag}">        
+            
+            <!-- L'ULTIMO STEP -->
+            <apex:pageblockSection >        
+                    
+                        <!-- PANEL PER METTERE DEI ACCOUNT SU WHITE LIST 
+                        <apex:outputpanel Id="BloccoInsert" rendered="{! isPutInWhiteList}">
+                               <apex:outputText styleClass="Bold" Value="Data Scadenza White List " />
+                               <apex:input type="date" value="{!myWhiteListLimit}" />
+                      
+                        <br/>
+
+                               <apex:outputText styleClass="Bold" Value="Ragione White List " />
+                               <apex:input type="text" value="{!RagioneWhiteList}" required="false"/>
+                        </apex:outputpanel>
+                        <br/>
+                        <br/>
+                        <apex:outputpanel rendered="{! isPutInWhiteList}">
+                            <c:AutoDisablinButton actionToInvoke="{!GestioneWHLStepSelAcct}" disableAll="true" buttonValue="Indietro" buttonId="backButton" styleClass="buttonStyle" buttonValueDisabled="Indietro..." ></c:AutoDisablinButton>
+                            <c:AutoDisablinButton actionToInvoke="{!mettiInWhL}" disableAll="true" buttonValue="Metti in White List" buttonId="BlockButton" styleClass="buttonStyle" buttonValueDisabled="Confermando il operzione..." ></c:AutoDisablinButton>
+                        </apex:outputpanel>
+                        -->
+                        <!-- Messaggio d'errore per compilare il limite di whitelist 
+                        <apex:pageMessages /> -->
+                        
+                        <!-- PANEL PER RIMUOVERE DEI ACCOUNT DAL WHITE LIST 
+                        <apex:outputpanel Id="SbloccoInsert" rendered="{!!isPutInWhiteList}">
+                            <apex:outputText styleClass="Bold" value="Conferma rimozione White List" />
+                            <br/>
+                            <br/>
+                        </apex:outputpanel>
+                        <br/>
+                        <apex:outputpanel rendered="{!!isPutInWhiteList}">
+                            <c:AutoDisablinButton actionToInvoke="{!GestioneWHLStepSelAcct}" disableAll="true" buttonValue="Indietro" buttonId="backButton" styleClass="buttonStyle" buttonValueDisabled="Indietro..." ></c:AutoDisablinButton>
+                            <c:AutoDisablinButton actionToInvoke="{!rimuoviDaWhL}" disableAll="true" buttonValue="Conferma rimozione White List" buttonId="UnblockButton" styleClass="buttonStyle" buttonValueDisabled="Confermando il operzione..." ></c:AutoDisablinButton>
+                        </apex:outputpanel>
+                        <br/>
+                        <br/>
+                        <apex:outputText >Account selezionati: {!NumberOfSelectedRecords}</apex:outputText>-->
+                        <apex:form >
+                            <apex:outputpanel Id="BloccoInsert" rendered="{! !PraticheSelEsisti && isBlocco}">
+                                <apex:outputText styleClass="Bold" value="{!$Label.crabb_dev__reason_for_locking}" />
+                                     <br/>
+                                     <br/>
+                                     <apex:selectList value="{!leftselected_Mot_Blo}" size="1" >
+                                         <apex:selectOptions value="{!unSelectedValues_Mot_Blo}"/>
+                                     </apex:selectList>
+                                     <br/>
+                                     <br/>
+                                     <apex:outputText styleClass="Bold" value="{!$Label.crabb_dev__note_of_locking}" />
+                                     <br/>
+                                     <br/>
+                                <apex:input type="text" value="{!Note_Blocco}"/>
+                            </apex:outputpanel>
+                            <br/>
+                            <c:AutoDisablinButton actionToInvoke="{!Blocca}" disableAll="true" rendered="{!!PraticheSelEsisti && isBlocco}" buttonValue="{!$Label.crabb_dev__lock}" buttonId="BlockButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__lock_dossier}.." ></c:AutoDisablinButton>
+                            <apex:outputpanel Id="SbloccoInsert" rendered="{!!PraticheSelEsisti && !isBlocco}">
+                                <apex:outputText styleClass="Bold" value="{!$Label.crabb_dev__note_of_unlocking}" />
+                                <br/>
+                                <br/>
+                                <apex:inputTextarea value="{!Note_Sblocco}"/>
+                            </apex:outputpanel> 
+                            <br/>
+                            <c:AutoDisablinButton actionToInvoke="{!Sblocca}" disableAll="true" rendered="{! !PraticheSelEsisti && !isBlocco}" buttonValue="{!$Label.crabb_dev__unlock}" buttonId="UnblockButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__unlock_dossier}.." ></c:AutoDisablinButton>
+                        </apex:form>
+                          
+            </apex:pageBlockSection> 
+            
+        </apex:pageBlock>
+        
+</apex:page>

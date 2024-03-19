@@ -1,0 +1,611 @@
+<apex:page controller="ListOfFieldsCSCTRL" showHeader="true" sidebar="true" docType="html-5.0">
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <apex:form >
+
+        <style type="text/css">
+            .modal-body{
+                background-image: -webkit-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+                background-image:      -o-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#f2dede), to(#ebcccc));
+                background-image:         linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2dede', endColorstr='#ffebcccc', GradientType=0);
+                background-repeat: repeat-x;
+            }
+        </style>
+
+        <div id="balancecontainer" class="crabbpackage">
+            <div class="page-header">
+                <apex:outputPanel layout="none" rendered="{!obj = 'PDF'}">
+                    <h1><span class="bi bi-file-earmark-arrow-up" style="color: #EB5E28"></span> {!title} <small>{!subTitle}</small></h1>
+                </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!obj = 'TAB'}">
+                    <h1><span class="bi bi-bar-chart-fill" style="color: #EB5E28"></span> {!title} <small>{!subTitle}</small></h1>
+                </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!obj = 'CSVNEW'}">
+                    <h1><span class="bi bi-table" style="color: #7AC29A"></span> {!title} <small>{!subTitle}</small></h1>
+                </apex:outputPanel>
+            </div>
+
+            <apex:pageMessages />
+
+            <div align="center">
+                <apex:actionRegion >
+                    <apex:commandButton styleClass="btn btn-primary" value="Save" action="{!updateRecords}" rendered="{!show}"/>
+                    <apex:outputPanel rendered="{!obj = 'PDF'}">
+                        &nbsp;
+                        <a class="btn btn-primary" href="/apex/ChangeLogoPage" target="_blank">Change Logo</a>
+                        <a class="btn btn-primary" href="/apex/EstrattoContoPage?type=preview" target="_blank">Preview</a>
+                    </apex:outputPanel>
+                </apex:actionRegion>
+            </div>
+
+            <div class="container-fluid" style="display: {!IF(show = true,'inline','none')}">
+
+                <div class="row">
+
+                    <apex:outputPanel rendered="{!IF(obj!='TAB',true,false)}">
+
+                        <div>
+                            <div class="col-xs-4">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">Select Object</div>
+                                    <div class="panel-body">
+                                        <apex:selectList value="{!selectedObj}" size="1" multiselect="false" styleClass="form-control">
+                                            <apex:selectOptions value="{!listObject}"/>
+                                            <apex:actionSupport action="{!retrieveListFields}" event="onchange" reRender="panelFields"></apex:actionSupport>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <apex:outputPanel id="panelFields">
+                                <div class="col-xs-4" id="panelFields">
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">Select Field</div>
+                                        <div class="panel-body">
+                                            <apex:selectList value="{!selectedField}" size="1" multiselect="false" styleClass="form-control">
+                                                <apex:selectOptions value="{!listFields}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+
+                            <div class="col-xs-3">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">Set Is Visible</div>
+                                    <div class="panel-body" >
+                                        <apex:inputCheckbox value="{!selectedVisible}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div align="center">
+                            <apex:actionRegion >
+                                <apex:commandButton styleClass="btn btn-danger" value="Add" action="{!addRecord}" rendered="{!show}"/>
+                            </apex:actionRegion>
+                        </div>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel rendered="{!IF(obj='TAB',true,false)}">
+
+                        <div>
+                            <div class="col-xs-4">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">Select Tab</div>
+                                    <div class="panel-body">
+                                        <apex:selectList value="{!selectedTO}" size="1" multiselect="false" styleClass="form-control">
+                                            <apex:selectOptions value="{!listTabObjOptions}"/>
+                                            <apex:actionSupport action="{!retrieveTabObj}" event="onchange" reRender="toFields"></apex:actionSupport>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <apex:outputPanel id="toFields">
+                                <div class="col-xs-4">
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">Select Field</div>
+                                        <div class="panel-body">
+                                            <apex:selectList value="{!selectedOF}" size="1" multiselect="false" styleClass="form-control">
+                                                <apex:selectOptions value="{!listObjFieldOptions}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+
+                            <div class="col-xs-3">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">Set Is Visible</div>
+                                    <div class="panel-body" >
+                                        <apex:inputCheckbox value="{!selectedTOFvisible}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div align="center">
+                            <apex:actionRegion >
+                                <apex:commandButton styleClass="btn btn-danger" onclick="" value="Add" action="{!addTabField}" rendered="{!show}"/>
+                            </apex:actionRegion>
+                        </div>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="currentrelation" rendered="{!obj != 'PDF'}">     
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+
+                                <table class="table" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%"></th>
+                                            <th style="display: {!IF(obj!='TAB','table-cell','none')}"><i>Object API Name</i></th>
+                                            <th><i>Field API Name</i></th>
+                                            <th style="display: {!IF(obj!='TAB','table-cell','none')}"><i>Order</i></th>
+                                            <th style="display: {!IF(obj='TAB','table-cell','none')}"><i>Object API Name</i></th>
+                                            <th><i>Is Visible</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!listLOF}" var="lof">
+                                            <tr>
+                                                <td>
+                                                    <apex:outputPanel rendered="{!AND(show = true, obj!='TAB')}">
+                                                        <apex:actionRegion >
+                                                            <apex:commandLink onclick="$('#delId')[0].value='{!lof.Id}'; $('#objid')[0].value='{!IF(BEGINS(lof.Object__c,'CSV'),RIGHT(lof.Object__c,LEN(lof.Object__c)-5),lof.Object__c)}'; $('#fieldid')[0].value='{!lof.Field__c}'; $('#myModal').modal('show'); return false;">
+                                                                <span class="bi bi-x-circle warning"></span>
+                                                            </apex:commandLink>
+                                                        </apex:actionRegion>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!AND(show = true, obj = 'TAB')}">
+                                                        <apex:outputPanel rendered="{!mapShowTF[lof.Field__c] = true}">
+                                                            <apex:actionRegion >
+                                                                <apex:commandLink onclick="return false;">
+                                                                    <span class="bi bi-eye {!lof.Id}"></span>
+                                                                    <script type="text/javascript">
+                                                                        $('.bi-eye.{!lof.Id}').click(function(){
+                                                                            $('.collapse.{!lof.Id}').slideToggle(100, function(){});
+                                                                        });
+                                                                    </script>
+                                                                </apex:commandLink>
+                                                            </apex:actionRegion>
+                                                        </apex:outputPanel>
+                                                    </apex:outputPanel>
+                                                   <!-- <div id="myModal" class="modal fade" role="dialog">
+                                                        <input id="delId" type="hidden" name="delId" value=""/>
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body" align="center">
+                                                                    <h4 class="modal-title">You are deleting the record :</h4>
+                                                                    <br />
+                                                                    <h5>Object : </h5><h5><input id="objid" value="" disabled="true" size="30" /></h5>
+                                                                    <br />
+                                                                    <h5>Field : </h5><h5><input id="fieldid" value="" disabled="true" size="30" /></h5>
+                                                                    <br /><br />
+                                                                    <h4>Continue ?</h4>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" onclick="callMethod1();" data-dismiss="modal">YES</button>
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            function callMethod1(){
+                                                                var x = $('#delId')[0].value;
+                                                                var obone = '{!JSENCODE(obj)}';
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.ListOfFieldsCSCTRL.removeRecords}',
+                                                                    x,
+                                                                    obone,
+                                                                    function(result, event){
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+                                                    </div>-->
+                                                </td>
+                                                <td style="display: {!IF(obj!='TAB','table-cell','none')};background-color: {!IF(AND(obj='TAB',OR(lof.Field__c='Expired Amounts Ageing',lof.Field__c='Statement of Account',lof.Field__c='Activities')),'#82C168','')}; font-weight: {!IF(AND(obj='TAB',OR(lof.Field__c='Expired Amounts Ageing',lof.Field__c='Statement of Account',lof.Field__c='Activities')),'bold','')};">
+                                                    {!IF(BEGINS(lof.Object__c,'CSV'),RIGHT(lof.Object__c,LEN(lof.Object__c)-5),lof.Object__c)}
+                                                </td>
+                                                <td style="background-color: {!IF(AND(obj='TAB',OR(lof.Field__c='Expired Amounts Ageing',lof.Field__c='Statement of Account',lof.Field__c='Activities')),'#82C168','')}; font-weight: {!IF(AND(obj='TAB',OR(lof.Field__c='Expired Amounts Ageing',lof.Field__c='Statement of Account',lof.Field__c='Activities')),'bold','')};">
+                                                    {!lof.Field__c}
+                                                </td>
+                                                <!-- <td style="display: {!IF(obj!='TAB','table-cell','none')}"><apex:inputText value="{!lof.Name}" ></apex:inputText></td> -->
+                                                <td style="display: {!IF(obj!='TAB','table-cell','none')};"><apex:inputText rendered="{!obj != 'TAB'}" value="{!mapIdRecordOrder[lof.Id]}"></apex:inputText></td>
+                                                <td style="display: {!IF(obj='TAB','table-cell','none')};background-color: {!IF(AND(obj='TAB',OR(lof.Field__c='Expired Amounts Ageing',lof.Field__c='Statement of Account',lof.Field__c='Activities')),'#82C168','')};"></td>
+                                                <td style="background-color: {!IF(AND(obj='TAB',OR(lof.Field__c='Expired Amounts Ageing',lof.Field__c='Statement of Account',lof.Field__c='Activities')),'#82C168','')}; font-weight: {!IF(AND(obj='TAB',OR(lof.Field__c='Expired Amounts Ageing',lof.Field__c='Statement of Account',lof.Field__c='Activities')),'bold','')};">
+                                                    <apex:inputCheckbox value="{!lof.Show__c}" rendered="{!IF(OR(obj!='TAB',AND(lof.Field__c!='Expired Amounts Ageing',lof.Field__c!='Statement of Account',lof.Field__c!='Activities')),true,false)}"/>
+                                                    <apex:inputCheckbox value="{!lof.Show__c}" disabled="true" rendered="{!IF(AND(obj='TAB',OR(lof.Field__c='Expired Amounts Ageing',lof.Field__c='Statement of Account',lof.Field__c='Activities')),true,false)}"/>
+                                                </td>
+                                            </tr>
+                                            <apex:outputPanel rendered="{!obj = 'TAB'}">
+                                                <apex:outputPanel rendered="{!mapShowTF[lof.Field__c] = true}" layout="none">
+                                                    <apex:repeat value="{!mapTabFields[lof.Field__c]}" var="mapItem">
+                                                        <tr class="collapse {!lof.Id}">
+                                                            <td>
+                                                                <apex:actionRegion >
+                                                                    <apex:commandLink onclick="$('#deltfId')[0].value='{!mapItem.Id}'; $('#tabtfid')[0].value='{!lof.Field__c}'; $('#objtfid')[0].value='{!mapItem.Object__c}'; $('#fieldtfid')[0].value='{!mapItem.Field__c}'; $('#delTFModal').modal('show'); return false;">
+                                                                        <span class="bi bi-x-circle warning"></span>
+                                                                    </apex:commandLink>
+                                                                </apex:actionRegion>
+                                                            </td>
+                                                            <td style="border: 1pt solid black;">{!mapItem.Object__c}</td>
+                                                            <td style="border: 1pt solid black;">{!mapItem.Field__c}</td>
+                                                            <td style="border: 1pt solid black;"><apex:inputCheckbox value="{!mapItem.Show__c}" /></td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                </apex:outputPanel>
+                                            </apex:outputPanel>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div>              
+                        </div>
+
+                       <!-- <div id="delTFModal" class="modal fade" role="dialog">
+                            <input id="deltfId" type="hidden" name="deltfId" value=""/>
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body" align="center">
+                                        <h4 class="modal-title">You are deleting the record :</h4>
+                                        <br />
+                                        <h5>Tab Name : </h5><h5><input id="tabtfid" value="" disabled="true" size="30" /></h5>
+                                        <br />
+                                        <h5>Object : </h5><h5><input id="objtfid" value="" disabled="true" size="30" /></h5>
+                                        <br />
+                                        <h5>Field : </h5><h5><input id="fieldtfid" value="" disabled="true" size="30" /></h5>
+                                        <br /><br />
+                                        <h4>Continue ?</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="callMethod5();" data-dismiss="modal">YES</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                function callMethod5(){
+                                    var x = $('#deltfId')[0].value;
+                                    var obtwo = '{!JSENCODE(obj)}';
+                                    Visualforce.remoting.Manager.invokeAction(
+                                        '{!$RemoteAction.ListOfFieldsCSCTRL.removeRecords}',
+                                        x,
+                                        obtwo,
+                                        function(result, event){
+                                            window.location = result;
+                                        }
+                                    );
+                                }
+                            </script>
+                        </div>
+-->
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="currentrelation2" rendered="{!obj = 'PDF'}">     
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+
+                                <h3>Sezione Informazioni della Pratica</h3>
+                                <br /><br />
+                                <table class="table" id="tab_logic2" >
+                                    <thead>
+                                        <tr>
+                                            <th width="5%"></th>
+                                            <th><i>Object API Name</i></th>
+                                            <th><i>Field API Name</i></th>
+                                            <th><i>Order</i></th>
+                                            <th><i>Is Visible</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!listLOF}" var="info">
+                                            <tr style="display: {!IF(AND(show = true, BEGINS(info.Name,'Pdf_'), info.Object__c = 'Pratica__c'),'table-row','none')};">
+                                                <td>
+                                                    <apex:outputPanel rendered="{!AND(show = true, BEGINS(info.Name,'Pdf_'), info.Object__c = 'Pratica__c')}" layout="none">
+                                                        <apex:actionRegion >
+                                                            <apex:commandLink onclick="$('#delId2')[0].value='{!info.Id}'; $('#objid2')[0].value='{!info.Object__c}'; $('#fieldid2')[0].value='{!info.Field__c}'; $('#modaldue').modal('show'); return false;">
+                                                                <span class="bi bi-x-circle warning"></span>
+                                                            </apex:commandLink>
+                                                        </apex:actionRegion>
+                                                    </apex:outputPanel>
+                                                    <!--<div id="modaldue" class="modal fade" role="dialog">
+                                                        <input id="delId2" type="hidden" name="delId" value=""/>
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body" align="center">
+                                                                    <h4 class="modal-title">You are deleting the record :</h4>
+                                                                    <br />
+                                                                    <h5>Object : </h5><h5><input id="objid2" value="" disabled="true" size="30" /></h5>
+                                                                    <br />
+                                                                    <h5>Field : </h5><h5><input id="fieldid2" value="" disabled="true" size="30" /></h5>
+                                                                    <br /><br />
+                                                                    <h4>Continue ?</h4>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" onclick="callMethod2();" data-dismiss="modal">YES</button>
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            function callMethod2(){
+                                                                var x = $('#delId2')[0].value;
+                                                                var obthree = '{!JSENCODE(obj)}';
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.ListOfFieldsCSCTRL.removeRecords}',
+                                                                    x,
+                                                                    obthree,
+                                                                    function(result, event){
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+                                                    </div>
+                                                    -->
+                                                </td>
+                                                <apex:outputPanel rendered="{!AND(show = true, BEGINS(info.Name,'Pdf_'), info.Object__c = 'Pratica__c')}" layout="none">
+                                                    <td>
+                                                        {!info.Object__c}
+                                                    </td>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!AND(show = true, BEGINS(info.Name,'Pdf_'), info.Object__c = 'Pratica__c')}" layout="none">
+                                                    <td>
+                                                        {!info.Field__c}
+                                                    </td>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!AND(show = true, BEGINS(info.Name,'Pdf_'), info.Object__c = 'Pratica__c')}" layout="none">
+                                                    <td style="display: table-cell;"><apex:inputText value="{!mapIdRecordOrder[info.Id]}"></apex:inputText></td>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!AND(show = true, BEGINS(info.Name,'Pdf_'), info.Object__c = 'Pratica__c')}" layout="none">
+                                                    <td>
+                                                        <apex:inputCheckbox value="{!info.Show__c}"/>
+                                                    </td>
+                                                </apex:outputPanel>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div> 
+                            <br />
+                            <div class="table-responsive">
+                                <h3>Sezione Movimenti</h3>
+                                <br /><br />
+                                <table class="table" id="tabletre" >
+                                    <thead>
+                                        <tr>
+                                            <th width="5%"></th>
+                                            <th><i>Object API Name</i></th>
+                                            <th><i>Field API Name</i></th>
+                                            <th><i>Order</i></th>
+                                            <th><i>Is Visible</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!listLOF}" var="mov">
+                                            <tr style="display: {!IF(AND(show = true, BEGINS(mov.Name,'Pdf_'), mov.Object__c = 'Movimento__c'),'table-row','none')};">
+                                                <td>
+                                                    <apex:outputPanel rendered="{!AND(show = true, BEGINS(mov.Name,'Pdf_'), mov.Object__c = 'Movimento__c')}" layout="none">
+                                                        <apex:actionRegion >
+                                                            <apex:commandLink onclick="$('#delId3')[0].value='{!mov.Id}'; $('#objid3')[0].value='{!mov.Object__c}'; $('#fieldid3')[0].value='{!mov.Field__c}'; $('#lastmodal').modal('show'); return false;">
+                                                                <span class="bi bi-x-circle warning"></span>
+                                                            </apex:commandLink>
+                                                        </apex:actionRegion>
+                                                        <!--<div id="lastmodal" class="modal fade" role="dialog">
+                                                            <input id="delId3" type="hidden" name="delId" value=""/>
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-body" align="center">
+                                                                        <h4 class="modal-title">You are deleting the record :</h4>
+                                                                        <br />
+                                                                        <h5>Object : </h5><h5><input id="objid3" value="" disabled="true" size="30" /></h5>
+                                                                        <br />
+                                                                        <h5>Field : </h5><h5><input id="fieldid3" value="" disabled="true" size="30" /></h5>
+                                                                        <br /><br />
+                                                                        <h4>Continue ?</h4>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-primary" onclick="callMethod3();" data-dismiss="modal">YES</button>
+                                                                        <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <script type="text/javascript">
+                                                                function callMethod3(){
+                                                                    var x = $('#delId3')[0].value;
+                                                                    var obfour = '{!JSENCODE(obj)}';
+                                                                    Visualforce.remoting.Manager.invokeAction(
+                                                                        '{!$RemoteAction.ListOfFieldsCSCTRL.removeRecords}',
+                                                                        x,
+                                                                        obfour,
+                                                                        function(result, event){
+                                                                            window.location = result;
+                                                                        }
+                                                                    );
+                                                                }
+                                                            </script>
+                                                        </div>
+                                                        -->
+                                                    </apex:outputPanel>
+                                                </td>
+                                                <apex:outputPanel rendered="{!AND(show = true, BEGINS(mov.Name,'Pdf_'), mov.Object__c = 'Movimento__c')}" layout="none">
+                                                    <td>
+                                                        {!IF(BEGINS(mov.Object__c,'CSV'),RIGHT(mov.Object__c,LEN(mov.Object__c)-5),mov.Object__c)}
+                                                    </td>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!AND(show = true, BEGINS(mov.Name,'Pdf_'), mov.Object__c = 'Movimento__c')}" layout="none">
+                                                    <td>
+                                                        {!mov.Field__c}
+                                                    </td>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!AND(show = true, BEGINS(mov.Name,'Pdf_'), mov.Object__c = 'Movimento__c')}" layout="none">
+                                                    <td style="display: table-cell;}"><apex:inputText value="{!mapIdRecordOrder[mov.Id]}"></apex:inputText></td>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!AND(show = true, BEGINS(mov.Name,'Pdf_'), mov.Object__c = 'Movimento__c')}" layout="none">
+                                                    <td>
+                                                        <apex:inputCheckbox value="{!mov.Show__c}"/>
+                                                    </td>
+                                                </apex:outputPanel>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div> 
+                        </div>
+                    </apex:outputPanel>
+
+                </div>
+            </div>
+
+        </div>
+        <div id="myModal" class="modal fade" role="dialog">
+            <input id="delId" type="hidden" name="delId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">You are deleting the record :</h4>
+                        <br />
+                        <h5>Object : </h5><h5><input id="objid" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>Field : </h5><h5><input id="fieldid" value="" disabled="true" size="30" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod1();" data-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                                                            function callMethod1(){
+                                                                var x = $('#delId')[0].value;
+                                                                var obone = '{!JSENCODE(obj)}';
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.ListOfFieldsCSCTRL.removeRecords}',
+                                                                    x,
+                                                                    obone,
+                                                                    function(result, event){
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+        </div>
+        <div id="delTFModal" class="modal fade" role="dialog">
+            <input id="deltfId" type="hidden" name="deltfId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">You are deleting the record :</h4>
+                        <br />
+                        <h5>Tab Name : </h5><h5><input id="tabtfid" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>Object : </h5><h5><input id="objtfid" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>Field : </h5><h5><input id="fieldtfid" value="" disabled="true" size="30" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod5();" data-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                                function callMethod5(){
+                                    var x = $('#deltfId')[0].value;
+                                    var obtwo = '{!JSENCODE(obj)}';
+                                    Visualforce.remoting.Manager.invokeAction(
+                                        '{!$RemoteAction.ListOfFieldsCSCTRL.removeRecords}',
+                                        x,
+                                        obtwo,
+                                        function(result, event){
+                                            window.location = result;
+                                        }
+                                    );
+                                }
+                            </script>
+        </div>
+        <div id="modaldue" class="modal fade" role="dialog">
+            <input id="delId2" type="hidden" name="delId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">You are deleting the record :</h4>
+                        <br />
+                        <h5>Object : </h5><h5><input id="objid2" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>Field : </h5><h5><input id="fieldid2" value="" disabled="true" size="30" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod2();" data-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                                                            function callMethod2(){
+                                                                var x = $('#delId2')[0].value;
+                                                                var obthree = '{!JSENCODE(obj)}';
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.ListOfFieldsCSCTRL.removeRecords}',
+                                                                    x,
+                                                                    obthree,
+                                                                    function(result, event){
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+        </div>
+        <div id="lastmodal" class="modal fade" role="dialog">
+            <input id="delId3" type="hidden" name="delId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">You are deleting the record :</h4>
+                        <br />
+                        <h5>Object : </h5><h5><input id="objid3" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>Field : </h5><h5><input id="fieldid3" value="" disabled="true" size="30" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod3();" data-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                                                                function callMethod3(){
+                                                                    var x = $('#delId3')[0].value;
+                                                                    var obfour = '{!JSENCODE(obj)}';
+                                                                    Visualforce.remoting.Manager.invokeAction(
+                                                                        '{!$RemoteAction.ListOfFieldsCSCTRL.removeRecords}',
+                                                                        x,
+                                                                        obfour,
+                                                                        function(result, event){
+                                                                            window.location = result;
+                                                                        }
+                                                                    );
+                                                                }
+                                                            </script>
+        </div>
+    </apex:form>
+
+</apex:page>

@@ -1,0 +1,107 @@
+<apex:page controller="newStrategiaCTRL"  tabStyle="Strategia__c" >
+  <apex:sectionHeader title="{!$Label.crabb_dev__strategy_configuration}" subtitle="Step 1 of 4" rendered="{!type != 'STR'}"/>
+  <apex:sectionHeader title="{!$Label.crabb_dev__strategy_configuration}" subtitle="Step 1 of 3" rendered="{!type == 'STR'}"/>
+   <script>
+        function disableOnSubmit(input) {
+            setTimeout('disableAfterTimeout(\'' + input.id + '\');', 50);
+        }
+        function disableAfterTimeout(id) {
+            var toDisable = document.getElementById( id );
+            toDisable.disabled = 'disabled';
+            // Use the Salesforce CSS style to make the button appear disabled
+            toDisable.className = 'btnDisabled';
+          
+        }
+    </script>
+  <apex:form > 
+    <apex:pageBlock id="errorBlock" rendered="{!Error}">
+        <!-- AVERTI L'UTENTE PER L'ID E TYPE SBAGLIATO O MANCATO IN URL -->
+         <apex:pageBlockSection title="{!$Label.crabb_dev__error}"  collapsible="false"  >
+                <apex:pagemessage strength="2"
+                    title="{!$Label.crabb_dev__warning_url_incorrect}"
+                    rendered="true"
+                    severity="warning" >
+                    <apex:commandButton value="{!$Label.crabb_dev__return_to_home_page}" action="/" />               
+                </apex:pagemessage>
+         </apex:pageBlockSection>
+    </apex:pageBlock>
+    <apex:pageBlock rendered="{!NOT(Error)}" id="normalBlock">
+    <!-- This facet tag defines the "Next" button that appears in the footer of the pageBlock. It calls the step2()
+         controller method, which returns a pageReference to the next step of the wizard. -->
+      <apex:facet name="footer">
+        <apex:outputPanel >
+          <apex:commandButton action="{!step2}" value="Next" id="nextbutton" onclick="disableOnSubmit(this);"
+                              styleClass="btn"/>
+        </apex:outputPanel>
+      </apex:facet>
+          <apex:commandButton action="{!cancelButton}" value="Cancel" id="cancelbutton" onclick="disableOnSubmit(this);"
+                              styleClass="btn" immediate="true"/>
+      
+      <!-- GESTIONE DELLA TESTATA -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__enterdatanewstrategy}"  rendered="{!IF(type='STR',true,false)}">
+         <apex:inputField value="{!Strategia .Nome__c}"  required="true"/>       
+         <apex:inputField value="{!Strategia.Descrizione__c}"/>
+         <apex:inputField value="{!Strategia.industri_print_reference__c}"/> 
+         <apex:inputField value="{!Strategia.Versione__c}" required="true" />
+
+         <apex:inputField value="{!Strategia.Priority__c}" required="true" />          
+         <apex:inputField value="{!Strategia.Tipo_Strategia__c}" required="true"/>  
+         <apex:inputField value="{!Strategia.Stato__c}"/>                   
+      </apex:pageBlockSection>
+      
+      <!-- GESTIONE DELLE CONDIZIONI DI INGRESSO -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__input_condition_definition_data}"  rendered="{!IF(type='CDI',true,false)}">
+         <apex:inputField value="{!Strategia .Nome__c}" required="true" />
+         <apex:outputLabel value="Testata : {!MyTestataSTR}" />
+         <apex:inputField value="{!Strategia .industri_print_reference__c}" /> 
+         <apex:inputField value="{!Strategia .Descrizione__c}"/> 
+         <apex:inputField value="{!Strategia.Versione__c}" required="true" />
+         <apex:inputField value="{!Strategia.Priority__c}" required="true" />             
+      </apex:pageBlockSection>    
+
+      <!-- GESTIONE DELLE CONDIZIONI DI USCITA -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__enterdatanewstrategy}"  rendered="{!IF(type='CDU',true,false)}">
+         <apex:inputField value="{!Strategia .Nome__c}" required="true" />
+         <apex:outputLabel value="Testata: {!MyTestataSTR}" />
+         <apex:inputField value="{!Strategia .industri_print_reference__c}" /> 
+         <apex:inputField value="{!Strategia .Descrizione__c}"/> 
+         <apex:inputField value="{!Strategia .Esito__c}" required="true"/> 
+         <apex:inputField value="{!Strategia.Priority__c}" required="true"/>         
+         <apex:inputField value="{!Strategia.Esci_e_chiudi__c}" />                  
+      </apex:pageBlockSection>  
+
+      <!-- GESTIONE DEGLI STEP -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__step_definition_data}"  rendered="{!IF(type='STEP',true,false)}">
+         <apex:inputField value="{!Strategia.Nome__c}" required="true"/>
+         <apex:outputLabel value="Testata : {!MyTestataSTR}" />
+         <apex:inputField value="{!Strategia.Descrizione__c}"/>
+         <apex:inputField value="{!Strategia.industri_print_reference__c}" />
+         <apex:inputField value="{!Strategia.Attivit_Padre__c}"  />
+         <apex:inputField value="{!Strategia.Tipologia__c}" required="true" />
+         <apex:inputField value="{!Strategia.Fase__c}" required="true" />
+         <apex:inputField value="{!Strategia.Tipo_attivita__c}" required="true" />
+         <apex:inputField value="{!Strategia.Sotto_tipo_attivita__c}" required="true" />
+         <apex:inputField value="{!Strategia.Priority__c}" required="true"/>
+         <apex:inputField value="{!Strategia.isFinal__c}" />
+         <apex:inputField value="{!Strategia.isSLA_present__c}" />         
+         <apex:inputField value="{!Strategia.E_da_affidare__c}" />                 
+         <apex:inputField value="{!Strategia.SLA__c}" />
+         <apex:inputField value="{!Strategia.Document_code__c}" />
+      </apex:pageBlockSection>  
+
+      <!-- GESTIONE DEGLI JUMP -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__enterdatanewstrategy}"  rendered="{!IF(type='JUMP',true,false)}">
+         <apex:inputField value="{!Strategia.Nome__c}" required="true" />
+         <apex:outputLabel value="Testata : {!MyTestataSTR}"/>
+         <apex:inputField value="{!Strategia.Descrizione__c}"/> 
+         <apex:inputField value="{!Strategia.industri_print_reference__c}" /> 
+         <apex:inputField value="{!Strategia.Jump_from__c}" required="true" />
+         <apex:inputField value="{!Strategia.Jump_to__c}" required="true" />
+         <apex:inputField value="{!Strategia.Esito__c}" />          
+         <apex:inputField value="{!Strategia.isAutomaticJump__c}" />           
+         <apex:inputField value="{!Strategia.Priority__c}" required="true" />                   
+      </apex:pageBlockSection>        
+      
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

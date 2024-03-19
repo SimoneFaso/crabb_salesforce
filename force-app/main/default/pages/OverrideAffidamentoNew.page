@@ -1,0 +1,8 @@
+<apex:page id="page" standardController="Affidamento__c">
+    <apex:pageMessage severity="ERROR"
+        strength="3"
+        title="{!$Label.crabb_dev__credit_lines_tasksemiauto}"
+        escape="false"
+        summary="<b>{!$Label.crabb_dev__hometaskpage}</b>." >
+    </apex:pageMessage>
+</apex:page>

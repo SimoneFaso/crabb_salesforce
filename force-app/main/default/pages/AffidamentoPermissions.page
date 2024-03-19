@@ -1,0 +1,3 @@
+<apex:page standardController="Affidamento__c" extensions="PermissionAccessCtrl">
+    <c:PermissionAccess />
+</apex:page>

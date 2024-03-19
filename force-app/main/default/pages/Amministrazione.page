@@ -1,0 +1,287 @@
+<!--VERSIONE AGGIORNATA CON ICONE DI BOOTSTRAP-->
+<apex:page controller="AmministrazioneCTRL" showHeader="true" sidebar="true" docType="html-5.0">
+    <!--<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrapcrabb.css')}"/>-->
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <style>
+#balancecontainer .thumbnail {
+    min-height: 200px;
+}
+</style>
+    <div id="balancecontainer" class="crabbpackage slds-scope" style="background-color:#F4F3EF; overflow: auto;">
+        <div class="page-header">
+            <h1 style="margin-left:1em;color: #777777;"><span class="bi bi-wrench"></span> {!$Label.Accordion_Section_Admin}</h1>
+        </div>
+        <div class="container-fluid" style="background-color:#F4F3EF; overflow: auto;">
+            <div class="row">
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.ConfigurazioneAmministrazione__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-sliders" style="color: #F3BB45"></i></center></h1>
+                            <div class="caption">
+                                <h5 style="color: #F3BB45">{!$Label.Configurazione_Amministrazione_Title}</h5>
+                                <p class="">{!$Label.Configurazione_Amministrazione_Description}.</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/GestioneAmministrazione" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.Configurazione_Amministrazione_button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.AttivitaProfili__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-eye" style="color: #F3BB45"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #F3BB45">{!$Label.Attivita_Profili_Title}</h5>
+                                <p class="">{!$Label.Attivita_Profili_Description}.</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/AffidiSettingsPage" class="btn btn-primary btn-xs" role="button" target="_blank">Settings</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.AttivitaProfili__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-text-indent-left" style="color: #F3BB45"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #F3BB45">{!$Label.bulkoutcomes} / {!$Label.profile}</h5>
+                                <p class="">{!$Label.strategysteps}.</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/GestioneEsitiMassiviPage" class="btn btn-primary btn-xs" role="button" target="_blank">Settings</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.ProfilazioneUtenti__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;" >
+                            <h1><center><i class="bi bi-person-fill" style="color: #F3BB45"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #F3BB45">{!$Label.Profilazione_Utenti_Title}</h5>
+                                <p class="">{!$Label.Profilazione_Utenti_Description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="/005" class="btn btn-primary btn-xs pull-left" role="button" target="_blank">{!$Label.Profilazione_Utenti_Button}</a>
+                                    <a href="/ui/setup/user/RoleViewPage?setupid=Roles" target="_blank" class="btn btn-info btn-xs pull-left" role="button">{!$Label.Profilazione_Ruoli_Button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.ConfigurazioneStrategie__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-arrows-fullscreen" style="color: #EB5E28"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #EB5E28">{!$Label.Configurazione_Strategie_Title}</h5>
+                                <p class="">{!$Label.Configurazione_Strategie_Description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/GestioneStrategie" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.Configurazione_Strategie_Button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.EstrattoConto__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-file-earmark-arrow-up" style="color: #EB5E28"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #EB5E28">{!$Label.Estratto_Conto_Title}</h5>
+                                <p class="">{!$Label.Estratto_Conto_Description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/ListOfFieldsCS?object=PDF" class="btn btn-primary btn-xs" role="button" target="_blank">PDF</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.CruscottoPratica__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-bar-chart-line-fill" style="color: #EB5E28"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #EB5E28">{!$Label.Cruscotto_Pratica_Title}</h5>
+                                <p class="">{!$Label.Cruscotto_Pratica_Description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/ListOfFieldsCS?object=TAB" class="btn btn-primary btn-xs" role="button" target="_blank">TAB</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.ImportStrategie__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-upload" style="color: #EB5E28"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #EB5E28">{!$Label.Import_Strategie_Title}</h5>
+                                <p class="">{!$Label.Import_Strategie_Description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/Import_Strategie" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.Import_Strategie_Button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.ConfigurazioneCollector__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-funnel" style="color: #7AC29A"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #7AC29A">{!$Label.Configurazione_Collector_Title}</h5>
+                                <p class="">{!$Label.Configurazione_Collector_Description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="/{!$ObjectType.Collector__c}/o" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.Configurazione_Collector_Button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.FlussiCollector__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-file-spreadsheet-fill" style="color: #7AC29A"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #7AC29A">{!$Label.Flussi_Collector_Title}</h5>
+                                <p class="">{!$Label.Flussi_Collector_Description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/ListOfFieldsCS?object=CSVNEW" class="btn btn-primary btn-xs" role="button" target="_blank">CSV</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.FasceCollector__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-align-center" style="color: #7AC29A"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #7AC29A">{!$Label.Fasce_Collector_Title}</h5>
+                                <p class="">{!$Label.Fasce_Collector_Description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/FasceCollector" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.Fasce_Collector_Button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.AffidoCollector__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-columns-gap" style="color: #7AC29A"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #7AC29A">{!$Label.Affido_Collector_title}</h5>
+                                <p class="">{!$Label.affido_collector_description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/AffidoCollectorPage" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.Affido_Collector_button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.GestioneOrkBatch__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-clock" style="color: #7AC29A"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #7AC29A">{!$Label.Gestione_OrkBatch_title}</h5>
+                                <p class="">{!$Label.Gestione_Orkbatch_description}</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/OrkBatchPage" class="btn btn-primary btn-xs" role="button" target="_blank">OrkBatch</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.EliminazioneLog__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-file-earmark-x" style="color: #7AC29A"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #7AC29A">{!$Label.Eliminazione_Logs_title}</h5>
+                                <p class="">{!$Label.eliminazione_Logs_description}.</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/LogDelete" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.eliminazione_logs_button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.ConfigurazioneMapping__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-shuffle" style="color: #68B3C8"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #68B3C8">{!$Label.Configurazione_Mapping_title}</h5>
+                                <p class="">{!$Label.Configurazione_Mapping_description}.</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/DataMapper" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.configurazione_mapping_button}.</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentAS.CostiAttivita__c}">
+                    <div class="col-md-2" style="min-width: 200px;">
+                        <div class="thumbnail" style="position: relative !important;">
+                            <h1><center><i class="bi bi-cash" style="color: #68B3C8"></i></center></h1>
+                            <div class="caption">
+                                <h5 class="" style="color: #68B3C8">{!$Label.Costi_Attivita_title}</h5>
+                                <p class="">{!$Label.costi_attivita_description}.</p>
+                                <hr style="margin-bottom:5px !important; margin-top:5px !important;"/>
+                                <div style="position: absolute !important; bottom: 10px !important;">
+                                    <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil-square"></i></a>  <a href="/apex/GestioneCostiAttivita" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.Costi_Attivita_button}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+            </div>
+        </div>
+
+        <!--/container -->
+    </div>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap501/js/bootstrap.min.js')}"/>
+
+    </html>
+</apex:page>

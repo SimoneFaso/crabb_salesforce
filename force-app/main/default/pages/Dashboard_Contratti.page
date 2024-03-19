@@ -1,0 +1,58 @@
+<apex:page standardController="Contratto__c" extensions="RepContrattiCTRL">
+    <style>
+        .mychart
+        {
+            float: left;
+            margin-right: 50px;
+            margin-top: 20px;
+            height: 500px;
+            font-size: 20px;
+            font: bold;
+        }
+        .RepLabel
+        {
+            font: bold 20px;
+        }
+        /*#chart1
+        {
+            float: left;
+            margin-right: 50px;
+        }
+        #chart2
+        {
+            float: left;
+            margin-right: 50px;
+        }
+        #chart3
+        {
+            float: left;
+            margin-right: 50px;
+        }
+        #chart4
+        {
+            float: left;
+            margin-right: 50px;
+        }*/
+    </style>
+    <apex:outputText >Page currently not used</apex:outputText>
+    <!--<apex:outputPanel layout="block" styleClass="mychart" id="chart1">
+        <apex:outputLabel styleClass="RepLabel">STORICO MENSILE SCADUTO SERVIZI/COMUNE - {!Contratto__c.Titolo__c}</apex:outputLabel>
+        <analytics:reportChart reportId="{!Report1}" filter="[{column:'Contratto__c.Titolo__c',operator:'equals',value:'{!Contratto__c.Titolo__c}'}]"/>
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" styleClass="mychart" id="chart2">
+        <apex:outputLabel styleClass="RepLabel">REPORT MENSILE ANNO SU ANNO</apex:outputLabel>
+        <analytics:reportChart reportId="{!Report2}" filter="[{column:'FK_Account.Contratto__c',operator:'equals',value:'{!Contratto__c.Name}'}]"/>
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" styleClass="mychart" id="chart3">
+        <apex:outputLabel styleClass="RepLabel">SCADUTO FRUITORE X COSTO PASTO</apex:outputLabel>
+        <analytics:reportChart reportId="{!Report3}" filter="[{column:'Contratto__c.Name',operator:'equals',value:'{!Contratto__c.Name}'}]"/>
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" styleClass="mychart" id="chart4">
+        <apex:outputLabel styleClass="RepLabel">NUMERO FRUITORI MOROSI X COSTO PASTO</apex:outputLabel>
+        <analytics:reportChart reportId="{!Report4}" filter="[{column:'Contratto__c.Name',operator:'equals',value:'{!Contratto__c.Name}'}]"/>
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" styleClass="mychart" id="chart5">
+        <apex:outputLabel styleClass="RepLabel">REPORT DELLE ATTIVITÀ UI (ULTIMI 30GG) - {!Contratto__c.Id}</apex:outputLabel>
+        <analytics:reportChart reportId="{!Report5}" filter="[{column:'Contratto__c.Id',operator:'equals',value:'{!Contratto__c.Id}'}]"/>
+    </apex:outputPanel>-->
+</apex:page>

@@ -1,0 +1,234 @@
+<apex:component allowDML="true">
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/css/theme/jquery-ui-1.10.4.custom.min.css')}"  />-->
+<!--    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.css')}"  />-->
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.css')}"  />
+    <script>
+        var j$ = jQuery.noConflict();
+    </script>
+    
+    <style>
+        .center {
+            //text-align: center;
+            margin: auto;
+            //width: 60%;
+            //border:3px solid #8AC007;
+            //padding: 10px;
+        }
+        /* Accordion */
+        #accordion .AccTitle{
+             background:#428BCA; //#57B4D1;
+             border:#428BCA;
+             color:#fff;
+        }
+        
+        #accordion2 .AccTitle{
+             background:#428BCA; //#57B4D1; 
+             border:#428BCA;
+             color:#fff;
+        }
+        
+        /* FLOW */
+        .FlowPageBlockBtns .FlowNextBtn
+        {
+            color:  #fff !important ;
+            border: 1px solid #cd2027;
+            background: #f68b1f;
+            border-radius: 4px;  
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            margin-bottom: 5px;
+            width: 100px;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 4px 6px;
+            margin: 8px;
+        }
+        
+        .FlowPageBlockBtns .FlowPreviousBtn
+        {
+            color:  #fff !important ;
+            border: 1px solid #cd2027;
+            background: #f68b1f;
+            border-radius: 4px;  
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            margin-bottom: 5px;
+            width: 100px;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 4px 6px;
+            margin: 8px;
+        }
+        
+        .FlowPageBlockBtns .FlowFinishBtn
+        {
+            color:  #fff !important ;
+            border: 1px solid #cd2027;
+            background: #f68b1f;
+            border-radius: 4px;  
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            margin-bottom: 5px;
+            width: 100px;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 4px 6px;
+            margin: 8px;
+        }
+        
+        .FlowPageBlockBtns .FlowNextBtn:hover
+        {
+            color:  #fff !important ;
+            border: 1px solid #1797c0;
+            background: #57b4d1;
+            text-decoration: none;
+        }
+        
+        .FlowPageBlockBtns .FlowPreviousBtn:hover
+        {
+            color:  #fff !important ;
+            border: 1px solid #1797c0;
+            background: #57b4d1;
+            text-decoration: none;
+        }
+        
+        .FlowPageBlockBtns .FlowFinishBtn:hover
+        {
+            color:  #fff !important ;
+            border: 1px solid #1797c0;
+            background: #57b4d1;
+            text-decoration: none;
+        }
+        
+        /* Button */
+        .KillerBtn
+        {
+          color:  #fff !important ;
+          border: 1px solid #cd2027;
+          background: #f68b1f;
+          border-radius: 4px;  
+          -moz-border-radius: 4px;
+          -webkit-border-radius: 4px;
+          margin-bottom: 5px;
+          width: 100px;
+          text-decoration: none;
+          font-size: 14px;
+          padding: 4px 6px;
+          margin: 8px;
+        }
+        
+        .KillerBtn:hover
+        {
+          color:  #fff !important ;
+          border: 1px solid #1797c0;
+          background: #57b4d1;
+          text-decoration: none;
+        }
+    
+        <!-- ***PICKLIST*** -->
+    
+        #mainselection select {
+           border: 0;
+           color: #EEE;
+           background: transparent;
+           font-size: 20px;
+           font-weight: bold;
+           padding: 2px 10px;
+           width: 378px;
+           *width: 350px;
+           *background: #f68b1f;
+           -webkit-appearance: none;
+        }
+        
+        #mainselection {
+           overflow:hidden;
+           width:350px;
+           -moz-border-radius: 9px 9px 9px 9px;
+           -webkit-border-radius: 9px 9px 9px 9px;
+           border-radius: 9px 9px 9px 9px;
+           box-shadow: 1px 1px 11px #330033;
+           background: #f68b1f; <!--url("http://i62.tinypic.com/15xvbd5.png") no-repeat scroll 319px center;-->
+        }
+    
+        <!-- ***CALENDAR*** -->
+        table.center 
+        {
+            border: 1px solid #999;
+            border-collapse: collapse;
+            font-family: Georgia, Times, serif;
+            margin-left:auto; 
+            margin-right:auto;
+        }
+        table.center th 
+        {
+            border: 1px solid #999;
+            font-size: 70%;
+            text-transform: uppercase;
+        }
+        table.center td 
+        {
+            border: 1px solid #999;
+            height: 5em;
+            width:5em;
+            padding: 5px;
+            vertical-align: top;
+        }
+        table.center caption 
+        {
+            font-size: 300%;
+            font-style: italic;
+        }
+        .day 
+        {
+            text-align: right;
+        }
+        .notes 
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 80%;
+            text-align: right;
+            padding-left: 20px;
+        }
+        .birthday
+        {
+            background-color: #ECE;
+        }
+        .holiday 
+        {
+            background-color: #ECE;
+        }
+        .fixday 
+        {
+            background-color: #FF5555;
+        }
+        .partialday 
+        {
+            background-color: #FFFF00;      
+        }
+        .okday
+        {
+            background-color: #AAEEAA;
+        }
+        .weekend 
+        {
+            background-color: #F3F3F3;
+        }
+    </style>
+</apex:component>

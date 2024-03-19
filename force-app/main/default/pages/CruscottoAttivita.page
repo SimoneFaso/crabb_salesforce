@@ -1,0 +1,125 @@
+<apex:page controller="CruscottoAttivita">
+    <c:KillerStyle />
+    
+     <style>
+    #opsdashboard {
+        width: 880px;
+    }
+    
+    #opsdashboard .opsheader {
+        height:50px;
+    }
+    
+    #opsdashboard .opsheader h3 {
+        float:left;
+        margin-top:15px;
+        padding:0;
+        font-size: 18px;
+        font-weight: normal;
+    }
+    
+    #opsdashboard .opsheader #count {
+        float:right;
+        width: 100px;
+    }
+    
+    #opsdashboard .opsheader #count .number {
+        display: block;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    
+    #opsdashboard .opsheader #count .days {
+        display: block;
+        text-align: center;
+        font-size: 12px;
+        font-weight: italic;
+        margin-top: 5px;
+    }
+    
+    #opscontent {
+        padding: 15px;
+    }
+    
+    #opscontent a {
+        width: 250px;
+        height: 50px;
+        font-size: 14px;
+        margin: 0 20px 20px 0;
+    }
+    
+    #opscontent .owner-name {
+        float: left;
+        margin-top: 10px;
+        width: 150px;
+        text-align: left;
+    }
+    
+    #opscontent .owner-count {
+        float: right;
+        width: 50px;
+    }
+    
+    #opscontent .owner-number {
+        display: block;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 7px;
+    }
+    
+    #opscontent .owner-days {
+        display: block;
+        text-align: center;
+        font-size: 8px;
+        margin-top: 5px;
+    }
+    
+  </style>
+  
+    <apex:pageBlock title="{!$Label.CRABB_DEV__ActivitiesDossier}" >
+        <div id="opsdashboard">
+            <apex:repeat value="{!MapHeader}" var="key">
+            <div class="opsheader">
+                <h3><apex:outputText value="{!key}"/></h3>
+                <div id="count">
+                    <span class="number">{!MapHeader[key].NRecord}</span>
+                    <span class="days">{!MapHeader[key].MaxGG} gg</span>
+                </div>
+            </div>
+            <div id="opscontent">
+                <apex:repeat value="{!MapHeader[key].lCont}" var="keyInt">
+                    <a class="owner-link" href="#">
+                        <span class="owner-name"> <apex:outputText value="{!keyInt.Owner}"/> </span>
+                            <div class="owner-count">
+                                <span class="onwer-number"><apex:outputText value="{!keyInt.NRecord}"/></span>
+                                <span class="owner-days"><apex:outputText value="{!keyInt.MaxGG} gg"/></span>
+                                
+                            </div>
+                    </a>
+                  </apex:repeat>
+            </div>
+            </apex:repeat>
+        </div>
+    </apex:pageBlock>
+  
+    <script>
+        j$(function()
+        {
+            j$( "#opsdashboard" ).accordion(
+                { 
+                    header: '.opsheader', 
+                    collapsible: true, 
+                    active: false,
+                    heightStyle: 'content',
+                }
+            );
+        });
+        
+        j$(function() {
+            j$( ".owner-link" ).button()
+        });
+    </script>
+</apex:page>

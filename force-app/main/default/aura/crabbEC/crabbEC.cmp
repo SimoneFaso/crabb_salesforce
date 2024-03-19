@@ -1,0 +1,15 @@
+<aura:component controller="CreateAttachmentCTRL" implements="force:lightningQuickAction,force:hasRecordId">
+    <!-- Create EC PDF -->
+    <aura:attribute name="result" type="String" default="{!$Label.c.Are_you_sure_to_confirm}" />
+    <aura:attribute name="isButtonInactive" type="Boolean" default="false" />
+    <!--    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>-->
+    <!--	<ui:outputText value="{!v.result}"/>-->
+    <lightning:formattedText value="{!v.result}"/>
+
+    <div>
+        <lightning:button label="{!$Label.c.Confirm}" variant="success" disabled= "{!v.isButtonInactive}"
+                          onclick="{!c.handleClick}"/>
+    </div>
+
+    <!-- Create EC PDF -->
+</aura:component>

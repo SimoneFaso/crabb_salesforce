@@ -1,0 +1,8 @@
+<apex:page id="page" standardController="Account">
+    <apex:pageMessage severity="ERROR"
+        strength="3"
+        title="{!$Label.crabb_dev__account_creation_crabb}"
+        escape="false"
+        summary="<b>{!$Label.crabb_dev__software_house}</b>." >
+    </apex:pageMessage>
+</apex:page>

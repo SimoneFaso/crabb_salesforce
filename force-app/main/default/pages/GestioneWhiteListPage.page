@@ -1,0 +1,239 @@
+<apex:page controller="GestioneWhiteListPageCTRL" docType="html-5.0">
+
+    <c:KillerStyle />
+        
+    <head> 
+    <style type="text/css">
+        .Summary{
+                width: 250px;
+                padding: 12px;
+                background-color: #f68b1f; 
+                border: 1px solid  #57B4D1;
+                opacity:0.65;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                color:white;
+                }
+        
+        .fixed{
+                position:fixed;
+                top:5px;
+                }       
+                    
+    </style>
+    </head>
+        <apex:pageBlock title="{!IF(Step = -1, $Label.CRABB_DEV__AssignRemove &' White List', IF(isPutInWhiteList, $Label.CRABB_DEV__Assign &' White List', $Label.CRABB_DEV__Remove & ' White List'))}">        
+            <!-- SELEZIONA L'OPERAZIONE (BLOCCO/SBLOCCO) => (METTI SU WHITE LIST/RIMUOVI DAL WHITE LIST) -->
+            <apex:form rendered="{!Step = -1}">
+                <apex:selectRadio value="{!leftselected_SelTipo}" >
+                    <apex:actionsupport status="TheStatus" event="onchange" action="{!Continua}"/>
+                    <apex:selectOptions value="{!unSelectedValues_SelTipo}"/>
+                </apex:selectRadio>
+            </apex:form>
+            <!-- IL SEZIONE DEI FILTRI -->
+            <apex:pageblockSection columns="1" rendered="{!Step = 0}">
+                    <apex:outputPanel id="Filtri" title="{!$Label.CRABB_DEV__FIlter} {!$Label.CRABB_DEV__Pratica}: " >
+                        <div id="accordion" style="width:650px">
+                            <h3 class="AccTitle" >{!$Label.contract}</h3>
+                            <div>
+                                <c:Selectable Index="1" Selezione_Sinistra="{!originalvalues_idEsternoContratto}" Selezione_Destra="{!originalvalues_idEsternoContratto}" Titolo1="{!$Label.CRABB_DEV__Contract} {!$Label.CRABB_DEV__Name}" Titolo2="{!$Label.CRABB_DEV__Contract} {!$Label.CRABB_DEV__Name}" Titolo3="{!$Label.CRABB_DEV__Contract} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle" >{!$Label.CRABB_DEV__Country}</h3>
+                            <div>
+                                <c:Selectable Index="2" Selezione_Sinistra="{!originalValues_Comuni}" Selezione_Destra="{!originalValues_Comuni}" Titolo1="{!$Label.CRABB_DEV__Country}" Titolo2="{!$Label.CRABB_DEV__Country}" Titolo3="{!$Label.CRABB_DEV__Country} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div><h3 class="AccTitle" >{!$Label.CRABB_DEV__RiskClass}</h3>
+                            <div>
+                                <c:Selectable Index="5" Selezione_Sinistra="{!originalValues_CdR}" Selezione_Destra="originalValues_CdR" Titolo1="{!$Label.CRABB_DEV__RiskClass}" Titolo2="{!$Label.CRABB_DEV__RiskClass}" Titolo3="{!$Label.CRABB_DEV__RiskClass} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                        </div>
+                        <!-- IL PANELO DELLO STATO -->
+                        <!--<apex:outputPanel StyleClass="OP" rendered="{!isPutInWhiteList}"> -->
+                        <apex:outputPanel StyleClass="OP" >
+                            <div id="accordion2" style="width:650px">
+                                <h3 class="AccTitle" >{!$Label.CRABB_DEV__Status} Account</h3>
+                                <div>
+                                    <c:Selectable Index="4" Selezione_Sinistra="{!originalValues_Stato}" Selezione_Destra="{!originalValues_Stato}" Titolo1="{!$Label.CRABB_DEV__Status}" Titolo2="{!$Label.CRABB_DEV__Status}" Titolo3="{!$Label.CRABB_DEV__Status} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                        <br/>
+                        <!-- I FILTRI SALDO MOVIMENTO SCADUTI__c & SALDO TOTALE__c -->
+                        <apex:form >
+                            <apex:outputPanel id="IdForm" rendered="{!Step = 0}">
+                                <table style="border:0; table-layout:fixed">
+                                    <!-- INPUT TEXTS DA DEFINIRE I FILTRI DEL ACCOUNT -->
+                                    <tr>
+                                        <td><b>{!$Label.scaduto} {!$Label.transaction}:</b></td>
+                                        <td>
+                                            <apex:input value="{!SaldoMovScadutoDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!SaldoMovScadutoA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{!$Label.CRABB_DEV__Total} {!$Label.CRABB_DEV__Amount}:</b></td>
+                                        <td>
+                                            <apex:input value="{!SaldoTotaleDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!SaldoTotaleA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                 <br/>   
+                                <!-- IL PANELO DEL CONTROLLO DELLA VALIDITÁ DEI DATI ENTRATI -->          
+                                <apex:outputpanel id="ErrorMessagesId"> 
+                                    <apex:pageMessages rendered="{!ErrorValidateDecimal}"/>
+                                </apex:outputpanel>
+                                <!-- FILTRA LE ACCOUNT DAL DATABASE -->
+                                <apex:commandButton action="{!QueryAccount}" value="{!$Label.CRABB_DEV__FIlter}"/>
+                            </apex:outputPanel>
+                        </apex:form>
+                    </apex:outputPanel>
+            </apex:pageblockSection>
+            <!-- DOPO AVER PRESO GLI ACCOUNT, VISUALIZZIAMOLE TUTTE -->
+            <apex:outputPanel rendered="{!(Step = 1 && accountEsiste)}"  id="IdFormAccount">
+                <apex:form >
+                    <apex:outputText Value="Account {!$Label.CRABB_DEV__Selected}: {!TotalSize}" />
+                    <br/>
+                    <apex:outputLabel value="{!$Label.CRABB_DEV__SelectDeselect} {!$Label.CRABB_DEV__All} account">
+                        <apex:inputcheckbox value="{!bAllSel}"> <!-- *IN FUTURO AGGIORNA bAllSel, PER LEGGERE LE ACCOUNT -->
+                            <apex:actionsupport status="TheStatus" event="onchange" action="{!SelectAll}" rerender="IdFormAccount"/>
+                        </apex:inputcheckbox>
+                    </apex:outputLabel>
+                    
+                    <!-- La tabela da scegliere gli account -->
+                    <apex:pageBlockTable value="{!ListAccountSelectable}" var="a" id="idAccTable"> 
+                        <apex:column headerValue="Select" id="colonnaCheckbox">
+                           <apex:inputCheckbox value="{!a.isSelected}">
+                               
+                           </apex:inputCheckbox> 
+                        </apex:column> 
+                        <apex:column >
+                            <apex:facet name="header">Check Account</apex:facet>
+                            <a href="/{!a.Acc.Id}" target="_blank" title="{!a.Acc.Id}"><apex:image value="/img/icon/desk24.png"/></a>
+                        </apex:column>
+                        <apex:column value="{!a.Acc.Name}" headerValue="{!$Label.CRABB_DEV__Name}"/>
+                        <apex:column value="{!a.Acc.Contratto__r.Id_Esterno__c}" headerValue="{!$Label.CRABB_DEV__Contract} SWH"/>
+                        <apex:column value="{!a.Acc.Comune_Contratto__c}" headerValue="{!$Label.CRABB_DEV__Country}"/>
+                        <apex:column value="{!a.Acc.Stato__c}" headerValue="{!$Label.CRABB_DEV__Status}"/>
+                        <apex:column value="{!a.Acc.Classe_di_Rischio__c}" headerValue="{!$Label.CRABB_DEV__RiskClass}"/>
+                    </apex:pageBlockTable> 
+                    <br/>
+                    <div style="width: 100%; text-align: center">
+                    <apex:actionRegion rendered="{!accountEsiste}">
+                        <apex:commandLink value="<< {!$Label.CRABB_DEV__Start}" styleClass="KillerBtn" action="{!Beginning}" rendered="{! !(DisablePrevious)}" rerender="IdFormAccount"></apex:commandlink>
+                        <apex:commandLink value="< {!$Label.CRABB_DEV__Previous}" styleClass="KillerBtn" action="{!Previous}" rendered="{! !(DisablePrevious)}" rerender="IdFormAccount"></apex:commandlink>
+                        <apex:commandLink value="{!$Label.CRABB_DEV__Next} >" styleClass="KillerBtn" action="{!Next}" rendered="{! !(DisableNext)}" rerender="IdFormAccount"></apex:commandlink>
+                        <apex:commandLink value="{!$Label.CRABB_DEV__End} >>" styleClass="KillerBtn" action="{!End}" rendered="{! !(DisableNext)}" rerender="IdFormAccount"></apex:commandlink>
+                    </apex:actionRegion>
+                    </div>
+                </apex:form>
+            </apex:outputPanel>
+            
+            <!-- NON ESISTONO ACCOUNT DA IMPOSTARE IL FLAG -->
+            <apex:outputPanel rendered="{!(Step = 1 && !AccountEsiste)}">
+                 <apex:pageMessage summary="{!$Label.CRABB_DEV__AccountError}." severity="info" strength="3"/>
+            </apex:outputPanel>
+            
+            <!-- L'ULTIMO STEP -->
+            <apex:pageblockSection >        
+                    <apex:form >
+                        <!-- PANEL PER METTERE DEI ACCOUNT SU WHITE LIST -->
+                        <apex:outputpanel Id="BloccoInsert" rendered="{!(Step = 2 && !AccountSelEsisti && isPutInWhiteList)}">
+                               <apex:outputText styleClass="Bold" Value="{!$Label.CRABB_DEV__ExpiredDate} White List " />
+                               <apex:input type="date" value="{!myWhiteListLimit}" required="true"/>
+                        </apex:outputpanel>
+                        <br/>
+                         <apex:outputpanel rendered="{!(Step = 2 && !AccountSelEsisti && isPutInWhiteList)}">
+                               <apex:outputText styleClass="Bold" Value="{!$Label.CRABB_DEV__Reason} White List " />
+                               <apex:input type="text" value="{!RagioneWhiteList}" required="false"/>
+                        </apex:outputpanel>
+                        <br/>
+                        <apex:outputLabel rendered="{!(Step = 2 && !AccountSelEsisti && isPutInWhiteList)}" style="color:red" styleClass="Bold" >
+                            *{!$Label.CRABB_DEV__AccountWarning}.
+                        </apex:outputLabel>
+                        <br/>
+                        <apex:outputpanel >
+                        <c:AutoDisablinButton actionToInvoke="{!mettiInWhL}" disableAll="true" rendered="{!(Step=2 && !AccountSelEsisti && isPutInWhiteList)}" buttonValue="White List" buttonId="BlockButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Processing}..." ></c:AutoDisablinButton>
+                        </apex:outputpanel>
+                        
+                        
+                        <!-- PANEL PER RIMUOVERE DEI ACCOUNT DAL WHITE LIST -->
+                        <apex:outputpanel Id="SbloccoInsert" rendered="{!(Step = 2 && !AccountSelEsisti && !isPutInWhiteList)}">
+                            <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__Remove} White List" />
+                            <br/>
+                            <br/>
+                        </apex:outputpanel>
+                        <br/>
+                        <c:AutoDisablinButton actionToInvoke="{!rimuoviDaWhL}" disableAll="true" rendered="{!(Step=2 && !AccountSelEsisti && !isPutInWhiteList)}" buttonValue="{!$Label.CRABB_DEV__Remove} White List" buttonId="UnblockButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Processing}" ></c:AutoDisablinButton>
+                     </apex:form>
+            </apex:pageBlockSection> 
+            
+            <!-- SELEZIONARE ALMENO UNA REGOLA PER IMMPOSTARE IL FLAG -->      
+            <apex:pageblockSection rendered="{!(accountSelEsisti&& Step=2)}">
+                <apex:pageMessage summary="{!$Label.CRABB_DEV__Select} account." severity="info" strength="3" />
+            </apex:pageblockSection>
+            
+            <!--BOTTONI CHE CI SERVONO, SOLO C'É DA RIGUARDARE LA LOGICA NEL CONTROLLER -->
+            <apex:pageblockButtons location="both">
+                   <apex:form >                 
+                        <c:AutoDisablinButton actionToInvoke="{!Indietro}" disableAll="true" rendered="{!(Step>=0 && Step<3)}" buttonValue="{!$Label.CRABB_DEV__Back}" buttonId="IndietroButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Back}..." ></c:AutoDisablinButton>
+                        <c:AutoDisablinButton actionToInvoke="{!ConfermaSelezione}" disableAll="true" rendered="{!(Step=1 && AccountEsiste)}" buttonValue="{!$Label.CRABB_DEV__Confirm}" buttonId="SelectButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Select} account.." ></c:AutoDisablinButton>                  
+                    </apex:form>
+            </apex:pageblockButtons>
+            
+            <!-- FEEDBACK AL OPERAZIONE -->
+            <apex:outputPanel rendered="{!Step = 3}">
+                    <apex:pageMessage severity="info" strength="3" >        
+                        <apex:outputText value="{!$Label.CRABB_DEV__ProcessedSuccessfully} {!TotalSize} ACCOUNT. {!$Label.CRABB_DEV__Return} {!$Label.CRABB_DEV__To} "/><apex:outputLink value="/apex/GestioneWhiteListPage">{!$Label.CRABB_DEV__Management} Account White List</apex:outputLink> <apex:outputText value=" o "/><a href="/">Home</a>.    
+                    </apex:pageMessage>
+            </apex:outputPanel>
+        </apex:pageBlock>
+        
+        <!-- QUESTO BLOCK, IMPEDISCE L'UTENTE DI ESEGUIRE OPERAZIONE INADEGUATI(PRECAUTION) -->
+        <apex:form id="TheStatusForm"> 
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus>
+        </apex:form>
+        
+        <script>
+        j$( "#accordion" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        j$( "#accordion2" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        jQuery(document).ready(function($) {
+        var pos = j$(window).height();
+
+        j$(window).scroll(function(){
+        if (j$(window).scrollTop() > pos){
+            j$('.Summary').addClass('fixed');
+        } else {
+            j$('.Summary').removeClass('fixed');
+        }
+        
+        
+        });
+    
+    
+        });   
+    </script>
+</apex:page>

@@ -1,0 +1,35 @@
+<apex:page controller="GestioneRevocaCTRL" docType="html-5.0">
+    <c:KillerStyle />
+    <head> 
+        <style type="text/css">
+            .Summary{ width: 250px; padding: 12px; background-color: #f68b1f; border: 1px solid  #57B4D1; opacity:0.65; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color:white; }                       
+        </style>
+    </head>
+    <APEX:FORm id="idform" > 
+        <!-- FINALIZZA OPERAZIONE -->
+        <apex:pageBlock title="{!$Label.CRABB_DEV__Confirm} {!$Label.CRABB_DEV__Withdraw}" rendered="{!NOT(confirmationOP)}" id="pageBlock">      
+                              
+                <apex:pageblockButtons location="bottom" > 
+                    <apex:commandButton immediate="true" value="{!$Label.CRABB_DEV__Back}" action="{!GestioneProrogaIndietro_3_2}" />       
+                    <apex:commandButton action="{!revocaAffidi}" value="{!$Label.CRABB_DEV__Confirm}" id="Conferma" rerender="idform" />      
+                    <!--<c:AutoDisablinButton actionToInvoke="{!revocaAffidi}" disableAll="true" rendered="true" buttonValue="Conferma" buttonId="Conferma" styleClass="buttonStyle" buttonValueDisabled="Attendere Prego..." rerender="idForm"></c:AutoDisablinButton>-->
+                            
+                </apex:pageblockButtons>                
+                <apex:pageBlockSection Columns="1" >
+                        <apex:inputField label="{!$Label.CRABB_DEV__Reason} {!$Label.CRABB_DEV__Withdraw}:" value="{!tmpAff.Note_elior__c}"/>
+                        <apex:outputText Value="{!$Label.CRABB_DEV__Assignment} {!$Label.CRABB_DEV__Selected}: {!NumberOfSelectedRecords}"  />                           
+                </apex:pageBlockSection>
+                 
+        </apex:pageBlock>
+        <!-- FEEDBACK OPERAZIONE -->
+        <apex:outputPanel rendered="{!confirmationOP}" id="finalMessage">
+            <apex:pageMessage severity="info" strength="3" rendered="{!errorCode == 0}">        
+                <apex:outputText value="{!$Label.CRABB_DEV__ProcessedSuccessfully} {!NumberOfSelectedRecords} {!$Label.CRABB_DEV__Assignment}. {!$Label.CRABB_DEV__Return} {!$Label.CRABB_DEV__To} "/><apex:outputLink value="/apex/GestioneRevoca">{!$Label.CRABB_DEV__WithdrawManagement}</apex:outputLink> <apex:outputText value=" o "/><a href="/">Home</a>.    
+            </apex:pageMessage>
+            <apex:pageMessage severity="Error" strength="3" rendered="{!errorCode != 0}">        
+                <apex:outputText value="{!errorMessage}. {!$Label.CRABB_DEV__Return} {!$Label.CRABB_DEV__To} "/><apex:outputLink value="/apex/GestioneRevoca">{!$Label.CRABB_DEV__WithdrawManagement}</apex:outputLink> <apex:outputText value=" o "/><a href="/">Home</a>.    
+            </apex:pageMessage>
+            <!-- <apex:pageMessages rendered="{!errorCode != 0}"/> -->
+        </apex:outputPanel> 
+     </apex:form>    
+</apex:page>

@@ -1,0 +1,38 @@
+<apex:page controller="GestioneProrogaCTRL1" docType="html-5.0"  id="thePage">
+
+    <c:KillerStyle />
+    <head> 
+     <script type="text/javascript">
+            j$ = jQuery.noConflict();
+        
+            function toggleInfo(){
+                    j$('#INDIETRO').hide();
+                    j$('#AVANTI').hide();
+                    j$('#INDIETROD').show();
+                    j$('#AVANTID').show();
+            }
+    </script>
+
+    </head>
+<apex:form id="theForm">
+    <apex:pageBlock title="{!$Label.CRABB_DEV__ApproveButton}/{!$Label.CRABB_DEV__RejectButton} {!$Label.CRABB_DEV__ExtensionRequest}" id="theBlock">
+        <!--(3) SELEZIONA L'OPERAZIONE Approva/Rifiuta Proroga -->
+        <apex:outputPanel >
+            <apex:outputText Value="{!$Label.CRABB_DEV__Assignments} {!$Label.CRABB_DEV__Selected}: {!NumberOfSelectedRecords}"  />
+            <apex:selectRadio value="{!leftselected_SelTipo}" layout="lineDirection">
+                <apex:selectOptions value="{!unSelectedValues_SelTipo}"/>
+            </apex:selectRadio>
+        </apex:outputPanel>
+        <apex:pageblockButtons location="both" id="buttons"> 
+            <apex:commandButton action="{!GestioneProrogaIndietro_3_2}" value="{!$Label.CRABB_DEV__Back}" id="INDIETRO"  onClick="toggleInfo();"  status="TheStatus" /> 
+            <apex:commandButton action="{!GestioneProrogaStep4}" value="{!$Label.CRABB_DEV__Next}" id="AVANTI"   onClick="toggleInfo();" style="display:true;" status="TheStatus" />
+            
+        </apex:pageblockButtons>    
+    </apex:pageBlock>
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="5%" width="5%" Message="{!$Label.CRABB_DEV__Processing}" messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus>    
+</apex:form>
+</apex:page>

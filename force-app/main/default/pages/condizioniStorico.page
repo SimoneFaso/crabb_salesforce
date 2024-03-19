@@ -1,0 +1,50 @@
+<apex:page standardController="Strategia__c" standardStylesheets="false" sidebar="false" extensions="CTRLcondizioniStorico" >
+
+    <style>
+       .activeTab {background-color: #236FBD; color:white; 
+          background-image:none}
+       .inactiveTab { background-color: lightgrey; color:black; 
+          background-image:none}
+    </style>
+<style>
+  .bPageBlock{
+      background-position: left 40px !important;
+      background-attachment: fixed !important;
+      background-repeat: repeat !important;
+
+      background-color: #E0C4AE !important;
+  }
+</style>    
+    <apex:form styleClass="myFormStyle" >
+        <apex:pageBlock >
+            <apex:pageMessage summary="This page needs an Id of Strategy record to display something" severity="info" strength="3" rendered="{!msg}"/>
+            <apex:pageMessages />
+            <apex:tabPanel switchType="client" selectedTab="tabdetails" id="Tabs" tabClass="activeTab"  inactiveTabClass="inactiveTab" >    
+                <apex:tab label="{!$Label.CRABB_DEV__EntryConditions}"  id="CDI" rendered="{!cDI}">         
+                    <table border="1">
+                        <tr>
+                            <td>{!$Label.CRABB_DEV__Rule_Name}</td> <td>{!$Label.CRABB_DEV__Field_Name}</td><td>{!$Label.CRABB_DEV__Field_Value}</td><td>{!$Label.CRABB_DEV__Condition}</td> <td>{!$Label.CRABB_DEV__Strategy_field_value}</td><td>{!$Label.CRABB_DEV__Strategy_Field_Name}</td>
+                        </tr> 
+                        <apex:repeat value="{!lMapFromJson}" var="o" >
+                             <tr>                  
+                               <td>{!o['RuleName']}</td><td>{!o['objField']}</td><td>{!o['objValue']}</td><td>{!o['condition']}</td><td>{!o['strategiaValue']}</td><td>{!o['strategiaField']}</td>
+                             </tr>
+                        </apex:repeat>
+                    </table>  
+                </apex:tab>  
+                <apex:tab label="Condizioni di Uscita" rendered="{!cDU}"   id="CDU">         
+                    <table border="1">
+                        <tr>
+                            <td>{!$Label.CRABB_DEV__Rule_Name}</td> <td>{!$Label.CRABB_DEV__Field_Name}</td><td>{!$Label.CRABB_DEV__Field_Value}</td><td>{!$Label.CRABB_DEV__Condition}</td> <td>{!$Label.CRABB_DEV__Strategy_field_value}</td><td>{!$Label.CRABB_DEV__Strategy_Field_Name}</td>
+                        </tr> 
+                        <apex:repeat value="{!lMap}" var="o" >
+                             <tr>                  
+                               <td>{!o['RuleName']}</td><td>{!o['objField']}</td><td>{!o['objValue']}</td><td>{!o['condition']}</td><td>{!o['strategiaValue']}</td><td>{!o['strategiaField']}</td>
+                             </tr>
+                        </apex:repeat>
+                    </table>  
+                </apex:tab>                  
+            </apex:tabpanel>
+        </apex:pageBlock>        
+    </apex:form>
+</apex:page>

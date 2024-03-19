@@ -1,0 +1,410 @@
+<apex:component >
+    <apex:attribute name="Index" type="Integer" description="" required="True"/>
+    <apex:attribute name="Selezione_Sinistra" type="String[]" description="" required="True"/>
+    <apex:attribute name="Selezione_Destra" type="String[]" description="" required="True"/>
+    <apex:attribute name="Titolo1" type="String" description="" required="True"/>
+    <apex:attribute name="Titolo2" type="String" description="" required="True"/>
+    <apex:attribute name="Titolo3" type="String" description="" required="True"/>
+    <apex:attribute name="SelInvoke" type="ApexPages.Action" required="true" description=""/>
+    
+    <style>
+        <!-- body
+        {
+          color: #444;
+          font: 10px sans-serif;
+        }
+        
+        h1.survey-title
+        {
+          font-size: 12px;
+        } -->
+        
+        h3
+        {
+          font-weight: bold;
+        }
+        
+        ul
+        {
+            margin: 0;
+            padding: 0;
+        }
+        li
+        {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        #multi-transfer-container
+        {
+          height: 300px;
+          width: 520px; /*520px when done*/
+        }
+        
+        /* source and target styles */
+        
+        #source-container, #target-container
+        {
+            float:left;
+            width: 220px;
+        }
+        
+        #source-list-div, #target-list-div
+        {
+          float: left;
+          width: 220px;
+          height: 300px;
+          overflow: auto;
+          border-radius: 4px;
+          -moz-border-radius: 4px;
+          -webkit-border-radius: 4px;
+          <!-- -moz-box-shadow: 0 0 2px 2px #ccc;
+        -webkit-box-shadow: 0 0 2px 2px #ccc;
+        box-shadow: 0 0 2px 2px #ccc; --> 
+        }
+        
+        #source-list-div
+        {
+          border: 1px solid #949494; 
+        }
+        
+        #target-list-div
+        {
+          border: 1px solid #f68b1f; 
+        }
+        
+        #source-title, #target-title
+        {
+          color: #fff;
+          border-radius: 4px;
+          -moz-border-radius: 4px;
+          -webkit-border-radius: 4px;
+          font-size: 14px;
+          margin: 5px;
+          padding: 8px;
+
+        }
+        
+        #source-title
+        {
+          background-color:  #949494;
+        }
+        #target-title
+        {
+          background-color:  #f68b1f;
+        }
+        
+        #source-list{!Index}, #target-list{!Index}
+        {
+        width: 200px;
+        margin: 5px;
+
+        }
+
+        #source-list{!Index} li, #target-list{!Index} li
+        {
+          <!-- background-color:  #f9f9f9;
+          background-image: -webkit-gradient(linear, left top, left bottom, from( #f9f9f9), to( #eee));
+          background-image: -webkit-linear-gradient( #f9f9f9, #eee);
+          background-image: -moz-linear-gradient( #f9f9f9, #eee);
+          background-image: -ms-linear-gradient( #f9f9f9, #eee);
+          background-image: -o-linear-gradient( #f9f9f9, #eee);
+          background-image: linear-gradient( #f9f9f9, #eee);
+          border-bottom: 1px solid #ddd; -->
+          color: #444;
+          cursor: default;
+          font-size: 12px;
+          padding: 8px;
+        }
+        #target-list{!Index} li
+        {
+          display: none;
+        }
+        #source-list{!Index} li:hover, #target-list{!Index} li:hover, #source-list{!Index} li.ui-selecting, #target-list{!Index} li.ui-selecting
+        {
+          background-color:  #fcb46c;
+          color: #fff;
+          <!-- background-image: -webkit-gradient(linear, left top, left bottom, from( #f8f8f8), to( #ddd));
+          background-image: -webkit-linear-gradient( #f8f8f8, #ddd);
+          background-image: -moz-linear-gradient( #f8f8f8, #ddd);
+          background-image: -ms-linear-gradient( #f8f8f8, #ddd);
+          background-image: -o-linear-gradient( #f8f8f8, #ddd);
+          background-image: linear-gradient( #f8f8f8, #ddd); -->
+        }
+        
+        <!-- #source-list{!Index} li.ui-selecting, #target-list{!Index} li.ui-selecting
+        {
+          background-color:  #4fb5dd;
+          background-image: -webkit-gradient(linear, left top, left bottom, from( #ddd), to( #888));
+          background-image: -webkit-linear-gradient( #ddd, #888);
+          background-image: -moz-linear-gradient( #ddd, #888);
+          background-image: -ms-linear-gradient( #ddd, #888);
+          background-image: -o-linear-gradient( #ddd, #888);
+          background-image: linear-gradient( #ddd, #888); 
+          color: #fff; 
+        }-->
+        
+        #source-list{!Index} li.ui-selected, #target-list{!Index} li.ui-selected
+        {
+          background-color:  #f49f49;
+          <!-- background-image: -webkit-gradient(linear, left top, left bottom, from( #f68b1f), to( #f4a250));
+          background-image: -webkit-linear-gradient( #f68b1f, #f4a250);
+          background-image: -moz-linear-gradient( #f68b1f, #f4a250);
+          background-image: -ms-linear-gradient( #f68b1f, #f4a250);
+          background-image: -o-linear-gradient( #f68b1f, #f4a250);
+          background-image: linear-gradient( #f68b1f, #f4a250); -->
+          color: #fff;  
+        }
+
+        /* end of source and target styles */
+        
+        
+        /* transfer styles */
+        
+        #transfer-buttons-container
+        {
+          float: left;
+          margin: 0 20px 0 15px;
+          width: 120px;
+        }
+        
+        #transfer-buttons
+        {
+          margin-top: 108px;
+        }
+        
+        #transfer-buttons button
+        {
+          cursor:pointer;
+          font: 12px Verdana,Helvetica,Arial,sans-serif;
+          line-height: 25px;
+          outline: none;
+          padding: 0;
+          width: 120px;
+        }
+        #transfer-buttons button:hover
+        {
+          opacity: .9;
+        }
+        
+        #add-button{!Index}, #add-all-button{!Index}
+        {
+          color:  #f68b1f;
+          border: 1px solid #f68b1f;
+          background: #fff;
+          border-radius: 4px;  
+          -moz-border-radius: 4px;
+          -webkit-border-radius: 4px;
+          margin-bottom: 5px;
+        }
+        
+        #add-button{!Index}:hover, #add-all-button{!Index}:hover
+        {
+          color:  #fff;
+          border: 1px solid #f68b1f;
+          background: #f49f49;
+        }
+        
+        #add-all-button{!Index}
+        {
+          margin-bottom: 20px;
+        }
+        
+        #remove-button{!Index}, #remove-all-button{!Index}
+        {
+          color:  #949494;
+          border: 1px solid #949494;
+          border-radius: 4px;  
+          -moz-border-radius: 4px;
+          -webkit-border-radius: 4px;
+          margin-bottom: 5px;
+          background: #fff;
+        }
+        
+        #remove-button{!Index}:hover, #remove-all-button{!Index}:hover
+        {
+          color:  #fff;
+          border: 1px solid #949494;
+          background: #ababab;
+        }
+        
+        /* end of transfer styles */
+        
+        
+        /* transfer highlight style */
+        
+        #source-list{!Index} .li-transfer-highlight, #target-list{!Index} .li-transfer-highlight
+        {
+          background-color:  #eee;
+          background-image: -webkit-gradient(linear, left top, left bottom, from( #eee), to( #ccc));
+          background-image: -webkit-linear-gradient( #eee, #ccc);
+          background-image: -moz-linear-gradient( #eee, #ccc);
+          background-image: -ms-linear-gradient( #eee, #ccc);
+          background-image: -o-linear-gradient( #eee, #ccc);
+          background-image: linear-gradient( #eee, #ccc);
+        }
+        
+        /* end of transfer highlight style */
+    </style>
+    
+    <script>
+        var res = "";
+        jQuery(document).ready(function(j$) 
+        { 
+            j$("button").click(function() {
+                //alert(this.id); // or alert(j$(this).attr('id'));
+                var IdButton = this.id;
+                //alert(IdButton);
+                if(IdButton.indexOf("add-button") != -1)
+                {
+                    //alert("OK" + IdButton);
+                    //alert("IndexOf: " + IdButton.indexOf("add-button"));
+                    //alert("Length: " + IdButton.length);
+                    res = IdButton.substring(10,IdButton.length);   
+                }
+                else if (IdButton.indexOf("add-all-button") != -1)
+                    res = IdButton.substring(14,IdButton.length);
+                else if (IdButton.indexOf("remove-button") != -1)
+                    res = IdButton.substring(13,IdButton.length);
+                else if (IdButton.indexOf("remove-all-button") != -1)
+                    res = IdButton.substring(17,IdButton.length);
+                    
+                //alert(IdButton + " ***** " + res);
+            });
+
+        
+            j$("#source-list{!Index}, #target-list{!Index}").selectable();
+      
+            j$("#add-button{!Index}").click(add);
+            j$("#add-all-button{!Index}").click(addAll);
+            j$("#remove-button{!Index}").click(remove);
+            j$("#remove-all-button{!Index}").click(removeAll);
+     
+            addHiglightPlugin();      
+        }); 
+    
+        function addHiglightPlugin() {
+            j$.fn.highlight = function() {
+                return this
+                    .addClass("li-transfer-highlight")
+                    .removeClass("li-transfer-highlight", 400);
+            }
+        }
+    
+        function add() {
+            //alert(res);
+            transfer(j$("#source-list" + res + " li.ui-selected"));
+        }
+            
+        function addAll() {
+            transfer(j$("#source-list" + res + " li:visible"));
+        }
+        
+        function transfer(listItems) {
+            //alert(listItems.text() + " --- Index: " + res);
+            listItems.fadeOut(function() {
+                j$(this)
+                    .removeClass("ui-selected")
+                    .clone()
+                    .appendTo("#target-list" + res)
+                    .fadeIn('slow',
+                        function() {
+                            var arr = new Array();
+                            var i = 0;
+                            j$("#target-list" + res + " li:visible").each(function() {
+                                var p = j$(this).text();
+                                arr[i] = p;
+                                i++;
+                            });
+                            var elenco = arr.join(",");
+                            SettaLista(elenco,res);
+                        })
+                    .data("index", j$("#source-list" + res + " li").index(j$(this)))
+                    .highlight();
+            });
+        }   
+    
+        function remove() {
+            j$("#target-list" + res + " li.ui-selected").fadeOut(
+                'slow',
+                function() {
+                    j$("#source-list" + res + " li") 
+                        .eq(j$(this).data("index"))
+                        .removeClass("ui-selected")
+                        .fadeIn()
+                        .highlight();
+                    
+                    j$(this).remove();
+                    
+                    var arr = new Array();
+                    var i = 0;
+                    j$("#target-list" + res + " li:visible").each(function() {
+                        var p = j$(this).text();
+                        arr[i] = p;
+                        i++;
+                    });
+                    var elenco = arr.join(",");
+                    SettaLista(elenco,res);       
+                }
+            );
+        }
+            
+        function removeAll() {
+            j$("#target-list" + res + " li").fadeOut()
+                .promise().done(function() {
+                    j$("#target-list" + res + " li").remove();
+                    j$("#source-list" + res + " li:hidden").fadeIn().highlight();
+                });
+                
+            var elenco = "";
+            SettaLista(elenco,res);
+        }
+        
+    </script>
+
+    <!-- <h2>{!Titolo1}</h2> -->
+    <div style="margin: 10px 0px 10px -15px; height:350px;">
+        <div id="source-container">
+            <h3 id="source-title">{!Titolo2}</h3>
+            <div id="source-list-div">
+                <ul id="source-list{!Index}">
+                    <apex:repeat value="{!Selezione_Sinistra}" var="ss">
+                        <li>{!ss}</li>
+                    </apex:repeat>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="transfer-buttons-container">
+            <div id="transfer-buttons">
+                <button id="add-button{!Index}">Aggiungi &rarr;</button>
+                <button id="add-all-button{!Index}">Aggiungi tutti &rArr;</button>
+                <button id="remove-button{!Index}">&larr; Rimuovi</button>
+                <button id="remove-all-button{!Index}">&lArr; Rimuovi tutti</button>           
+            </div>
+        </div>
+        
+        <div id="target-container">
+            <h3 id="target-title">{!Titolo3}</h3>
+            <div id="target-list-div">
+                
+                <ul id="target-list{!Index}"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <apex:form >
+        <!-- <apex:actionstatus id="TheStatus{!Index})">
+            <apex:facet name="start">
+                <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" ImageUrl="{!j$Resource.Loading}" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+            </apex:facet>
+        </apex:actionstatus>  -->
+        <apex:actionFunction name="SettaLista" action="{!SelInvoke}" rerender="feedback,feedbackColl" status="TheStatus">
+            <apex:param id="ValSelected" name="ValSelected" value=""/>
+            <apex:param id="IndexSelected" name="IndexSelected" value=""/>
+        </apex:actionFunction>
+    </apex:form>     
+    
+
+</apex:component>

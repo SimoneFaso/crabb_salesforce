@@ -1,0 +1,44 @@
+<apex:page controller="ChangeLogoCTRL" showHeader="true" sidebar="true" docType="html-5.0" cache="false">
+
+
+	<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+	<apex:form >
+
+		<div id="balancecontainer" class="crabbpackage">
+			
+			<apex:pageMessages />
+            <apex:pageMessage severity="ERROR" title="Folder Error" summary="Folder 'CRABB - Oggetti grafici' non esiste, impossibile creare/aggiornare il logo. Contattare l'amministratore." rendered="{!!showCreate}" />
+
+			<br />
+
+			<div align="center">
+				<h4>Select New Logo :</h4>
+	            <br /><br />
+	            <apex:inputFile value="{!newLogo}" onchange="loadFile(event);"/>
+	            <br /><br />
+	            <apex:image value="{!filePath}" id="output" width="150" styleClass="filepath"/>
+	            <br /><br />
+
+	            <apex:commandButton styleClass="btn btn-primary" value="Update" action="{!updateLogo}" disabled="{!!showCreate}"/>
+
+
+				<script type="text/javascript">
+
+	    			var loadFile = function(event) {
+	        			var output = document.getElementsByClassName('filepath')[0];
+	        			output.src = URL.createObjectURL(event.target.files[0]);
+	    			};
+
+				</script>
+			</div>
+
+		</div>
+
+	</apex:form>
+
+</apex:page>

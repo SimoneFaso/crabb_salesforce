@@ -1,0 +1,18 @@
+<apex:page controller="GestioneWhiteListCTRL" docType="html-5.0">
+        <apex:form id="NoRecordSToProcess">
+            <apex:pageBlock title="{!$Label.crabb_dev__page_not_reachable}" rendered="{!blankPageFlag}">    
+                <apex:pageMessage summary="{!$Label.crabb_dev__chooseaction}: {!$Label.crabb_dev__assignremove} {!$Label.crabb_dev__from} White List." severity="info" strength="3"/>
+                <apex:pageblockButtons location="bottom"> 
+                        <apex:commandButton action="/apex/CRABB_DEV__GestioneWhiteList" id="INDIETROBOTTON"  value="{!$Label.crabb_dev__return} {!$Label.crabb_dev__to} White List" />                   
+                </apex:pageblockButtons>                 
+            </apex:pageBlock>    
+        </apex:form>
+        <apex:pageBlock title="Fine" rendered="{! !blankPageFlag}">        
+            <!-- FEEDBACK AL OPERAZIONE -->
+            <apex:outputPanel >
+                    <apex:pageMessage severity="info" strength="3" >        
+                        <apex:outputText value="{!$Label.crabb_dev__processedsuccessfully} {!NumberOfSelectedRecords} ACCOUNT. {!$Label.crabb_dev__return} {!$Label.crabb_dev__to} "/><apex:outputLink value="/apex/CRABB_DEV__GestioneWhiteList">{!$Label.crabb_dev__management} Account White List</apex:outputLink> <apex:outputText value=" o "/><a href="/">Home</a>.    
+                    </apex:pageMessage>
+            </apex:outputPanel>
+        </apex:pageBlock>  
+</apex:page>

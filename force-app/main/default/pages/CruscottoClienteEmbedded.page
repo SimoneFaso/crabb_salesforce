@@ -1,0 +1,277 @@
+<apex:page StandardController="Account" extensions="CruscottoClienteCTRL" standardStylesheets="false">
+
+    <!--<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrap-themecrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrap.min.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/js/bootstrap.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/js/bootstrap.min.js')}"/>-->
+
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+
+    <style>
+        [hidden], template{
+            display:block !important;
+        }
+        ul li {
+          display: inline;
+          padding: 10px;
+        }
+        div.myTabContent {
+          overflow: auto;
+        }
+
+    </style>
+
+    <!-- *** Component con tutti gli stili di CRABB *** -->
+    <c:KillerStyle />
+    
+    <!-- *** Parte da visualizzare se non viene fornito il cliente *** -->
+    <apex:message />
+    <!--<apex:enhancedList height="400" rowsPerPage="10" listId="{!ListViewId}" customizable="true" rendered="{! !(bId)}"/>-->
+    <apex:outputText rendered="{! !(bId)}">This Page needs an Account Id Parameter to show details</apex:outputText>
+    
+    <!-- *** Tab del cruscotto *** -->    
+    <apex:outputPanel rendered="{!(bId)}">
+
+        <ul class="nav nav-tabs ">
+
+            <li class="active">
+                <a href="#tabs-1" data-toggle="tab">{!IF( Account.Mondo_Scuola__c , $Label.CRABB_DEV__balance_trend_last_120_days, $Label.CRABB_DEV__expiredamountsageing)}</a>
+            </li>
+            
+            <li>
+                <a href="#tabs-2" data-toggle="tab">{!$Label.CRABB_DEV__cases}</a>
+            </li>
+            
+            <li>
+                <a href="#tabs-3" data-toggle="tab">{!$Label.CRABB_DEV__services}</a>
+            </li>
+            
+            <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)} " layout="none">
+                <li>
+                    <a href="#tabs-11" data-toggle="tab">{!$Label.CRABB_DEV__consumer}</a>
+                </li>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)} " layout="none">
+                <li>
+                    <a href="#tabs-4" data-toggle="tab">{!$Label.CRABB_DEV__addresses}</a>
+                </li>
+            </apex:outputPanel>
+            
+            <li>
+                <a href="#tabs-5" data-toggle="tab">{!IF( Account.Mondo_Scuola__c , $Label.CRABB_DEV__balance, $Label.CRABB_DEV__ec)}</a>
+            </li>
+            
+            <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)} " layout="none">
+                <li>
+                    <a href="#tabs-13" data-toggle="tab">{!$Label.CRABB_DEV__takings}</a>
+                </li>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)} " layout="none">
+                <li>
+                    <a href="#tabs-12" data-toggle="tab">{!$Label.CRABB_DEV__funded_statement_of_account}</a>
+                </li>
+            </apex:outputPanel>
+            
+            <!-- <li>
+                <a href="#tabs-6" data-toggle="tab">{!$Label.RepaymentPlans}</a>
+            </li> -->
+            
+            <!-- <li>
+                <a href="#tabs-8" data-toggle="tab">{!$Label.Activities}</a>
+            </li> -->
+            
+            <li>
+                <a href="#tabs-9" data-toggle="tab">{!$Label.Documentation}</a>
+            </li>
+
+            <li>
+                <a href="#tabs-10" data-toggle="tab">Chatter</a>
+            </li>
+
+        </ul>
+
+        <div id="myTabContent" class="tab-content ">
+            
+            <div id="tabs-1" role="tabpanel" class="tab-pane fade in active">
+                <apex:outputPanel rendered="{! !(Account.Mondo_Scuola__c)}">
+                    <apex:pageBlock id="StackedChart">
+                        <apex:facet name="header">
+                            <div class="crabbpackage">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">Aeging Scaduto</div>
+                                </div>
+                            </div>
+                        </apex:facet>
+                        <apex:pageBlockSection >
+                            <c:StckdChart8Val StkData="{!StkData}" MinRes="0" MaxRes="{!MaxRes}" TopSteps="5" BottomSteps="10"/>
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection >
+                            <c:Chart2Val ChartData="{!PieData}" MinRes="0" MaxRes="100" Steps="5" TitoloGenerale="Mese" TitoloAsse1="Scaduto" TitoloAsse2="Importo"/>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                    <c:RiepilogoScaduto ChartData="{!pieData}"/>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)}">
+                    <c:ChartSaldi ChartSaldi="{!ChrtSaldi}" MinRes="0" MaxRes="100" Steps="5" TitoloGenerale="Mese" TitoloAsse1="Scaduto" TitoloAsse2="Importo"/>
+                    <apex:outputPanel rendered="{!ChrtSaldi = null}">
+                        <div class="ui-widget ui-state-error" style="width:500px;text-align:center;margin-right:auto;margin-left:auto;padding:16px;"><!--styleClass="ui-state-error"-->
+                            <apex:outputText >Non sono presenti informazioni per gli ultimi 120 giorni</apex:outputText>
+                        </div>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </div>
+            <div id="tabs-2" role="tabpanel" class="tab-pane fade">
+                <c:TblPage sObj="Pratica__c" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div>
+            <div id="tabs-3" role="tabpanel" class="tab-pane fade">
+                <c:TblPage sObj="Servizio__c" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div>
+            <div id="tabs-4" role="tabpanel" class="tab-pane fade">
+                <div>
+                    <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)}">
+                        <c:TblPage sObj="Contact" IdParent="{!Account.Id}" sParent="Cliente"/>
+                    </apex:outputPanel>
+                </div>        
+            </div>
+            <div id="tabs-5" role="tabpanel" class="tab-pane fade">
+                <div>
+                    <apex:outputPanel rendered="{! !(Account.Mondo_Scuola__c)}">
+                        <c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="EC"/>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)}">
+                        <!--<c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="Saldo"/>-->
+                        <apex:pageBlock id="TabAff">
+                            <apex:facet name="header">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">{!$Label.CRABB_DEV__Summary}</div>
+                                </div>
+                            </apex:facet>
+                            <apex:outputPanel id="TblPanel" >
+                                <div class="ui-widget ui-accordion">
+                                    <apex:outputPanel > <h3 class="ui-widget-header ui-accordion-header ui-state-active">Pag # {!PagAttuale} di {!NPag} - Record {!Fine+1}-{!Inizio} di {!ChrtSaldi.size} </h3></apex:outputPanel>
+                                    <!-- <apex:outputPanel rendered="{!NPag=null}"> <h3 class="ui-widget-header ui-accordion-header ui-state-active">Nessun record trovato</h3></apex:outputPanel>  -->
+                                    <div class="ui-widget-content ui-accordion-content">
+                                        <apex:pageBlockTable value="{!ListSaldi}" var="saldo">
+                                            <apex:column >
+                                                <apex:facet name="header">Id Saldo</apex:facet>
+                                                <a href="/{!saldo.idSaldo}" target="_blank" title="{!saldo.idSaldo}"><apex:image value="/img/icon/forecasts24.gif"/></a>
+                                            </apex:column>
+                                            <apex:column >
+                                                <apex:facet name="header">Record Type</apex:facet>
+                                                <apex:outputText value="{!saldo.RType}"/>
+                                            </apex:column>
+                                            <apex:column >
+                                                <apex:facet name="header">Data Saldo</apex:facet>
+                                                <apex:outputText value="{!saldo.dataSaldo}"/>
+                                            </apex:column>
+                                            <apex:column >
+                                                <apex:facet name="header">Scaduto</apex:facet>
+                                                <apex:outputText value="{!saldo.Scaduto} €"/>
+                                            </apex:column>
+                                            <apex:column >
+                                                <apex:facet name="header">Importo</apex:facet>
+                                                <apex:outputText value="{!saldo.Importo} €"/>
+                                            </apex:column>
+                                            <apex:column >
+                                                <apex:facet name="header">Saldo Spese</apex:facet>
+                                                <apex:outputText value="{!saldo.SaldoSpese} €"/>
+                                            </apex:column>
+                                            <apex:column >
+                                                <apex:facet name="header">Data Integrazione</apex:facet>
+                                                <apex:outputText value="{!saldo.DataIntegrazione}"/>
+                                            </apex:column>
+                                        </apex:pageBlockTable>
+                                        <br/>
+                                        <div style="width: 100%; text-align: center">
+                                            <apex:form >
+                                            <apex:actionRegion >
+                                                <apex:commandLink value="<< Inizio" styleClass="btn btn-primary btn-xs" action="{!Beginning}" rendered="{! !(DisablePrevious)}" rerender="TblPanel"></apex:commandLink>
+                                                <apex:commandLink value="< Precedente" styleClass="btn btn-primary btn-xs" action="{!Previous}" rendered="{! !(DisablePrevious)}" rerender="TblPanel"></apex:commandLink>
+                                                <!-- <apex:commandLink value="Refresh" styleClass="btn btn-primary btn-xs" action="{!Refresh}" rerender="TblPanel" status="Aggiorna"/>
+                                                <!-- <apex:actionStatus startText="Aggiornamento in corso ..." id="Aggiorna"/> -->
+                                                <apex:commandLink value="Successiva >" styleClass="btn btn-primary btn-xs" action="{!Next}" rendered="{! !(DisableNext)}" rerender="TblPanel"></apex:commandLink>
+                                                <apex:commandLink value="Fine >>" styleClass="btn btn-primary btn-xs" action="{!End}" rendered="{! !(DisableNext)}" rerender="TblPanel"></apex:commandLink>
+                                            </apex:actionRegion>
+                                            </apex:form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:pageBlock>
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)} ">
+                <div id="tabs-13" role="tabpanel" class="tab-pane fade">
+                    <c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="Incasso"/>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)} ">
+                <div id="tabs-12" role="tabpanel" class="tab-pane fade">
+                    <!--<c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="Consolidato"/>-->
+                    <div>
+                        <apex:outputPanel rendered="{! !(Account.Mondo_Scuola__c)}">
+                            <c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="EC"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)}">
+                            <c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="Consolidato"/>
+                        </apex:outputPanel>
+                    </div>
+                </div>
+            </apex:outputPanel>
+            <!-- <div id="tabs-6" role="tabpanel" class="tab-pane fade">
+                <c:TblPage sObj="Piano_di_Rientro__c" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div> -->
+            <!-- <div id="tabs-8" role="tabpanel" class="tab-pane fade">
+                <div id="visualization"></div>
+
+                <script type="text/javascript">
+                    // DOM element where the Timeline will be attached
+                var container = document.getElementById('visualization');
+            
+                // Create data
+                var data = {!JSENCODE(HTMLENCODE(TLTask))};
+                
+                // Configuration for the Timeline
+                var options = {};
+            
+                // Create a Timeline
+                var timeline = new vis.Timeline(container, data, options);
+                </script>
+                <c:TblPage sObj="Task" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div> -->
+            <div id="tabs-9" role="tabpanel" class="tab-pane fade">
+                <c:TblPage sObj="Attachment" IdParent="{!Account.Id}" sParent="Cliente"/>
+                <apex:pageBlock >
+                    <apex:facet name="header">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Carica Nuovi Documenti</div>
+                        </div>
+                    </apex:facet>
+                    <c:FileUpload parentId="{!Account.Id}"/>
+                </apex:pageBlock>
+            </div>
+            <div id="tabs-10" role="tabpanel" class="tab-pane fade">
+                <chatter:feedWithFollowers entityId="{!Account.Id}" showHeader="false"/>
+            </div>
+            <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)} ">
+                <div id="tabs-11" role="tabpanel" class="tab-pane fade">
+                    <c:TblPage sObj="Servizi_Item__c" IdParent="{!Account.Id}" sParent="Cliente"/>
+                </div>
+            </apex:outputPanel>
+        </div>
+    </apex:outputPanel>
+</apex:page>

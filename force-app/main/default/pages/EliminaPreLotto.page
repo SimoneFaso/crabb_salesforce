@@ -1,0 +1,21 @@
+<apex:page controller="ModificaPreLotti">
+    <style>
+        .buttonStyle { width:10%; text-align:center; padding-top:4px; }
+    </style>
+    <apex:form >
+        <apex:pageblock >
+            <apex:outputPanel >
+                <apex:pageMessage severity="info" strength="3" title="{!$Label.crabb_dev__preassignment_elimination}" >
+                    {!$Label.crabb_dev__areyousuretodeletethe}
+                    <a href="/{!Lotto.id}" target="_blank">{!Lotto.Name}</a>                                
+                    
+                </apex:pageMessage>
+            </apex:outputPanel>
+            <apex:pageblockbuttons location="bottom">
+                <c:AutoDisablinButton actionToInvoke="{!IndietroPreLotto}" disableAll="true" buttonValue="{!$Label.crabb_dev__back}" buttonId="TornaIndietro" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__back}..." ></c:AutoDisablinButton>            
+                <c:AutoDisablinButton actionToInvoke="{!CancellaPreLotto}" disableAll="true" buttonValue="{!$Label.crabb_dev__delete}" buttonId="Elimina" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__delete}..." ></c:AutoDisablinButton>
+            </apex:pageblockbuttons>
+            
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

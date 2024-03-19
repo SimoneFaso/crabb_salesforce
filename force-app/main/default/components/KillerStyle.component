@@ -1,0 +1,544 @@
+<apex:component allowDML="true">
+
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.css')}"  />
+
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />-->
+<!--    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.css')}"  />-->
+
+    <!--<apex:includeScript value="{!URLFOR($Resource.jquery1130, '/jquery-ui-1.13.0/jquery-ui.*')}"  />-->
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  />
+     <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/css/theme/jquery-ui-1.10.4.custom.min.css')}"  /> -->
+
+
+
+    <apex:includeScript value="{!URLFOR($Resource.formatcurrency, '/format_currency/jquery.formatCurrency.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.formatcurrency, '/format_currency/jquery.formatCurrency.it.js')}"  />
+
+    <!--<apex:includeScript value="{!URLFOR($Resource.VISJS, '/dist/vis.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.VISJS, '/dist/vis.css')}"  />-->
+    
+    <script>
+        var j$ = jQuery.noConflict();
+        j$(function()
+        {
+            j$( "#crabbtabs" ).tabs({heightStyle: "content"});
+        });
+    </script>
+    
+    <style>
+        /* Accordion */
+        #accordion .AccTitle{
+             background:#57B4D1; 
+             color:#fff;
+        }
+        
+        #accordion2 .AccTitle{
+             background:#57B4D1; 
+             color:#fff;
+        }
+       /*.ui-accordion-header-active {
+        border-right: 1px solid rgba(0, 0, 0, .2);
+          border-left: 1px solid rgba(0, 0, 0, .2);
+          border-bottom: 1px solid rgba(0, 0, 0, .2);
+          border-top: 1px solid rgba(250, 250, 250, .2);
+
+           }*/
+.ui-accordion.ui-accordion-header{display:block;cursor:pointer;position:relative;margin-top:2px;padding:.5em .5em .5em .7em;min-height:0}
+.ui-accordion .ui-accordion-icons{padding-left:2.2em}.ui-accordion .ui-accordion-noicons{padding-left:.7em}
+.ui-accordion .ui-accordion-icons .ui-accordion-icons{padding-left:2.2em}
+.ui-accordion .ui-accordion-header .ui-accordion-header-icon{position:absolute;left:.5em;top:50%;margin-top:-8px}
+.ui-accordion .ui-accordion-content{padding:1em 2.2em;border-top:0;overflow:auto}
+.ui-helper-reset{margin:0;padding:0;border:0;outline:0;line-height:1.3;text-decoration:none;font-size:100%;list-style:none}
+.ui-state-default,.ui-widget-content .ui-state-default,.ui-widget-header .ui-state-default{border:1px solid #f68b1f;background:#fff url(images/ui-bg_glass_75_fff_1x400.png) 50% 50% repeat-x;font-weight:normal;color:#f68b1f}
+.ui-corner-all,.ui-corner-top,.ui-corner-left,.ui-corner-tl{border-top-left-radius:4px}
+.ui-state-active,.ui-widget-content .ui-state-active,.ui-widget-header .ui-state-active{border:1px solid #1c94c4;background:#4fb5dd url(images/ui-bg_glass_65_4fb5dd_1x400.png) 50% 50% repeat-x;font-weight:normal;color:#fff}
+
+
+        /* Radio button*/
+        .selradio input[type=radio] {
+                            display:none;
+                        }
+
+        .selradio input[type=radio] + label {
+                            padding-left:27px;
+                            height:22px; 
+                            display:inline-block;
+                            line-height:22px;
+                            background-repeat:no-repeat;
+                            background-position: 0 0;
+                            font-size:14px;
+                            vertical-align:middle;
+                            cursor:pointer;
+
+                        }
+
+        .selradio input[type=radio]:checked + label
+        {
+            background-position: 0 -22px;
+        }
+        
+        .selradio label {
+            background-image:url({!$Resource.checkboximg});
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            margin-right: 20px;
+            margin-bottom: 20px;
+        }
+    
+        /* TAB Inizio*/
+        .activeTab {background-color:  #ff9933; color:white; background-image:none; font-weight: bold;}
+        .inactiveTab { background-color: #bbbbbb; color:black; background-image:none; font-weight: normal;}
+        /* TAB Fine*/
+        
+        .Panel { background-color: white; border: none;}
+        .underCostr { color:white !important; font-weight: bold !important; font-size: 20px !important;}
+        .Important { color:red !important; font-weight: bold !important;}
+        .Bold{font-weight: bold;}
+        
+        
+        <!-- Inizio Stile per Progress Bar -->
+        progress {color: #ff9933; font-size: .6em; line-height: 1.5em; text-indent: .5em; width: 15em;
+          height: 1.8em; border: 1px solid #bbbbbb; background: #FDDC99;}
+        progress::-webkit-progress-bar { background: #FDDC99; }
+        progress::-webkit-progress-value { background: #ff9933; }
+        progress::-moz-progress-bar { background: #ff9933; }
+        <!-- Fine Stile per Progress Bar -->
+        
+        <!-- Inizio Stile per i Bottoni -->
+        
+        .KillerBtn
+        {
+          color:  #fff !important ;
+          border: 1px solid #cd2027;
+          background: #f68b1f;
+          border-radius: 4px;  
+          -moz-border-radius: 4px;
+          -webkit-border-radius: 4px;
+          margin-bottom: 5px;
+          width: 100px;
+          text-decoration: none;
+          font-size: 14px;
+          padding: 4px 6px;
+          margin: 8px;
+        }
+        
+        .KillerBtn:hover
+        {
+          color:  #fff !important ;
+          border: 1px solid #1797c0;
+          background: #57b4d1;
+          text-decoration: none;
+        }
+        
+        .KillerBtnSel
+        {
+          color:  #fff !important ;
+          //border: 1px solid #cd2027;
+          border: 1px solid #006600;
+          background: #AAEEAA;
+          border-radius: 4px;  
+          -moz-border-radius: 4px;
+          -webkit-border-radius: 4px;
+          margin-bottom: 5px;
+          width: 100px;
+          text-decoration: none;
+          font-size: 14px;
+          padding: 4px 6px;
+          margin: 8px;
+        }
+        
+        .KillerBtnTask
+        {
+            display: inline-block;
+            color:  #fff !important ;
+            border: 1px solid #cd2027;
+            background: #f68b1f;
+            border-radius: 4px;  
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            margin-bottom: 50px;
+            width: 100px;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 4px 6px;
+            margin: 8px;
+            vertical-align: middle;
+        }
+        
+        .KillerBtnTask:hover
+        {
+            color:  #fff !important ;
+            border: 1px solid #1797c0;
+            background: #57b4d1;
+            text-decoration: none;
+        }
+        
+        .KillerBtnTaskSel
+        {
+            display: inline-block;
+            color:  #fff !important ;
+            //border: 1px solid #cd2027;
+            border: 1px solid #006600;
+            background: #AAEEAA;
+            border-radius: 4px;  
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            margin-bottom: 50px;
+            width: 100px;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 4px 6px;
+            margin: 8px;
+            vertical-align: middle;
+        }
+        
+        <!-- Fine Stile per i Bottoni -->
+        
+        
+        
+        <!--.Panel { background-color: #ff9933;}
+        .headerRow { background-color: #ff9933 !Important; color:white !Important; font-weight: bold !Important;font-size: 12px;}
+        .even { background-color: #FDDC99 !Important;}-->
+        
+        /* ============================================================================================================================
+        == BUBBLE WITH A BORDER AND TRIANGLE
+        ** ============================================================================================================================ */
+        
+        /* THE SPEECH BUBBLE
+        ------------------------------------------------------------------------------------------------------------------------------- */
+        
+        .triangle-border {
+            position:relative;
+            padding:15px;
+            margin:1em 0 3em;
+            border:5px solid #ff9933;
+            color: #333;
+            background:#fff;
+            /* css3 */
+            -webkit-border-radius:15px;
+            -moz-border-radius:15px;
+            border-radius:15px;
+            
+            /* Dimensione */
+            width: 420Px;
+            //width: 50%;
+            font-size: 14px;
+        }
+        
+        /* Variant : for left positioned triangle
+        ------------------------------------------ */
+        
+        .triangle-border.left {
+            margin-left:30px;
+            text-align: left;
+        }
+        
+        /* Variant : for right positioned triangle
+        ------------------------------------------ */
+        
+        .triangle-border.right {
+            margin-right:30px;
+            text-align: right;
+        }
+        
+        /* THE TRIANGLE
+        ------------------------------------------------------------------------------------------------------------------------------- */
+        
+        .triangle-border:before {
+            content:"";
+            position:absolute;
+            bottom:-20px; /* value = - border-top-width - border-bottom-width */
+            left:40px; /* controls horizontal position */
+            border-width:20px 20px 0;
+            border-style:solid;
+            border-color:#ff9933 transparent;
+            /* reduce the damage in FF3.0 */
+            display:block; 
+            width:0;
+        }
+        
+        /* creates the smaller  triangle */
+        .triangle-border:after {
+            content:"";
+            position:absolute;
+            bottom:-13px; /* value = - border-top-width - border-bottom-width */
+            left:47px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+            border-width:13px 13px 0;
+            border-style:solid;
+            border-color:#fff transparent;
+            /* reduce the damage in FF3.0 */
+            display:block; 
+            width:0;
+        }
+        
+        /* Variant : top
+        ------------------------------------------ */
+        
+        /* creates the larger triangle */
+        .triangle-border.top:before {
+            top:-20px; /* value = - border-top-width - border-bottom-width */
+            bottom:auto;
+            left:auto;
+            right:40px; /* controls horizontal position */
+            border-width:0 20px 20px;
+        }
+        
+        /* creates the smaller  triangle */
+        .triangle-border.top:after {
+            top:-13px; /* value = - border-top-width - border-bottom-width */
+            bottom:auto;
+            left:auto;
+            right:47px; /* value = (:before right) + (:before border-right) - (:after border-right) */
+            border-width:0 13px 13px;
+        }
+        
+        /* Variant : left
+        ------------------------------------------ */
+        
+        /* creates the larger triangle */
+        .triangle-border.left:before {
+            top:10px; /* controls vertical position */
+            bottom:auto;
+            left:-30px; /* value = - border-left-width - border-right-width */
+            border-width:15px 30px 15px 0;
+            border-color:transparent #ff9933;
+        }
+        
+        /* creates the smaller  triangle */
+        .triangle-border.left:after {
+            top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+            bottom:auto;
+            left:-21px; /* value = - border-left-width - border-right-width */
+            border-width:9px 21px 9px 0;
+            border-color:transparent #fff;
+        }
+        
+        /* Variant : right
+        ------------------------------------------ */
+        
+        /* creates the larger triangle */
+        .triangle-border.right:before {
+            top:10px; /* controls vertical position */
+            bottom:auto;
+            left:auto;
+            right:-30px; /* value = - border-left-width - border-right-width */
+            border-width:15px 0 15px 30px;
+            border-color:transparent #ff9933;
+        }
+        
+        /* creates the smaller  triangle */
+        .triangle-border.right:after {
+            top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+            bottom:auto;
+            left:auto;
+            right:-21px; /* value = - border-left-width - border-right-width */
+            border-width:9px 0 9px 21px;
+            border-color:transparent #fff;
+        }
+        
+        #tblNote
+        {
+            //width: 100%;
+            width: 1000Px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #tblNote tr:nth-child(odd) td p:after 
+        {
+            top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+            bottom:auto;
+            left:-21px; /* value = - border-left-width - border-right-width */
+            border-width:9px 21px 9px 0;
+            border-color:transparent #fff;
+        }
+        #tblNote tr:nth-child(odd) td p:before 
+        {
+            top:10px; /* controls vertical position */
+            bottom:auto;
+            left:-30px; /* value = - border-left-width - border-right-width */
+            border-width:15px 30px 15px 0;
+            border-color:transparent #ff9933;
+        }
+            
+        #tblNote tr:nth-child(even) td p:after 
+        {
+            top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+            bottom:auto;
+            left:auto;
+            right:-21px; /* value = - border-left-width - border-right-width */
+            border-width:9px 0 9px 21px;
+            border-color:transparent #fff;
+        }
+        #tblNote tr:nth-child(even) td p:before 
+        {
+            top:10px; /* controls vertical position */
+            bottom:auto;
+            left:auto;
+            right:-30px; /* value = - border-left-width - border-right-width */
+            border-width:15px 0 15px 30px;
+            border-color:transparent #ff9933;
+        }
+            
+        #tblNote tr:nth-child(even) td {float: right; text-align: center; font-size: 10px;}
+        #tblNote tr:nth-child(odd) td {float: left; text-align: center; font-size: 10px;}
+        
+        /* Matrice Strategia con prima riga e prima colonna ARANCIO */
+        #tblStrategia table{border: 1px solid #f78f1e;border-collapse: collapse;border-spacing: 0; width: 100%}
+        #tblStrategia table tr th{background: #f78f1e;padding: 5px;text-align: center;color: #fff;font-size: 14px;font-weight: bold;}
+        #tblStrategia table tr:first-of-type td
+        {
+            background: #ff9933;
+            border: 1px solid #e3e3e3;
+            padding: 5px;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold; 
+            height:25px;
+            vertical-align: middle;
+        }
+        #tblStrategia table tr:nth-child(n+1) td:first-of-type
+        {
+            background: #ff9933;
+            border: 1px solid #e3e3e3;
+            padding: 5px;
+            text-align: center;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            height:25px;
+            vertical-align: middle;
+        }
+        #tblStrategia table tr td
+        {
+            background: white;
+            border: 1px solid #e3e3e3;
+            padding: 5px;
+            text-align: center;
+            color: #000;
+            font-size: 12px;
+            height:25px;
+            vertical-align: middle;
+        }
+        #tblStrategia table tr:first-of-type td:first-of-type
+        {
+            background: #f2f3f3; //green; //#ff9933;
+            border: none; //5px 5px 0px 5px solid green;//#e3e3e3;
+            padding: 5px;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold; 
+            height:25px;
+            vertical-align: middle;
+        }
+        
+        /* Matrice con prima riga e prima colonna ARANCIO */
+        #tblMatrix table{border: 1px solid #f78f1e;border-collapse: collapse;border-spacing: 0; width: 100%}
+        #tblMatrix table tr th{background: #f78f1e;padding: 5px;text-align: center;color: #fff;font-size: 14px;font-weight: bold;}
+        
+        #tblMatrix table tr:nth-child(n+1) td:first-of-type
+        {
+            background: #ff9933;
+            border: 1px solid #e3e3e3;
+            padding: 5px;
+            text-align: center;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            height:25px;
+            vertical-align: middle;
+        }
+        #tblMatrix table tr td
+        {
+            background: white;
+            border: 1px solid #e3e3e3;
+            padding: 5px;
+            text-align: center;
+            color: #000;
+            font-size: 12px;
+            height:25px;
+            vertical-align: middle;
+        }
+        
+        /* DnD Inizio*/
+        .drop {text-align: center; color: #337ab7; font-size: 20px; font-weight: bold; 
+            min-height: 50px; width: 700px; border: 3px Dashed #337ab7; margin: 10px; 
+            padding: 10px; border-radius: 15px;}
+        .buttonTD{padding-left: 6px;}
+        .clear{clear:both;}
+        .fileName
+        {
+            float: left;
+            max-width: 235px;
+            overflow: hidden;
+            position: absolute;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .percentComplete{float: right;}
+        .statusBar
+        {
+            background: none repeat scroll 0 0 #FFFFFF;
+            border: 1px solid #EAEAEA;
+            height: 11px;
+            padding: 0 2px 0 0;
+        }
+        .statusBarPercent
+        {
+            background-color: #ff9933;
+            /* old value: 1797C0 */
+            float: left;
+            height: 9px;
+            margin: 1px;
+            max-width: 100%;
+        }
+        .statusBarPercentError{background-color: #CE0000;}
+        .upload
+        {
+            background-color: white;
+            border: 1px solid #CACACA;
+            border-radius: 3px 3px 3px 3px;
+            margin-top: 6px;
+            padding: 4px;
+        }
+        .uploadBox
+        {
+            min-height: 50px; width: 700px; 
+        }
+        /*.uploadBox
+        {
+            background-color: #F8F8F8;
+            border: 1px solid #EAEAEA;
+            border-radius: 4px 4px 4px 4px;
+            color: #333333;
+            font-size: 12px;
+            padding: 6px;
+            width: 350px;
+        }*/
+        .uploadError{border-color: #CE0000;}
+        .uploadTable{margin-left: auto; margin-right: auto;}
+        /* DnD Fine*/
+    </style>
+</apex:component>

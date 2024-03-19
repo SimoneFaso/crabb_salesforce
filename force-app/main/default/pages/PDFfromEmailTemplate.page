@@ -1,0 +1,255 @@
+<!--
+ - Created by MatteoSala on 13/07/2020.
+ -->
+
+<apex:page id="PDFfromEmailTemplate"
+           controller="PDFfromEmailTemplateCTRL"
+           showHeader="false"
+           sidebar="false"
+           readOnly="true"
+           applyHtmlTag="false"
+           applyBodyTag="false"
+           docType="html-5.0"
+           renderAs="pdf"
+           apiVersion="50.0">
+    <!--<!DOCTYPE html>-->
+    <html>
+    <head>
+        <title>Title of the document</title>
+        <style>
+                @page {
+                    margin-top: 4cm;
+                    margin-bottom: 3cm;
+
+                    @top-center {
+                        content: element(header);
+                    }
+                    @bottom-left {
+                        content: element(footer);
+                    }
+                }
+
+                div.header {
+                    padding: 10px;
+                    position: running(header);
+                }
+                div.footer {
+                    display: block;
+                    padding: 5px;
+                    position: running(footer);
+                }
+                .pagenumber:before {
+                    content: counter(page);
+                }
+                .pagecount:before {
+                    content: counter(pages);
+                }
+                div.content {
+                    //border-style:dotted;
+                    float: left;
+                    width: 100%;
+                }
+            </style>
+        <!--<style>
+            @page {
+              margin: 5mm;
+            }
+
+            @media {
+               thead {display: table-header-group;}
+               tfoot {display: table-footer-group;}
+
+               button {display: none;}
+
+               body {margin: 0;}
+            }
+
+            .page-header, .page-header-space {
+              height: 75px;
+              //background-color:red;
+            }
+
+            .page-footer, .page-footer-space {
+                height: 75px;
+                //background-color:red;
+            }
+
+            .page-footer {
+              position: fixed;
+              bottom: 0;
+              width: 100%;
+              page-break-after: always;
+              //background-color:blue;
+            }
+
+            .page-header {
+              position: fixed;
+              top: 0mm;
+              width: 100%;
+              page-break-before: always;
+              //background-color:blue;
+            }
+
+            /***.page {
+              page-break-after: always;
+            }***/
+
+            #pageNumbers div:after {
+              content: counter(pageTotal);
+            }
+            .pagenumber:before {
+                content: counter(page);
+            }
+            .pagecount:before {
+                content: counter(pages);
+            }
+        </style>-->
+        <!--<style>
+            @page
+            {
+                size:A4 portrait;
+                margin-left: 1cm;
+                margin-right: 1cm;
+                margin-top: 1cm;
+                margin-bottom: 3.54cm;
+                @top-center
+                {
+                    content: element(header);
+                    width: 100%;
+                }
+                @bottom-left
+                {
+                    content: element(footer);
+                    width: 100%;
+                }
+            }
+            div.header
+            {
+                padding: 10px;
+                position: running(header);
+            }
+            div.footer
+            {
+                display: block;
+                padding: 5px;
+                position: running(footer);
+            }
+
+            #pageNumbers div:after {
+              content: counter(pageTotal);
+            }
+            .pagenumber:before {
+                content: counter(page);
+            }
+            .pagecount:before {
+                content: counter(pages);
+            }
+        </style>-->
+        <!--<style type="text/css">
+            @page
+            {
+                size: letter;
+                margin: 25mm;
+                @top-center {
+                content: "Sample";
+                @top-left
+                {
+                    content: element(header_left);
+                };
+                @top-center
+                {
+                    content: element(header_center);
+                };
+                @top-right
+                {
+                    content: element(header_right);
+                };
+                @bottom-left
+                {
+                    content: element(footer_left);
+                };
+                @bottom-center
+                {
+                    content: element(footer_center);
+                };
+                @bottom-right
+                {
+                    content: element(footer_right);
+                };
+            }
+
+            .header_left {
+                text-align: left;
+                position: running(header_left);
+            }
+            .header_center{
+                text-align: center;
+                position: running(header_center);
+            }
+            .header_right {
+                text-align: right;
+                position: running(header_right);
+            }
+            .footer_left {
+                text-align: left;
+                position: running(footer_left);
+            }
+            .footer_center {
+                text-align: center;
+                position: running(footer_center);
+            }
+            .footer_right {
+                text-align: right;
+                position: running(footer_right);
+            }
+            #pageCounter
+            {
+              counter-reset: pageTotal;
+            }
+            #pageCounter span {
+              counter-increment: pageTotal;
+            }
+            #pageNumbers {
+              counter-reset: currentPage;
+            }
+            #pageNumbers div:before {
+              counter-increment: currentPage;
+              content: "Page " counter(currentPage) " of ";
+            }
+            #pageNumbers div:after {
+              content: counter(pageTotal);
+            }
+
+            table tr, table td{
+                page-break-inside: avoid;
+            }
+
+            table{
+                -fs-table-paginate: paginate;
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+            #pageCounter
+            {
+              counter-reset: pageTotal;
+            }
+            #pageCounter span {
+              counter-increment: pageTotal;
+            }
+            #pageNumbers {
+              counter-reset: currentPage;
+            }
+            #pageNumbers div:before {
+              counter-increment: currentPage;
+              content: "Page " counter(currentPage) " of ";
+            }
+        </style>-->
+    </head>
+
+    <h2 style="text-align: center;position:relative;">
+        <apex:outputText value="{!subject} "/>
+    </h2>
+    <apex:outputText value="{!PDFBody}" escape="false" />
+    </html>
+
+</apex:page>

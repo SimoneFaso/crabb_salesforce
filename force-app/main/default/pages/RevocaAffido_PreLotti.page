@@ -1,0 +1,16 @@
+<apex:page controller="ModificaPreLotti">
+    <style>
+        .buttonStyle { width:10%; text-align:center; padding-top:4px; }
+    </style>
+    <apex:form >
+        <apex:Pageblock id="MainBlockPreLotti" title="{!$Label.crabb_dev__assignment_withdrawl}">
+            <apex:pageMessage severity="warning" strength="3" >        
+                <apex:outputText value="{!$Label.crabb_dev__remove_pre_lot_trust}  Trust: {!Aff.Name} Lot: {!Aff.Lotto__r.Name}"/>
+            </apex:pageMessage>
+            <apex:pageBlockButtons location="bottom" >
+                <c:AutoDisablinButton actionToInvoke="{!DeleteAffidamenti_PreLotti}" disableAll="true" buttonValue="{!$Label.crabb_dev__delete}" buttonId="Elimina" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__delete}..." ></c:AutoDisablinButton>
+                <c:AutoDisablinButton actionToInvoke="{!IndietroModificaLotti}" disableAll="true" buttonValue="{!$Label.crabb_dev__back}" buttonId="Indietro" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__back}..." ></c:AutoDisablinButton>
+            </apex:pageBlockButtons>
+        </apex:Pageblock>
+    </apex:form>
+</apex:page>

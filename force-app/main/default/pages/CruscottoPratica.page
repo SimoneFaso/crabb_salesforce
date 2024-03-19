@@ -1,0 +1,288 @@
+<apex:page standardController="Pratica__c" extensions="CruscottoPraticaCTRL">
+    
+    <c:KillerStyle />
+    
+    <!--<apex:enhancedList height="400" rowsPerPage="10" listId="{!ListViewId}" customizable="true" rendered="{! !(bId)}"/>-->
+    <apex:outputText rendered="{! !(bId)}">This page needs a Pratica ID to show details</apex:outputText>
+
+    <apex:outputPanel id="praticaDetail" rendered="{!bId}">
+        <apex:detail relatedList="false" subject="{!Pratica__c.Id}" title="true" id="prDetail"/>
+    </apex:outputPanel>
+    
+    <apex:outputpanel rendered="{!bId}">
+        <div id="crabbtabs">
+            <ul>            
+                <li style="display:{!IF( Pratica__c.Mondo_Scuola__c , 'None', '')}">
+                    <a href="#tabs-1">{!$Label.ExpiredAmountsAgeing}</a>
+                </li>
+                <li><a href="#tabs-2">Saldi</a></li>
+                <li><a href="#tabs-15">Incassi</a></li>
+                <li><a href="#tabs-14">Estratto Conto Consolidato</a></li>
+                <li><a href="#tabs-3">{!$Label.Service_Product_Detail}</a></li>
+                <li><a href="#tabs-13">Fruitori</a></li>
+                <li><a href="#tabs-4">{!$Label.RepaymentPlans}</a></li>
+                <li><a href="#tabs-5">{!$Label.ServiceRequests}</a></li>
+                <li style="display:{!IF( Pratica__c.Mondo_Scuola__c , 'None', '')}">
+                    <a href="#tabs-6">{!$Label.BalanceVariations}</a>
+                </li>
+                <li><a href="#tabs-7">{!$Label.Activities}</a></li>
+                <li><a href="#tabs-8">{!$Label.CRABB_DEV__Notes}</a></li>
+                <li><a href="#tabs-9">{!$Label.Documentation}</a></li>
+                <li><a href="#tabs-10">{!$Label.Strategy}</a></li>
+                <li><a href="#tabs-11">{!$Label.Assignments}</a></li>
+                <li><a href="#tabs-12">Chatter</a></li>
+            </ul>
+            
+            <div id="tabs-1" >
+                <div style="display:{!IF( Pratica__c.Mondo_Scuola__c , 'None', '')}">
+                    <apex:pageblock title="Ageing dello scaduto" id="StackedChart">
+                        <apex:pageBlockSection >
+                            <c:StckdChart8Val StkData="{!StkData}" MinRes="0" MaxRes="{!MaxRes}" TopSteps="5" BottomSteps="10"/>
+                        </apex:pageBlockSection>
+                        <apex:pageblockSection >
+                            <c:Chart2Val ChartData="{!pieData}" MinRes="0" MaxRes="100" Steps="5" TitoloGenerale="Ageing" TitoloAsse1="# Movimenti" TitoloAsse2="Scaduto €"/>
+                        </apex:pageblockSection>
+                    </apex:pageblock>
+                    <c:RiepilogoScaduto ChartData="{!pieData}"/>
+                </div>
+            </div>
+            
+            <div id="tabs-2">
+                <apex:pageBlock title="{!$Label.CRABB_DEV__Summary}" id="TabAff">
+                    <apex:outputpanel id="TblPanel" >
+                        <div class="ui-widget ui-accordion">
+                            <apex:outputpanel > <h3 class="ui-widget-header ui-accordion-header ui-state-active">Pag # {!PagAttuale} di {!NPag} - Record {!Fine+1}-{!Inizio} di {!ChrtSaldi.size} </h3></apex:outputpanel>
+                            <div class="ui-widget-content ui-accordion-content">
+                                <apex:pageBlockTable value="{!ListSaldi}" var="saldo">
+                                    <apex:column >
+                                        <apex:facet name="header">Id Saldo</apex:facet>
+                                        <a href="/{!saldo.idSaldo}" target="_blank" title="{!saldo.idSaldo}"><apex:image value="/img/icon/forecasts24.gif"/></a>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">Record Type</apex:facet>
+                                        <apex:outputText value="{!saldo.RType}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">Data Saldo</apex:facet>
+                                        <apex:outputText value="{!saldo.dataSaldo}"/> 
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">Scaduto</apex:facet>
+                                        <apex:outputText value="{!saldo.Scaduto} €"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">Importo</apex:facet>
+                                        <apex:outputText value="{!saldo.Importo} €"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">Saldo Spese</apex:facet>
+                                        <apex:outputText value="{!saldo.SaldoSpese} €"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">Data Integrazione</apex:facet>
+                                        <apex:outputText value="{!saldo.DataIntegrazione}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">Tipo Movimento SWH</apex:facet>
+                                        <apex:outputText value="{!saldo.TipoMovimentoSWH}"/>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                                <br/>
+                                <div style="width: 100%; text-align: center">
+                                    <apex:form >
+                                    <apex:actionRegion >
+                                        <apex:commandLink value="<< Inizio" styleClass="KillerBtn" action="{!Beginning}" rendered="{! !(DisablePrevious)}" rerender="TblPanel"></apex:commandlink>
+                                        <apex:commandLink value="< Precedente" styleClass="KillerBtn" action="{!Previous}" rendered="{! !(DisablePrevious)}" rerender="TblPanel"></apex:commandlink>
+                                        <!-- <apex:commandLink value="Refresh" styleClass="KillerBtn" action="{!Refresh}" rerender="TblPanel" status="Aggiorna"/>
+                                        <!-- <apex:actionStatus startText="Aggiornamento in corso ..." id="Aggiorna"/> -->
+                                        <apex:commandLink value="Successiva >" styleClass="KillerBtn" action="{!Next}" rendered="{! !(DisableNext)}" rerender="TblPanel"></apex:commandlink>
+                                        <apex:commandLink value="Fine >>" styleClass="KillerBtn" action="{!End}" rendered="{! !(DisableNext)}" rerender="TblPanel"></apex:commandlink>
+                                    </apex:actionRegion>
+                                    </apex:form>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                </apex:pageBlock>
+            </div>
+            
+            <div id="tabs-15">
+                <c:TblPage sObj="Movimento__c" IdParent="{!Pratica__c.Id}" sParent="Pratica" NomeParent="Incasso"/>
+            </div>
+            <div id="tabs-14">
+                <c:TblPage sObj="Movimento__c" IdParent="{!Pratica__c.Id}" sParent="Pratica" NomeParent="Consolidato"/>
+            </div>
+            <div id="tabs-3">
+                <apex:detail relatedList="false" subject="{!ServId}" title="false"/>
+            </div>
+            <div id="tabs-4">
+                <c:TblPage sObj="Piano_di_Rientro__c" IdParent="{!Pratica__c.Id}" sParent="Pratica"/>
+            </div>
+            
+            <div id="tabs-5">
+                <apex:form >
+                    <apex:pageBlock >
+                        <apex:outputpanel Id="BloccoInsert" rendered="{! !(bSospesa)}">
+                            <apex:outputText styleClass="Bold" value="Motivo Blocco" rendered="{! !(bSospesa)}"/>
+                            <br/>
+                            <br/>
+                                <apex:selectList value="{!leftselected_Mot_Blo}" size="1" rendered="{! !(bSospesa)}">
+                                    <apex:selectOptions value="{!unSelectedValues_Mot_Blo}"/>
+                                </apex:selectList>
+                            <br/>
+                            <br/>
+                            <apex:outputText styleClass="Bold" value="Nota Blocco" rendered="{! !(bSospesa)}"/>
+                            <br/>
+                            <br/>
+                            <apex:inputTextarea value="{!Note_Blocco}" rendered="{! !(bSospesa)}"/>
+                        </apex:outputpanel>
+                        <apex:outputpanel Id="SbloccoInsert" rendered="{! (bSospesa)}">
+                            <apex:outputText styleClass="Bold" value="Nota Sblocco" rendered="{! (bSospesa)}"/>
+                            <br/>
+                            <br/>
+                            <apex:inputTextarea value="{!Note_Sblocco}" rendered="{! (bSospesa)}"/>
+                        </apex:outputpanel>
+                    
+                        <apex:pageBlockButtons id="btnSB">
+                            <apex:outputpanel id="PanelBlocco" rendered="{! !(bSospesa)}">
+                                <apex:outputText styleClass="KillerBtn" value="{!$Label.CRABB_DEV__LockCase}"/>
+                                <apex:actionSupport status="statBloc" event="onclick" action="{!BloccaPratica}" reRender="PanelBlocco,PanelSblocco"/>
+                                <apex:actionStatus startText="Processing..." id="statBloc"/>
+                            </apex:outputpanel>
+                            <apex:outputpanel id="PanelSblocco" rendered="{!bSospesa}">
+                                <apex:outputText styleClass="KillerBtn" value="{!$Label.CRABB_DEV__UnlockCase}"/>
+                                <apex:actionSupport status="statSbloc" event="onclick" action="{!SbloccaPratica}" reRender="PanelBlocco,PanelSblocco"/>
+                                <apex:actionStatus startText="Processing..." id="statSbloc"/>
+                            </apex:outputpanel>
+                        </apex:pageBlockButtons>
+                    </apex:pageBlock>
+                </apex:form>
+            </div>
+            <div id="tabs-7">
+                <c:TblAttUltimoAnno TipoAtt="{!TipoAtt}" LastYear="{!LastYear}" mMesiAtt="{!mMesiAtt}"/>
+                <c:TblPage sObj="Task" IdParent="{!Pratica__c.Id}" sParent="Pratica"/>
+            </div>
+            <div id="tabs-8">
+                <apex:pageBlock title="{!$Label.CRABB_DEV__Notes}">
+                    <apex:outputText id="EsitoNote" value="{!sEsitoNote}" styleClass="Important"/>  
+                    <apex:pageblockSection columns="2">
+                        <apex:form >
+                            <apex:panelGrid width="1000Px" columns="2" style="margin-left:auto;margin-right:auto;">
+                                <apex:outputpanel id="newNote">
+                                    <apex:inputField value="{!n.Nota__c}" html-placeholder="Inserisci qui la tua nota" styleClass="triangle-border"/>
+                                </apex:outputpanel>
+                                <apex:outputpanel id="PanelNote">
+                                    <br/>
+                                    <!-- <apex:inputField value="{!n.RecordTypeId}"/> -->
+                                    <br/><br/>
+                                    <apex:outputpanel id="PanelBtnNote">
+                                        <apex:outputText styleClass="KillerBtn" value="{!$Label.CRABB_DEV__AddTheNote}"/>
+                                        <apex:actionSupport status="statNote" event="onclick" action="{!SaveNote}" rerender="PanelTblNote,PanelNote,newNote,EsitoNote"/>
+                                        <apex:actionStatus startText="Processing..." id="statNote"/>
+                                    </apex:outputpanel>
+                                    <br/><br/>
+                                    <apex:outputpanel id="PanelBtnRefreshNote">
+                                        <apex:outputText styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Refresh}"/>
+                                        <apex:actionSupport status="statAggNote" event="onclick" action="{!AggiornaNote}" rerender="PanelTblNote,PanelNote,newNote,EsitoNote"/>
+                                        <apex:actionStatus startText="Processing..." id="statAggNote"/>
+                                    </apex:outputpanel>
+                                </apex:outputpanel>
+                            </apex:panelGrid>
+                        </apex:form>
+                    </apex:pageblockSection>
+                    <apex:outputpanel id="PanelTblNote">
+                        <table id="tblNote">
+                            <apex:repeat value="{!ListNote}" var="listNota" id="Note">
+                                <tr >
+                                    <td >
+                                        <p class="triangle-border">
+                                            <apex:outputText value="{!listNota.Nota}"/>
+                                        </p>
+                                        <apex:outputText value="{0,date,dd'/'MM'/'yyyy HH':'mm}">
+                                            <apex:param value="{!listNota.Data}" /> 
+                                        </apex:outputText>
+                                        <apex:outputtext value=" - "/>
+                                        <apex:outputtext value="{!listNota.User}"/>
+                                        <apex:outputtext value=" - "/>
+                                        <apex:outputtext value="{!listNota.Visibility}"/>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </table>
+                    </apex:outputpanel>
+                </apex:pageBlock>
+            </div>
+            <div id="tabs-9">
+                <apex:outputPanel id="DocPanel">
+                    <c:TblPage sObj="Attachment" IdParent="{!Pratica__c.Id}" sParent="Pratica"/>
+                </apex:outputPanel>
+    
+                <!-- Prova di DRAG & DROP Files-->
+                <apex:pageBlock title="Inserimento nuovi documenti">
+                    <c:FileUpload parentId="{!Pratica__c.Id}"/>
+                </apex:pageBlock>
+            </div>
+            <div id="tabs-10">
+                <apex:pageBlock title="Riepilogo Strategia">
+                    <apex:pageBlockButtons >
+                        <apex:form >
+                            <apex:outputpanel id="StratPanel">
+                                <apex:outputpanel id="PanelAssocia" rendered="{! !(bStrategia)}">
+                                    <apex:outputText styleClass="KillerBtn" value="{!$Label.CRABB_DEV__AppointStrategy}"/>
+                                    <apex:actionSupport status="statAss" event="onclick" action="{!AssociaStrategia}" rerender="stratMessage,tblStrategia,StratPanel,StratEsito"/>
+                                    <apex:actionStatus startText="Processing..." id="statAss"/>
+                                </apex:outputpanel>
+                            
+                                <apex:outputpanel id="PanelCambia" rendered="{! bStrategia}">
+                                    <apex:outputText styleClass="KillerBtn" value="Cambia Strategia"/>
+                                    <apex:actionSupport status="statCambia" event="onclick" action="{!CambiaStrategia}" rerender="stratMessage,tblStrategia,StratPanel,StratEsito"/>
+                                    <apex:actionStatus startText="Processing..." id="statCambia"/>
+                                </apex:outputpanel>
+                            </apex:outputpanel>
+                        </apex:form>
+                    </apex:pageBlockButtons>
+                    <apex:outputPanel id="StratEsito">
+                        <apex:outputtext value="{!sEsito}"/>
+                    </apex:outputPanel>
+                    <br/>
+                    <br/>
+                    <apex:outputPanel id="stratMessage" rendered="{! !(bStrategia)}">
+                        <apex:outputLabel >Al momento la pratica non è associata a nessuna strategia</apex:outputLabel>
+                    </apex:outputPanel>
+                    <!-- <div id="tblStrategia"> 
+                        <apex:dataTable value="{!lStrat}" var="lstr" rendered="{!bStrategia}">
+                            <apex:column >
+                                <apex:outputText value="{!lstr.vCampo}"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:outputText value="{!lstr.vStrat}"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:outputText value="{!lstr.vIngresso}"/>
+                            </apex:column>
+                            <apex:column id="tStrat3">
+                                <apex:outputText value="{!lstr.vReale}"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:image url="/img/msg_icons/confirm16.png" rendered="{!lstr.bControl}"/>
+                                <apex:image url="/img/msg_icons/error16.png" rendered="{! !(lstr.bControl)}"/>
+                            </apex:column>
+                        </apex:dataTable>
+                    </div>  -->
+                </apex:pageBlock>
+                <apex:pageBlock title="Riepilogo Attività">
+                    <c:OrgChartGoogle DRows="{!DRows}"/>
+                </apex:pageBlock> 
+            </div>
+            <!--  <div id="tabs-11">
+                <c:TblPage sObj="Affidamento__c" IdParent="{!Pratica__c.Id}" sParent="Pratica"/>
+            </div>  -->
+            <div id="tabs-12">
+                <chatter:feedWithFollowers entityId="{!Pratica__c.Id}" showHeader="false"/>
+            </div>
+            <div id="tabs-13">
+                <c:TblPage sObj="Servizi_Item__c" IdParent="{!ServId}" sParent="Pratica"/>
+            </div>
+        </div>    
+    </apex:outputpanel>
+</apex:page>

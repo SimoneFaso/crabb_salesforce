@@ -1,0 +1,41 @@
+<apex:page showHeader="true" sidebar="true" docType="html-5.0">
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <style>
+        #balancecontainer .thumbnail
+        {
+            min-height: 200px;
+        }
+    </style>
+    
+    <div id="balancecontainer" class="crabbpackage">
+        <div class="page-header">
+            <h1>
+                <span class="bi bi-gear-fill"/>
+                {!$Label.MassiveManagement}
+            </h1>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="thumbnail">
+                        <h1><center><i class="bi bi-card-list"></i></center></h1>
+                        <div class="caption">
+                            <h4 class="">White List</h4>
+                            <p class="">{!$Label.Access_White_List_Page}</p> <a href="#" class="btn btn-default btn-xs pull-right hidden" role="button"><i class="bi bi-pencil"></i></a>  <a href="/apex/GestioneWhiteList" class="btn btn-primary btn-xs" role="button" target="_blank">{!$Label.WhiteListManagement}</a>
+                        </div>
+                    </div>
+                </div>       
+            </div>        
+        </div>
+
+    <!--/container -->
+    </div>
+
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    
+</apex:page>

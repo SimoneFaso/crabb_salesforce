@@ -1,0 +1,66 @@
+<apex:page language="{!lingua}" standardController="Pratica__c" extensions="CruscottoPraticaCTRL" standardStylesheets="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.min.css')}"/>
+    <!-- <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />
+     <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  /> -->
+    
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <style>
+        [hidden], template{
+            display:block !important;
+        }
+    </style>
+
+    <c:KillerStyle />
+
+    <apex:outputPanel rendered="{!mLof[Label5]}">
+        <apex:form >
+            <apex:pageBlock >
+                <apex:outputPanel Id="BloccoInsert" rendered="{! !(bSospesa)}">
+                    <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__Reason_for_Locking}" rendered="{! !(bSospesa)}"/>
+                    <br/>
+                    <br/>
+                    <apex:selectList value="{!leftselected_Mot_Blo}" size="1" rendered="{! !(bSospesa)}">
+                        <apex:selectOptions value="{!unSelectedValues_Mot_Blo}"/>
+                    </apex:selectList>
+                    <br/>
+                    <br/>
+                    <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__Note_of_Locking}" rendered="{! !(bSospesa)}"/>
+                    <br/>
+                    <br/>
+                    <apex:inputTextarea value="{!Note_Blocco}" rendered="{! !(bSospesa)}"/>
+                </apex:outputPanel>
+                <apex:outputPanel Id="SbloccoInsert" rendered="{! (bSospesa)}">
+                    <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__Note_of_Unlocking}" rendered="{! (bSospesa)}"/>
+                    <br/>
+                    <br/>
+                    <apex:inputTextarea value="{!Note_Sblocco}" rendered="{! (bSospesa)}"/>
+                </apex:outputPanel>
+            
+                <apex:pageBlockButtons id="btnSB">
+                    <apex:outputPanel id="PanelBlocco" rendered="{! !(bSospesa)}">
+                        <apex:outputText styleClass="btn btn-primary btn-xs" value="{!$Label.CRABB_DEV__LockCase}" />
+                        <apex:actionSupport status="statBloc" event="onclick" action="{!BloccaPratica}" reRender="redirectPanel" />
+                        <apex:actionStatus startText="Processing..." id="statBloc" />
+                    </apex:outputPanel>
+                    <apex:outputPanel id="PanelSblocco" rendered="{!bSospesa}">
+                        <apex:outputText styleClass="btn btn-primary btn-xs" value="{!$Label.CRABB_DEV__UnlockCase}"/>
+                        <apex:actionSupport status="statSbloc" event="onclick" action="{!SbloccaPratica}" reRender="redirectPanel"/>
+                        <apex:actionStatus startText="Processing..." id="statSbloc"/>
+                    </apex:outputPanel>
+                    <apex:outputPanel id="redirectPanel" >
+                            <apex:outputText rendered="{!shouldRedirect}">
+                                <script type="text/javascript">
+                                    window.top.location.href = '{!URLENCODE(url_Parent)}';
+                                </script>
+                            </apex:outputText>
+                    </apex:outputPanel>
+                </apex:pageBlockButtons>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

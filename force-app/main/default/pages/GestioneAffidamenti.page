@@ -1,0 +1,478 @@
+<apex:page controller="GestioneAffidamentiCTRL" >
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.bundle.min.js')}"/>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+    <!--VECCHIO IMPORT <apex:includeScript value="{!$Resource.jQuery}"/>-->
+    <!-- TENTATIVO DI IMPORT MASSIVO DI JQUERY 1130 <apex:includeScript value="{!$Resource.jquery1130}"  />-->
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.css')}"  />-->
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.css')}"  />
+
+
+
+    <style type="text/css">
+        #exTab3 .nav-pills > li > a {
+            border-radius: 4px 4px 0 0 ;
+        }
+
+        #exTab3 .tab-content {
+            color : white;
+            background-color: #428bca;
+            padding : 5px 15px;
+
+        }
+    </style>
+
+    <apex:form >
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $( ".TArea" ).tooltip();
+            });
+        </script>
+
+        <div id="balancecontainer" class="crabbpackage">
+
+            <div class="page-header">
+                <h1><span class="bi bi-arrow-left-right" style="color: #EB5E28"></span> {!$Label.ManageLotAssignement}</h1>
+            </div>
+
+            <apex:pageMessages id="messages"/>
+
+            <apex:pageMessage severity="Error" strength="3" title="{!$Label.CRABB_DEV__Processing}" rendered="{!showErrorBatch}"/>
+
+            <apex:outputPanel rendered="{!!showErrorBatch}">
+                <div class="container-fluid">
+                    <div class="row">
+
+                        <div class="col-xs-3"></div>
+
+                        <div class="col-xs-6" style="border: none !important;">
+                            <div class="panel panel-info" align="center" style="border: none !important;">
+                                <div class="panel-body" style="border: none !important;">
+                                    <!--<a class="btn btn-primary" href="/apex/RiepilogoTask" target="_blank">{!$Label.New_Assignment}</a>-->
+                                    <a class="btn btn-primary" href="/lightning/n/CRABB_DEV__Affidi_Massivi" target="_blank">{!$Label.New_Assignment}</a>
+                                    <a class="btn btn-primary" href="/apex/gestionerevoca" target="_blank">{!$Label.Withdraw_Assignments}</a>
+                                    <a class="btn btn-primary" href="/apex/GestioneProroga" target="_blank">{!$Label.Assignments_Extension}</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-3"></div>
+
+                        <div class="col-xs-12">
+                            <div class="panel panel-info">
+                                <div class="panel-heading" align="center">
+                                    <h3>{!$Label.Withdraw_Extension}</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="exTab">
+                                        <div class="col-xs-12">
+
+                                            <ul class="nav nav-tabs " role="tablist" id="myTab">
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link active" data-bs-toggle ="tab" data-bs-target="#b1" id="lot" type="button" role="tab" aria-controls="b1" aria-selected="true">{!$Label.Lot}</button>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <button class="nav-link " data-bs-toggle ="tab" data-bs-target="#b2" id="prelot" type="button" role="tab" aria-controls="b2" aria-selected="false" >{!$Label.PreLot}</button>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <button class="nav-link " data-bs-toggle ="tab" data-bs-target="#b3" id="lg" type="button" role="tab" aria-controls="b3" aria-selected="false">{!$Label.LotsGenerating}</button>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+
+                                        <br/><br/><br/><br/>
+
+                                        <div>
+                                            <div class="tab-content clearfix">
+                                                <div class="tab-pane active" id="b1" role="tabpanel" aria-labelledby="b1-tab">
+                                                    <apex:pageMessage severity="Info" strength="3" title="{!$Label.CRABB_DEV__NoLot}" rendered="{!Sizelotti=0}"/>
+                                                    <div class="table-responsive">
+                                                        <table class="table" id="tab_logic">
+                                                            <thead>
+                                                            <tr>
+                                                                <th width="10%"></th>
+                                                                <th><i>{!$Label.LotCode}</i></th>
+                                                                <th><i>{!$Label.CollectionAgency}</i></th>
+                                                                <th><i>{!$Label.Code}</i></th>
+                                                                <th><i>{!$Label.Status}</i></th>
+                                                                <th><i>{!$Label.Assignment2}</i></th>
+                                                                <th><i>{!$Label.Scaduto} {!$Label.final}</i></th>
+                                                                <!--   <th><i>{!$Label.balance}</i></th> -->
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <apex:repeat value="{!Lotti}" var="e" rendered="{!Sizelotti>0}">
+                                                                <tr>
+                                                                    <td>
+                                                                        <apex:commandLink action="{!ModificaLotti}" rendered="{!e.Stato__c='Confermato' || e.Stato__c='Confermato parzialmente'}" style="text-decoration: none;">
+                                                                            <apex:param name="IdLotto" value="{!e.Id}" assignTo="{!IdLotto}"/>
+                                                                            <span class="bi bi-scissors warning TArea" title="{!$Label.Withdraw_Assignments}"></span>
+                                                                        </apex:commandLink>
+                                                                        &nbsp;
+                                                                        <apex:commandLink action="{!EliminaLotti}" rendered="{!e.Stato__c='Confermato' || e.Stato__c='Confermato parzialmente'}" style="text-decoration: none;">
+                                                                            <apex:param name="IdLotto" value="{!e.Id}" assignTo="{!IdLotto}"/>
+                                                                            <span class="bi bi-x-circle warning TArea" title="{!$Label.WithdrawLot}"></span>
+                                                                        </apex:commandLink>
+                                                                    </td>
+                                                                    <td><a href="/{!e.id}" target="_blank">{!e.Name}</a></td>
+                                                                    <td><apex:outputText value="{!e.Agenzia_di_Recupero__r.name}"/></td>
+                                                                    <td><apex:outputText value="{!e.Codice__c}"/></td>
+                                                                    <td><apex:outputText value="{!e.Stato__c}" /></td>
+                                                                    <td><apex:outputText value="{!e.Affidi__c}" /></td>
+                                                                    <td><apex:outputText value="{!e.Totale_Incassato_sul_Lotto__c}"/></td>
+                                                                    <!--  <td><apex:outputText /></td> -->
+                                                                </tr>
+                                                            </apex:repeat>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="b2" role="tabpanel" aria-labelledby="b2-tab">
+                                                    <apex:pageMessage severity="Info" strength="3" title="{!$Label.CRABB_DEV__NoPreLot}" rendered="{!SizePreLotti=0}" />
+                                                    <div class="table-responsive">
+                                                        <table class="table" id="tab_logic">
+                                                            <thead>
+                                                            <tr>
+                                                                <th width="10%"></th>
+                                                                <th><i>{!$Label.Name}</i></th>
+                                                                <th><i>{!$Label.CollectionAgency}</i></th>
+                                                                <th><i>{!$Label.Code}</i></th>
+                                                                <th><i>{!$Label.Status}</i></th>
+                                                                <th><i>{!$Label.Assignment2}</i></th>
+                                                                <th><i>{!$Label.Assignment3}</i></th>
+                                                                <th><i>{!$Label.TotalAssignment}</i></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <apex:repeat value="{!preLottiWrapperList}" var="e" rendered="{!SizePreLotti>0}">
+                                                                <tr>
+                                                                    <td>
+                                                                        <apex:outputPanel rendered="{!e.l.SystemCreationOfLotto__c}">
+                                                                            {!$Label.CRABB_DEV__Processing2}
+                                                                        </apex:outputPanel>
+
+                                                                        <apex:commandLink action="{!ModificaPreLotti}" rendered="{!AND(e.l.SystemCreationOfLotto__c=false,e.l.Affidi__c!=0)}" style="text-decoration: none;">
+                                                                            <apex:param name="IdPreLotto" value="{!e.l.Id}" assignTo="{!IdPreLotto}"/>
+                                                                            <span class="bi bi-box-arrow-in-right TArea" title="{!$Label.CreateLot}"></span>
+                                                                        </apex:commandLink>
+                                                                        &nbsp;
+                                                                        <apex:commandLink action="{!EliminaPreLotti}" rendered="{!e.l.SystemCreationOfLotto__c=false}" style="text-decoration: none;">
+                                                                            <apex:param name="IdPreLotto" value="{!e.l.Id}" assignTo="{!IdPreLotto}"/>
+                                                                            <span class="bi bi-x-circle warning TArea" title="{!$Label.Delete}"></span>
+                                                                        </apex:commandLink>
+                                                                    </td>
+                                                                    <td><a href="/{!e.l.id}" target="_blank">{!e.l.Name}</a></td>
+                                                                    <td><apex:outputText value="{!e.l.Agenzia_di_Recupero__r.name}"/></td>
+                                                                    <td><apex:outputText value="{!e.l.Codice__c}"/></td>
+                                                                    <td><apex:outputText value="{!e.l.Stato__c}" /></td>
+                                                                    <td><apex:outputText value="{!e.l.Affidi__c}" /></td>
+                                                                    <td><apex:outputText value="{!e.l.Affidi_in_corso__c}" /></td>
+                                                                    <td><apex:outputText value="{!e.totaleScaduto}"/></td>
+                                                                </tr>
+                                                            </apex:repeat>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="b3" role="tabpanel" aria-labelledby="b3-tab">
+                                                    <apex:pageMessage severity="Info" strength="3" title="{!$Label.CRABB_DEV__NoPreLotGenerating}" rendered="{!SizelottiFaseCreazione=0}"/>
+                                                    <font size="3"><apex:pageMessage severity="Info" strength="2" summary="{!$Label.CRABB_DEV__NoPreLotGeneratingError}" rendered="{!SizelottiFaseCreazione>0}" /></font>
+                                                    <apex:pageMessages />
+                                                    <div class="table-responsive">
+                                                        <table class="table" id="tab_logic">
+                                                            <thead>
+                                                            <tr>
+                                                                <th width="10%"></th>
+                                                                <th><i>{!$Label.Name}</i></th>
+                                                                <th><i>{!$Label.CollectionAgency}</i></th>
+                                                                <th><i>{!$Label.Code}</i></th>
+                                                                <th><i>{!$Label.Status}</i></th>
+                                                                <th><i>{!$Label.Assignment2}</i></th>
+                                                                <th><i>{!$Label.TotalAssignment}</i></th>
+                                                                <!--   <th><i>{!$Label.balance}</i></th> -->
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <apex:repeat value="{!lottiFaseCreazione}" var="e" rendered="{!SizelottiFaseCreazione>0}">
+                                                                <tr>
+                                                                    <td>
+                                                                        <apex:outputPanel rendered="{!e.SystemCreationOfPreLotto__c}">
+                                                                            {!$Label.CRABB_DEV__Processing2}
+                                                                        </apex:outputPanel>
+
+                                                                        <apex:commandLink action="{!GeneraPreLottoIDLIC}" status="MainBlock" reRender="" rendered="{!e.SystemCreationOfPreLotto__c=false}" style="text-decoration: none;">
+                                                                            <apex:param name="IDLIC" value="{!e.Id}" assignTo="{!IDLIC}"/>
+                                                                            <span class="bi bi-box-arrow-in-right TArea" title="{!$Label.CreatePreLot}"></span>
+                                                                        </apex:commandLink>
+                                                                        &nbsp;&nbsp;
+                                                                        <apex:commandLink action="{!EliminaIDLIC}" status="TheStatus" reRender="MainBlock" rendered="{!e.SystemCreationOfPreLotto__c=false}" style="text-decoration: none;">
+                                                                            <apex:param name="IDLIC" value="{!e.Id}" assignTo="{!IDLIC}"/>
+                                                                            <span class="bi bi-x-circle warning TArea" title="{!$Label.Delete}"></span>
+                                                                        </apex:commandLink>
+                                                                    </td>
+                                                                    <td><a href="/{!e.id}" target="_blank">{!e.Name}</a></td>
+                                                                    <td><apex:outputText value="{!e.Agenzia_di_Recupero__r.name}"/></td>
+                                                                    <td><apex:outputText value="{!e.Codice__c}"/></td>
+                                                                    <td><apex:outputText value="{!e.Stato__c}" /></td>
+                                                                    <td><apex:outputText value="{!e.Affidamenti_support_numero_affidi__c}" /></td>
+                                                                    <td><apex:outputText value="{!e.Affidamenti_support_Scaduto_Affidato__c}"/></td>
+                                                                    <!--     <td><apex:outputText /></td> -->
+                                                                </tr>
+                                                            </apex:repeat>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </apex:outputPanel>
+        </div>
+
+    </apex:form>
+
+
+</apex:page>
+<!-- <apex:page controller="GestioneAffidamentiCTRL" >
+    <c:KillerStyle />
+    <apex:includeScript value="{!$Resource.jQuery}"/>
+
+
+        <style type="text/css">
+            .Summary{ width: 250px; padding: 12px; background-color: #f68b1f;
+                    border: 1px solid  #57B4D1; opacity:0.65;
+                    -webkit-border-radius: 5px; -moz-border-radius: 5px;
+                    border-radius: 5px; color:white;
+            }
+        </style>
+        <!-- UN STYLE USATO PER I TAB ATTIVI E INATTIVI --
+        <style>
+        .activeTab {background-color:#F68B1F; color: white; ackground-image:none; font-size: 100%; text-transform: uppercase;}
+        .inactiveTab { background-color: lightgrey; color:black;  background-image:none}
+        .AskButton {background-color: #252FBD; color:white; background-image:none}
+        </style>
+        <script type="text/javascript">
+            j$ = jQuery.noConflict();
+            function toggleInfo(ele){
+                if(j$('#'+ele).css('display')=='none'){
+                    j$('#'+ele).show();
+                    j$('#img'+ele).addClass('rightArrow');
+                } else {
+                    j$('#'+ele).hide();
+                    j$('#img'+ele).removeClass('rightArrow')
+                }
+
+            }
+        </script>
+        <style>
+            .leftArrow{-webkit-transform: rotate(90deg);
+                -moz-transform: rotate(90deg);
+                filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+            }
+            .rightArrow{
+                -webkit-transform: rotate(270deg);
+                -moz-transform: rotate(270deg);
+                filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+            }
+            .clickable{ cursor:pointer; }
+        </style>
+
+    <apex:form rendered="{!showErrorBatch = true}">
+
+        <apex:pageMessage severity="Error" strength="3" title="Elaborazione in corso, attendere che il processo sia completo."/>
+
+    </apex:form>
+
+  <apex:form id="formID" rendered="{!showErrorBatch = false}">
+        <apex:pageBlock id="BtnBlock" title="GESTIONE REVOCHE & PROROGHE">
+        <div>
+             <!--<apex:outputLink styleClass="KillerBtn" value="/apex/GestioneAffidamenti" target="_blank">Gestione Affidamenti</apex:outputLink>
+             <br/>
+             <br/>-->
+<!--<apex:outputLink styleClass="KillerBtn" value="/apex/BALANCE_CRABBL__TaskSemiAutomaticiAffi" target="_blank">Nuovo Affido</apex:outputLink>--
+<apex:outputLink styleClass="KillerBtn" value="/apex/RiepilogoTask" target="_blank">Nuovo Affido</apex:outputLink>
+<apex:outputLink styleClass="KillerBtn" value="/apex/BALANCE_CRABBL__gestionerevoca" target="_blank">Revoca Affidamenti</apex:outputLink>
+<apex:outputLink styleClass="KillerBtn" value="/apex/BALANCE_CRABBL__GestioneProroga" target="_blank">Proroga Affidamenti</apex:outputLink>
+</div>
+</apex:pageBlock>
+<apex:pageBlock id="MainBlock" title="GESTIONE LOTTI & AFFIDAMENTI">
+<APEX:TABPAnel switchType="client" value="{!TabToView}"
+     id="LottiTabPanel" tabClass="activeTab"
+     inactiveTabClass="inactiveTab" style="color:red;" >
+<apex:tab id="lottiTab" label="Lotti" >
+      <apex:pageMessage severity="Info" strength="3" title="Nessun lotto presente" rendered="{!Sizelotti=0}"/>
+      <apex:pageBlockTable value="{!Lotti}" var="e" id="lottiPageBlock"  width="100%" rendered="{!Sizelotti>0}">
+       <apex:column >
+           <apex:facet name="header">Codice Lotto</apex:facet>
+           <a href="/{!e.id}" target="_blank">{!e.Name}</a>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Agenzia di recupero</apex:facet>
+           <apex:outputText value="{!e.Agenzia_di_Recupero__r.name}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Codice</apex:facet>
+           <apex:outputText value="{!e.Codice__c}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Stato</apex:facet>
+           <apex:outputText value="{!e.Stato__c}" />
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header"># Affidi</apex:facet>
+           <apex:outputText value="{!e.Affidi__c}" />
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Totale incassato</apex:facet>
+           <apex:outputText value="{!e.Totale_Incassato_sul_Lotto__c}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Totale incasso</apex:facet>
+           <apex:outputText />
+       </apex:column>
+       <apex:column >
+           <apex:outputText value="Nessun azione disponibile" rendered="{!e.Stato__c<>'Confermato'}"/>
+           <apex:facet name="header">Azione</apex:facet>
+           <apex:commandLink value="Revoca Affido" action="{!ModificaLotti}" rendered="{!e.Stato__c='Confermato'}" >
+               <apex:param name="IdLotto" value="{!e.Id}" assignTo="{!IdLotto}"/>
+           </apex:commandLink>
+           &nbsp;&nbsp;
+           <apex:commandLink value="Revoca Lotto"  action="{!EliminaLotti}" rendered="{!e.Stato__c='Confermato'}"  >
+               <apex:param name="IdLotto" value="{!e.Id}" assignTo="{!IdLotto}"/>
+           </apex:commandLink>
+       </apex:column>
+     </apex:pageBlockTable>
+ </apex:tab>
+ <apex:tab id="preLottiTab" label="Pre-Lotti" >
+      <apex:pageMessage severity="Info" strength="3" title="Nessun pre-Lotto presente" rendered="{!SizePreLotti=0}"/>
+     <apex:pageBlockTable value="{!preLottiWrapperList}" var="e" id="preLottotable"  width="100%" rendered="{!SizePreLotti>0}" >
+       <apex:column >
+           <apex:facet name="header">Name</apex:facet>
+           <a href="/{!e.l.id}" target="_blank">{!e.l.Name}</a>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Agenzia di recupero</apex:facet>
+           <apex:outputText value="{!e.l.Agenzia_di_Recupero__r.name}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Codice</apex:facet>
+           <apex:outputText value="{!e.l.Codice__c}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Stato</apex:facet>
+           <apex:outputText value="{!e.l.Stato__c}" />
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header"># Affidi</apex:facet>
+           <apex:outputText value="{!e.l.Affidi__c}" />
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Totale da affidare</apex:facet>
+           <apex:outputText value="{!e.totaleScaduto}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Azione</apex:facet>
+           <apex:outputPanel rendered="{!e.l.SystemCreationOfLotto__c}">
+               In Lavorazione
+           </apex:outputPanel>
+
+           <apex:commandLink value="Genera Lotto" action="{!ModificaPreLotti}" rendered="{!AND(e.l.SystemCreationOfLotto__c=false,e.l.Affidi__c!=0)}">
+               <apex:param name="IdPreLotto" value="{!e.l.Id}" assignTo="{!IdPreLotto}"/>
+           </apex:commandLink>
+           &nbsp;&nbsp;
+           <apex:commandLink value="Elimina"  action="{!EliminaPreLotti}" rendered="{!e.l.SystemCreationOfLotto__c=false}">
+               <apex:param name="IdPreLotto" value="{!e.l.Id}" assignTo="{!IdPreLotto}"/>
+           </apex:commandLink>
+       </apex:column>
+     </apex:pageBlockTable>
+ </apex:tab>
+
+<apex:tab id="LICTab" label="Lotti in creazione" >
+      <apex:pageMessage severity="Info" strength="3" title="Nessun Pre-lotto In creazione" rendered="{!SizelottiFaseCreazione=0}"/>
+      <apex:pageMessage severity="Info" strength="3" title="Questa pagina ha scopo di monitoraggio sullo stato dei lotti che si sono sottomessi per la creazione. Se i lotti non scompaiono da questo tab significa che si è verificata qualche anomalia. Contattare l'amministratore nel caso un lotto permane in questo tab per più di 24h." rendered="{!SizelottiFaseCreazione>0}"/>
+        <apex:pageMessages />
+     <apex:pageBlockTable value="{!lottiFaseCreazione}" var="e" id="LICPageBlock"  width="100%" rendered="{!SizelottiFaseCreazione>0}">
+       <apex:column >
+           <apex:facet name="header">Name</apex:facet>
+           <a href="/{!e.id}" target="_blank">{!e.Name}</a>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Agenzia di recupero</apex:facet>
+           <apex:outputText value="{!e.Agenzia_di_Recupero__r.name}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Codice</apex:facet>
+           <apex:outputText value="{!e.Codice__c}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Stato</apex:facet>
+           <apex:outputText value="{!e.Stato__c}" />
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header"># Affidi da creare</apex:facet>
+           <apex:outputText value="{!e.Affidamenti_support_numero_affidi__c}" />
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Totale da affidare</apex:facet>
+           <apex:outputText value="{!e.Affidamenti_support_Scaduto_Affidato__c}"/>
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Totale incasso</apex:facet>
+           <apex:outputText />
+       </apex:column>
+       <apex:column >
+           <apex:facet name="header">Azione</apex:facet>
+           <apex:outputPanel rendered="{!e.SystemCreationOfPreLotto__c}">
+               In Lavorazione
+           </apex:outputPanel>
+
+           <apex:commandLink value="Genera Pre-lotto" action="{!GeneraPreLottoIDLIC}" status="MainBlock" reRender="" rendered="{!e.SystemCreationOfPreLotto__c=false}">
+               <apex:param name="IDLIC" value="{!e.Id}" assignTo="{!IDLIC}"/>
+           </apex:commandLink>
+           &nbsp;&nbsp;
+           <apex:commandLink value="Elimina"  action="{!EliminaIDLIC}" status="TheStatus" reRender="MainBlock" rendered="{!e.SystemCreationOfPreLotto__c=false}">
+               <apex:param name="IDLIC" value="{!e.Id}" assignTo="{!IDLIC}"/>
+           </apex:commandLink>
+           &nbsp;&nbsp;
+       </apex:column>
+     </apex:pageBlockTable>
+ </apex:tab>
+</APEX:TABPAnel>
+</apex:pageBlock>
+</apex:form>
+<apex:form id="TheStatusForm">
+<apex:actionstatus id="TheStatus">
+  <apex:facet name="start">
+      <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="5%" width="5%" Message="Attendere prego..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+  </apex:facet>
+</apex:actionstatus>
+</apex:form>
+</apex:page> -->

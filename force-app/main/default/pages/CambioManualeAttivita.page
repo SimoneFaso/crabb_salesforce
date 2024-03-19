@@ -1,0 +1,106 @@
+<apex:page controller="CambioManualeAttivitaCTRL" docType="html-5.0">
+  
+  <c:KillerStyle />
+  
+  <apex:pageBlock title="{!$Label.CRABB_DEV__Manually_Changed_Activity}">
+      
+      <apex:pageBlockSection id="SelezioniIniziali" columns="2" rendered="{!Step = 0}">
+          <apex:form >
+              <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__SelectTheStrategy}" />
+              <br/>
+              <br/>
+              <apex:selectList value="{!StrategieSelectable}" size="1">
+                  <apex:actionsupport status="TheStatus" event="onchange" action="{!RecuperaTask}" rerender="SelezioniIniziali"/>
+                  <apex:selectOptions value="{!UnselectedStrategie}" />
+              </apex:selectList>
+          </apex:form>
+          <apex:form id="idFormSel">   
+              <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__SelectActivity} " />
+              <br/>
+              <br/>
+              <apex:selectList value="{!TaskDa}" size="1" id="TaskDa">
+                  <!-- --><apex:actionSupport status="TheStatus" event="onchange" action="{!bonificaTask}" rerender="idFormSel"/> 
+                  <apex:selectOptions value="{!UnselectedTaskDa }"/>
+              </apex:selectList> 
+              <br/>
+              <br/>
+              <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__SelectActivity2}" />
+              <br/>
+              <br/>
+              <apex:selectList value="{!TaskA}" size="1" id="TaskA">
+                  <apex:selectOptions value="{!UnselectedTaskA}"/>
+              </apex:selectList>
+              <br/>
+              <br/>
+              <apex:commandButton action="{!Continua}" value="{!$Label.CRABB_DEV__Next}"/>
+          </apex:form>
+          <apex:outputPanel rendered="{!StratIsSelected}">
+             <apex:pageMessage summary="{!$Label.CRABB_DEV__SelectTheStrategy}" severity="warning" strength="2"/>
+          </apex:outputPanel>
+      </apex:pageBlockSection>
+      
+      <apex:pageBlockSection id="Pratiche" rendered="{!Step = 1}" columns="1">
+          <apex:form >
+              <apex:outputText value="{!$Label.CRABB_DEV__ChangeActivity} {!$Label.CRABB_DEV__From} '{!TaskDa}' {!$Label.CRABB_DEV__To} '{!TaskA}'" />
+              <br/>
+              <apex:outputText value="{!$Label.CRABB_DEV__Selected} {!TotalSize} {!$Label.CRABB_DEV__Dossier} " />
+              <br/>
+              <apex:outputLabel value="{!$Label.CRABB_DEV__SelectDeselect} {!$Label.CRABB_DEV__All} {!$Label.CRABB_DEV__Dossier}">
+                  <apex:inputcheckbox value="{!bAllSel}">
+                      <apex:actionsupport status="TheStatus" event="onchange" action="{!SelectAll}" rerender="{!$Label.CRABB_DEV__Dossier}"/>
+                  </apex:inputcheckbox>
+              </apex:outputLabel>
+              <apex:pageBlockTable value="{!listPraticheSelectable}" var="p"> 
+                <apex:column headerValue="Select" id="colonnaCheckbox">
+                   <apex:inputCheckbox value="{!p.isSelected}">
+                       <apex:actionsupport status="TheStatus" event="onchange" action="{!AggiornaElementoLista}" rerender="Pratiche">
+                           <apex:param name="Codice_Pratica" value="{!p.Prat.Id}"/>
+                           <apex:param name="isSel" value="{!p.isSelected}"/>   
+                       </apex:actionSupport>
+                   </apex:inputCheckbox> 
+                </apex:column> 
+                <apex:column >
+                    <apex:facet name="header">{!$Label.CRABB_DEV__Pratica} Id</apex:facet>
+                    <a href="/{!p.Prat.Id}" target="_blank" title="{!p.Prat.Id}"><apex:image value="/img/icon/desk24.png"/></a>
+                </apex:column>
+                <apex:column value="{!p.Prat.Name}" headerValue="{!$Label.CRABB_DEV__Name}"/>
+                <apex:column value="{!p.Prat.Stato__c}" headerValue="{!$Label.CRABB_DEV__Status}"/>
+              </apex:pageBlockTable>
+              <br/>
+              <div style="width: 100%; text-align: center">
+              <apex:actionRegion >
+                <apex:commandLink value="<< {!$Label.CRABB_DEV__Start}" styleClass="KillerBtn" action="{!Beginning}" rendered="{! !(DisablePrevious)}" rerender="Pratiche"></apex:commandlink>
+                <apex:commandLink value="< {!$Label.CRABB_DEV__Previous}" styleClass="KillerBtn" action="{!Previous}" rendered="{! !(DisablePrevious)}" rerender="Pratiche"></apex:commandlink>
+                <!-- <apex:commandLink value="Refresh" styleClass="KillerBtn" action="{!Refresh}" rerender="TblPanel" status="Aggiorna"/>
+                <!-- <apex:actionStatus startText="Aggiornamento in corso ..." id="Aggiorna"/> -->
+                <apex:commandLink value="{!$Label.CRABB_DEV__Next} >" styleClass="KillerBtn" action="{!Next}" rendered="{! !(DisableNext)}" rerender="Pratiche"></apex:commandlink>
+                <apex:commandLink value="{!$Label.CRABB_DEV__End} >>" styleClass="KillerBtn" action="{!End}" rendered="{! !(DisableNext)}" rerender="Pratiche"></apex:commandlink>
+              </apex:actionRegion>
+              </div>
+          </apex:form>
+      </apex:pageBlockSection>
+      
+      <apex:outputPanel rendered="{!Step = 2}">
+          <apex:pageMessage severity="info" strength="3" >        
+              <apex:outputText value="{!$Label.CRABB_DEV__ProcessedSuccessfully} {!TotalSize} {!$Label.CRABB_DEV__Dossier}. {!$Label.CRABB_DEV__Return_to_Home_Page} "/><a href="/apex/CambioManualeAttivita">Cambio Manuale Attività</a><apex:outputText value=" o alla "/><a href="/">Home</a>.    
+          </apex:pageMessage>
+      </apex:outputPanel>
+      
+      <apex:pageblockButtons location="both">
+       <apex:form >                 
+            <c:AutoDisablinButton actionToInvoke="{!Indietro}" disableAll="true" rendered="{!(Step>0 && Step<2)}" buttonValue="{!$Label.CRABB_DEV__Back}" buttonId="IndietroButton" styleClass="buttonStyle" buttonValueDisabled="Indietro..." ></c:AutoDisablinButton>
+            <apex:commandButton action="{!ConfermaSelezione}" value="{!$Label.CRABB_DEV__Confirm_selection}" rendered="{!(Step=1)}" status="TheStatus" onclick="if(!confirm('{!$Label.CRABB_DEV__ConfirmationMessage2}')){return};"/>
+            <!-- <c:AutoDisablinButton actionToInvoke="{!ConfermaSelezione}" disableAll="true" rendered="{!(Step=1)}" buttonValue="Conferma Selezione" buttonId="SelectButton" styleClass="buttonStyle" buttonValueDisabled="Selezione pratiche.." ></c:AutoDisablinButton> -->                 
+        </apex:form>
+    </apex:pageblockButtons>    
+  </apex:pageBlock>
+  
+  <apex:form id="TheStatusForm"> 
+      <apex:actionstatus id="TheStatus">
+          <apex:facet name="start">
+              <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+          </apex:facet>
+      </apex:actionstatus>
+  </apex:form>
+  
+</apex:page>

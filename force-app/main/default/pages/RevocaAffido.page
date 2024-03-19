@@ -1,0 +1,14 @@
+<apex:page controller="ModificaLotti">
+    <apex:form >
+        <apex:Pageblock id="MainBlock" title="{!$Label.crabb_dev__assignment_withdrawl}">
+            <apex:pageMessages />
+            <apex:pageBlockSection >
+                <apex:inputField value="{!tmpAff.Note_elior__c}" label="{!$Label.crabb_dev__notes2}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom" >
+                <c:AutoDisablinButton actionToInvoke="{!IndietroModificaLotti}" disableAll="true" buttonValue="{!$Label.crabb_dev__back}" buttonId="Indietro" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__back}..." ></c:AutoDisablinButton>
+                <c:AutoDisablinButton actionToInvoke="{!Conferma}" disableAll="true" buttonValue="{!$Label.crabb_dev__next}" buttonId="Conferma" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__confirm}..." ></c:AutoDisablinButton>
+            </apex:pageBlockButtons>
+        </apex:Pageblock>
+    </apex:form>
+</apex:page>

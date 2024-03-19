@@ -1,0 +1,363 @@
+<apex:page controller="AffidiSettingsCTRL" showHeader="true" sidebar="true" docType="html-5.0">
+
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+
+    <apex:form >
+
+        <style type="text/css">
+            .modal-body{
+                background-image: -webkit-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+                background-image:      -o-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#f2dede), to(#ebcccc));
+                background-image:         linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2dede', endColorstr='#ffebcccc', GradientType=0);
+                background-repeat: repeat-x;
+            }
+        </style>
+
+        <apex:actionFunction action="{!retrieveSottotipoTwo}" name="retr" reRender="editsottopanel">
+            <apex:param value="" name="testParam" assignTo="{!selectedTipo}" id="testParam"/>
+        </apex:actionFunction>
+
+        <div id="balancecontainer" class="crabbpackage">
+            <div class="page-header">
+                <h1><span class="bi bi-eye" style="color: #F3BB45"></span> {!$Label.Profiles_activity}</h1>
+            </div>
+
+            <apex:pageMessages />
+
+            <div class="container-fluid" >
+
+                <div class="row">
+
+                    <apex:outputPanel >
+                    
+                        <apex:outputPanel id="panelItems">
+                            <div class="col-xs-3" id="panelItems">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">Select Profile</div>
+                                    <div class="panel-body">
+                                        <apex:selectList value="{!addingProfile}" size="1" multiselect="false" styleClass="form-control">
+                                            <apex:selectOptions value="{!listItems}"/>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+
+                        <div class="col-xs-4">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">{!$Label.crabb_dev__insert_type}</div>
+                                <div class="panel-body">
+                                    <apex:selectList value="{!addingTipo}" size="1" multiselect="false" styleClass="form-control">
+                                        <apex:selectOptions value="{!tipoOptions}"/>
+                                        <apex:actionSupport action="{!retrieveSottotipo}" event="onchange" reRender="sottotipopanel"></apex:actionSupport>
+                                    </apex:selectList>
+                                </div>
+                            </div>
+                        </div>
+
+                        <apex:outputPanel id="sottotipopanel">
+                            <div class="col-xs-4">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">{!$Label.crabb_dev__insert_sub}</div>
+                                    <div class="panel-body" style="display: {!IF(AND(sottotipoOptions != null,sottotipoOptions.size>1),'block','none')}">
+                                        <apex:selectList value="{!addingSotto}" size="5" multiselect="true" styleClass="form-control">
+                                            <apex:selectOptions value="{!sottotipoOptions}"/>
+                                        </apex:selectList>
+                                    </div>
+                                    <div class="panel-body" style="display: {!IF(OR(sottotipoOptions = null,sottotipoOptions.size<2),'block','none')}">
+                                        <apex:selectList value="{!addingSottoStr}" size="1" multiselect="false" styleClass="form-control">
+                                            <apex:selectOptions value="{!sottotipoOptions}"/>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+
+                        <apex:commandButton styleClass="btn btn-danger" value="Add" action="{!addNewRecord}" rendered="{!show}"/>
+                        
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="currentrelation">     
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%"></th>
+                                            <th width="5%"></th>
+                                            <th><i>Profile</i></th>
+                                            <th><i>{!$Label.Type}</i></th>
+                                            <th><i>{!$Label.Subtype}</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!listAffSettings}" var="lof">
+                                            <tr>
+                                                <td>
+                                                    <apex:outputPanel >
+                                                        <button type="button" class="btn btn-link" style="padding:0 0;" onclick="$('#delId')[0].value='{!lof.Id}';$('#locid')[0].value='{!JSENCODE(mapIdProfile[lof.SetupOwnerId])}';$('#tipoid')[0].value='{!JSENCODE(lof.Tipo__c)}';$('#sottoid')[0].value='{!JSENCODE(lof.Sottotipo__c)}';$('#myModal').modal('show');">
+                                                            <span class="bi bi-x-circle warning"></span>
+                                                        </button>
+                                                    </apex:outputPanel>
+                                                    <!--<div id="myModal" class="modal fade" role="dialog">
+                                                        <input id="delId" type="hidden" name="delId" value=""/>
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body" align="center">
+                                                                    <h4 class="modal-title">You are deleting the record :</h4>
+                                                                    <br />
+                                                                    <h5>Profile : </h5><h5><input id="locid" value="" disabled="true" size="30" /></h5>
+                                                                    <br />
+                                                                    <h5>{!$Label.type} : </h5><h5><input id="tipoid" value="" disabled="true" size="30" /></h5>
+                                                                    <br />
+                                                                    <h5>{!$Label.crabb_dev__subtype} : </h5><h5><input id="sottoid" value="" disabled="true" size="30" /></h5>
+                                                                    <br /><br />
+                                                                    <h4>Continue ?</h4>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" onclick="callMethod();" data-dismiss="modal">YES</button>
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            function callMethod(){
+                                                                var x = $('#delId')[0].value;
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.AffidiSettingsCTRL.removeRecords}',
+                                                                    x,
+                                                                    function(result, event){
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+                                                    </div>-->
+                                                </td>
+                                                <td>
+                                                    <apex:outputPanel >
+                                                        <button type="button" class="btn btn-link" style="padding:0 0;" onclick="retr('{!lof.Tipo__c}');$('#edelId')[0].value='{!lof.Id}';document.getElementsByClassName('selit')[0].value='{!JSENCODE(mapIdProfile[lof.SetupOwnerId])}';document.getElementsByClassName('seltip')[0].value='{!JSENCODE(lof.Tipo__c)}';document.getElementsByClassName('selsot')[0].value='{!JSENCODE(lof.Sottotipo__c)}';$('#editModal').modal('show');">
+                                                            <span class="bi bi-pencil"></span>
+                                                        </button>
+                                                    </apex:outputPanel>
+                                                    <!--<div id="editModal" class="modal fade" role="dialog">
+                                                        <input id="edelId" type="hidden" name="edelId" value=""/>
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body" align="center">
+                                                                    <h4 class="modal-title">You are editing the record :</h4>
+                                                                    <br />
+                                                                    <h5>Profile : </h5><h5>
+                                                                        <apex:selectList value="{!selectedItem}" id="elocid" size="1" multiselect="false" styleClass="form-control selit">
+                                                                            <apex:selectOptions value="{!listItems}"/>
+                                                                        </apex:selectList></h5>
+                                                                    <br />
+                                                                    <h5>{!$Label.type} : </h5><h5>
+                                                                        <apex:selectList value="{!selectedTipo}" id="etipoid" size="1" multiselect="false" styleClass="form-control seltip" onchange="changed();">
+                                                                            <apex:selectOptions value="{!tipoOptions}"/>
+                                                                            <apex:actionSupport action="{!retrieveSottotipoTwo}" event="onchange" reRender="editsottopanel">
+                                                                            </apex:actionSupport>
+                                                                        </apex:selectList></h5>
+                                                                    <br />
+                                                                    <apex:outputPanel id="editsottopanel">
+                                                                        <h5>{!$Label.crabb_dev__subtype} : </h5><h5>
+                                                                            <apex:selectList value="{!sottotipoSelected}" id="esottoid" size="5" multiselect="true" styleClass="form-control selsot">
+                                                                                <apex:selectOptions value="{!sottotipoOptions}"/>
+                                                                            </apex:selectList>
+                                                                        </h5>
+                                                                    </apex:outputPanel>
+                                                                    <br /><br />
+                                                                    <h4>Continue ?</h4>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" onclick="callMethod2();" data-dismiss="modal">SAVE</button>
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <script type="text/javascript">
+
+                                                            function changed(){
+                                                                var etip = document.getElementsByClassName('seltip')[0].value;
+                                                                retr(etip);
+                                                            }
+
+                                                            function callMethod2(){
+                                                                var eid = $('#edelId')[0].value;
+                                                                var eloc = document.getElementsByClassName('selit')[0].value;
+                                                                var etip = document.getElementsByClassName('seltip')[0].value;
+                                                                var esot = document.getElementsByClassName('selsot')[0].selectedOptions;
+                                                                var finalsot = '';
+                                                                for(var i=0;i<esot.length;i++){
+                                                                    finalsot += esot[i].value + ';';
+                                                                }
+
+                                                                finalsot = finalsot.substring(0,finalsot.length-1);
+
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.AffidiSettingsCTRL.editRecord}',
+                                                                    eid,
+                                                                    eloc,
+                                                                    etip,
+                                                                    finalsot,
+                                                                    function(result, event){
+                                                                        if(result == ''){
+
+                                                                            return;
+                                                                        }
+
+                                                                        if(result == 'error'){
+
+                                                                            return;
+                                                                        }
+
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+                                                    </div>-->
+                                                </td>
+                                                <td>
+                                                    {!mapIdProfile[lof.SetupOwnerId]}
+                                                </td>
+                                                <td>
+                                                    {!lof.Tipo__c}
+                                                </td>
+                                                <td>
+                                                    {!lof.Sottotipo__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div>              
+                        </div>
+                    </apex:outputPanel>
+                </div>
+            </div>
+
+        </div>
+        <div id="myModal" class="modal fade" role="dialog">
+            <input id="delId" type="hidden" name="delId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">You are deleting the record :</h4>
+                        <br />
+                        <h5>Profile : </h5><h5><input id="locid" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>{!$Label.type} : </h5><h5><input id="tipoid" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>{!$Label.crabb_dev__subtype} : </h5><h5><input id="sottoid" value="" disabled="true" size="30" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod();" data-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                                                            function callMethod(){
+                                                                var x = $('#delId')[0].value;
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.AffidiSettingsCTRL.removeRecords}',
+                                                                    x,
+                                                                    function(result, event){
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+        </div>
+        <div id="editModal" class="modal fade" role="dialog">
+            <input id="edelId" type="hidden" name="edelId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">You are editing the record :</h4>
+                        <br />
+                        <h5>Profile : </h5><h5>
+                            <apex:selectList value="{!selectedItem}" id="elocid" size="1" multiselect="false" styleClass="form-control selit">
+                                <apex:selectOptions value="{!listItems}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>{!$Label.type} : </h5><h5>
+                            <apex:selectList value="{!selectedTipo}" id="etipoid" size="1" multiselect="false" styleClass="form-control seltip" onchange="changed();">
+                                <apex:selectOptions value="{!tipoOptions}"/>
+                                <apex:actionSupport action="{!retrieveSottotipoTwo}" event="onchange" reRender="editsottopanel">
+                                </apex:actionSupport>
+                            </apex:selectList></h5>
+                        <br />
+                        <apex:outputPanel id="editsottopanel">
+                            <h5>{!$Label.crabb_dev__subtype} : </h5><h5>
+                                <apex:selectList value="{!sottotipoSelected}" id="esottoid" size="5" multiselect="true" styleClass="form-control selsot">
+                                    <apex:selectOptions value="{!sottotipoOptions}"/>
+                                </apex:selectList>
+                            </h5>
+                        </apex:outputPanel>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod2();" data-dismiss="modal">SAVE</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CANCEL</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+
+                                                            function changed(){
+                                                                var etip = document.getElementsByClassName('seltip')[0].value;
+                                                                retr(etip);
+                                                            }
+
+                                                            function callMethod2(){
+                                                                var eid = $('#edelId')[0].value;
+                                                                var eloc = document.getElementsByClassName('selit')[0].value;
+                                                                var etip = document.getElementsByClassName('seltip')[0].value;
+                                                                var esot = document.getElementsByClassName('selsot')[0].selectedOptions;
+                                                                var finalsot = '';
+                                                                for(var i=0;i<esot.length;i++){
+                                                                    finalsot += esot[i].value + ';';
+                                                                }
+
+                                                                finalsot = finalsot.substring(0,finalsot.length-1);
+
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.AffidiSettingsCTRL.editRecord}',
+                                                                    eid,
+                                                                    eloc,
+                                                                    etip,
+                                                                    finalsot,
+                                                                    function(result, event){
+                                                                        if(result == ''){
+
+                                                                            return;
+                                                                        }
+
+                                                                        if(result == 'error'){
+
+                                                                            return;
+                                                                        }
+
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+        </div>
+    </apex:form>
+
+</apex:page>

@@ -1,0 +1,52 @@
+<!--
+ - Created by MatteoSala on 09/07/2020.
+ -->
+
+<!-- Crabb Fields List -->
+<template>
+    <div class="droppable drop-container" ondragover={handleDragOver} ondrop={handleDrop}>
+        <div class="slds-border_top slds-border_bottom slds-grid slds-wrap">
+            <div class="slds-size_1-of-12"></div>
+
+            <div class="slds-size_1-of-12">
+                <div class="slds-box_x-small slds-text-align_center slds-m-around_xx-small"></div>
+            </div>
+            <div class="slds-size_3-of-12">
+                <div class="slds-box_x-small slds-text-align_center slds-m-around_xx-small">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <input type="text" placeholder="Object API Name" onkeyup={onObjectApiNameSearch}
+                                   class="slds-input slds-text-align_center" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size_3-of-12">
+                <div class="slds-box_x-small slds-text-align_center slds-m-around_xx-small">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <input type="text" placeholder="Field API Name" onkeyup={onFieldApiNameSearch}
+                                   class="slds-input slds-text-align_center" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size_2-of-12">
+                <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                    Order
+                </div>
+            </div>
+            <div class="slds-size_1-of-12">
+                <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                    Is Visible
+                </div>
+            </div>
+            <div class="slds-size_1-of-12"></div>
+        </div>
+        <template for:each={fieldslist} for:item="field">
+            <c-crabb-field-item key={field.Name} field={field} draggable={draggable} itemunderid={itemunderid}
+                          onitemdrag={handleItemDrag} onitemdragover={handleItemDragOver} onneworder={handleNewOrder}
+                          onvisiblechanged={handleVisibleChanged} ondeleteitem={handleDeleteItem}></c-crabb-field-item>
+        </template>
+    </div>
+</template>

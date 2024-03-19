@@ -1,0 +1,19 @@
+<!-- Crabb Scoring -->
+<template>
+    <lightning-card >
+        <div style="text-align:center;">
+            <div style="padding-bottom:5px;font-size:15px;">
+                <b>Score:</b> {scoring}
+                <template if:true={lastScoringUpdateDate}>
+                    <br>
+                    <b>Updated on:</b> &nbsp;
+                    <lightning-formatted-date-time value={lastScoringUpdateDate} year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                   minute="2-digit" time-zone-name="short" hour12="true"></lightning-formatted-date-time>
+                </template>
+            </div>
+            <div>
+                <lightning-button variant="brand" label="Evaluate scoring" title="Evaluate scoring" onclick={handleScoring} class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

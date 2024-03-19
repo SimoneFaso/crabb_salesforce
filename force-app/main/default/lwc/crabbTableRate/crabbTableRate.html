@@ -1,0 +1,44 @@
+<!--
+ - Created by Matteo on 10/06/2020.
+ -->
+
+<!-- Crabb Table Rate -->
+<template>
+    <!--PRATICA: {praticaName} - Stato: {statoPratica} - SCADUTO: € {scaduto} - ACCOUNT: {accountName}
+    <BR/>Numero di Rate: {numRate} - Totale Piano di Rientro: {totPDR}€
+    <BR/>Interessi di Mora: <lightning-formatted-number value={intMora} format-style="percent"  maximum-fraction-digits="3"></lightning-formatted-number> - Interessi di Dilazione: <lightning-formatted-number value={intDilazione} format-style="percent"  maximum-fraction-digits="3"></lightning-formatted-number> - Totale Interessi: {totInt}€-->
+    <div class="slds-p-bottom_large">
+        <p>
+            <!-- {label.rp}: <B>{CodePDR}</B> - {label.totRepPlan}: <B>{totPDR}€</B> - {label.stipDate}: <B>{dataStipula}</B> -->
+            {label.rp}: <B>{CodePDR}</B> - {label.totRepPlan}: <B>{totPDR}</B> - {label.stipDate}: <B>{dataStipula}</B>
+        </p>
+        <!--Claudio Start-->
+        <template if:true={showTypeRP}>
+            {label.rp} {label.tipoRP}: <B>{typePDR}</B>
+        </template>
+        <!--Claudio End-->
+        <p>
+            {label.intMora}: <B><lightning-formatted-number value={intMora} format-style="percent"  maximum-fraction-digits="3"></lightning-formatted-number></B> - {label.expInt}: <B><lightning-formatted-number value={intDilazione} format-style="percent"  maximum-fraction-digits="3"></lightning-formatted-number></B>
+        </p>
+    </div>
+    </p>
+    <lightning-datatable
+            hide-checkbox-column
+            key-field="id"
+            data={tableData}
+            columns={columns}
+            onrowaction={handleRowAction}>
+    </lightning-datatable>
+    <div class="slds-p-top_large">
+        <template if:false={bPDF}>
+            <p>
+                <lightning-button label={label.genPdf} slot="actions" onclick={creaPDF}></lightning-button>
+            </p>
+        </template>
+        <template if:true={bPDF}>
+            <p>
+                <lightning-button label={label.genPdf} slot="actions" onclick={creaPDF} disabled></lightning-button>
+            </p>
+        </template>
+    </div>
+</template>

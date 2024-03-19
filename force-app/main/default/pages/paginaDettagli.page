@@ -1,0 +1,691 @@
+<apex:page standardController="Strategia__c" extensions="paginaDettagliCTRL" docType="html-5.0" sidebar="false" >
+
+   <!-- <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/js/bootstrap.min.js')}"/>-->
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.bundle.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <c:KillerStyle />
+
+    <script type="text/javascript">
+        j$(document).ready(function(){
+            j$("#opsdashboard").accordion(
+                {   
+                    header: '.opsheader', 
+                    collapsible: true, 
+                    active: false,
+                    heightStyle: 'content',
+                }
+            );
+            j$( ".TArea" ).tooltip();
+        });
+
+        function confirmDelete() {
+            return confirm('{!$Label.CRABB_DEV__Delete_Record}');
+        }
+    </script>
+        
+    <apex:form id="myform">
+
+        <div id="balancecontainer" class="crabbpackage">
+
+            <div class="page-header">
+                <h1><span class="bi bi-card-list " style="color: #EB5E28"></span> {!$Label.Strategy_Detail}</h1>
+            </div>
+
+            <apex:pageMessages />
+
+            <div class="container-fluid">
+
+                <div class="col-xs-12">
+
+                    <div class="panel panel-info">
+
+                        <div class="panel-heading" align="center">
+                            <h3>{!$Label.tested}</h3>
+                        </div>
+
+                        <div class="panel-body" align="center">
+                            <table style="display: inline;">
+                                <tr>
+                                    <td>
+                                        <h5><apex:outputLabel value="{!$Label.CRABB_DEV__Name} : "/></h5>
+                                    </td>
+                                    <td align="right">
+                                        <apex:outputField value="{!myTestata.Nome__c}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5><apex:outputLabel value="{!$Label.CRABB_DEV__Status} : "/></h5>
+                                    </td>
+                                    <td align="right">
+                                        <apex:outputField value="{!myTestata.Stato__c}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5><apex:outputLabel value="{!$Label.CRABB_DEV__Version} : "/></h5>
+                                    </td>
+                                    <td align="right">
+                                        <apex:outputField value="{!myTestata.Versione__c}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5><apex:outputLabel value="{!$Label.CRABB_DEV__Strategy_Code} : "/></h5>
+                                    </td>
+                                    <td align="right">
+                                        <apex:outputField value="{!myTestata.Name}" />
+                                    </td>
+                                </tr>
+                            </table>
+                            <table style="display: inline;">
+                                <tr>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td width="80%">&nbsp;&nbsp;</td>
+                                    <td>&nbsp;&nbsp;</td>
+                                </tr>
+                            </table>
+                            <table style="display: inline;">
+                                <tr>
+                                    <td align="right">
+                                        <h5><apex:outputLabel value="{!$Label.CRABB_DEV__Number_Dossier_Strategy} : "/></h5>
+                                    </td>
+                                    <td align="right" width="20%">
+                                        <apex:outputText value="{!numPraticheIn}" />
+                                    </td>
+                                </tr>
+                                <apex:repeat value="{!mapStatoCount}" var="key">
+                                    <tr>
+                                        <td align="right">
+                                            <h5><apex:outputLabel value="{!key} : "/></h5>
+                                        </td>
+                                        <td align="right" width="20%">
+                                            <apex:outputText value="{!mapStatoCount[key]}"/>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td align="right"></td>
+                                    <td align="right" width="20%"></td>
+                                </tr>
+                                <tr>
+                                    <td align="right"></td>
+                                    <td align="right" width="20%"></td>
+                                </tr>
+                            </table>
+
+                            <br /><br /><br />
+
+                            <div align="center">
+                                <apex:commandButton value="{!$Label.CRABB_DEV__Activate_strategy}" action="{!cambiStato}" rendered="{!myTestata.Stato__c != $Label.CRABB_DEV__Active}" id="cambiStatoBottone" styleClass="btn btn-primary"/>
+                                &nbsp;
+                                <apex:commandButton value="{!$Label.CRABB_DEV__Deactivate_Strategy}" onclick="if(!confirm('\n {!$Label.CRABB_DEV__Are_Sure_Deactivate_Strategy}')) return false;" action="{!disattiva}" rendered="{!myTestata.Stato__c = $Label.CRABB_DEV__Active}" id="disattivaBottone" styleClass="btn btn-primary"/>
+                                &nbsp;
+                                <a href="/apex/newStrategiaDataInput?type=STR&idTestata={!myTestata.id}&action=modifica&recordId={!myTestata.id}" shape="circle" target="_blank" class="btn btn-primary">{!$Label.edit} {!$Label.tested}</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br />
+
+                <div class="col-xs-12">
+
+                    <div id="opsdashboard">
+                        <apex:repeat value="{!opsDashboardList}" var="odl">
+                            <apex:outputPanel rendered="{!odl = 'CDI'}">
+                                <div class="opsheader" align="center">
+                                    <h3>{!$Label.Input_Conditions}</h3>
+                                </div>
+                                <div id="opscontent">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <th width="10%">
+                                                    <a href="/apex/newStrategiaDataInput?type=CDI&idTestata={!myTestata.id}&action=Crea" target="blank" style="text-decoration: none;">
+                                                        <span class="bi bi-plus" style="color: blue;"></span>
+                                                    </a>
+                                                </th>
+                                                <th>#</th>
+                                                <th>{!$Label.Code}</th>
+                                                <th>{!$Label.Name}</th>
+                                                <th>{!$Label.Description}</th>
+                                            </thead>
+                                            <tbody>
+                                                <apex:variable var="count1" value="{!0}" />
+                                                <apex:repeat value="{!myCDI}" var="cdi">
+                                                    <tr>
+                                                        <td>
+                                                            <apex:commandLink action="{!$Page.newStrategiaDataInput}?type=CDI&idTestata={!myTestata.id}&action=Modifica&RecordId={!cdi.id}" target="blank" style="text-decoration: none;">
+                                                                <span class="bi bi-pencil TArea" title="Edit"></span>
+                                                            </apex:commandLink>
+                                                            &nbsp;
+                                                            
+                                                            <apex:commandLink action="{!$Page.newStrategiaDataInput}?type=CDI&idTestata={!myTestata.id}&action=Clone&RecordId={!cdi.id}" style="text-decoration: none;">
+                                                                <span class="bi bi-files TArea" title="Clone"></span>
+                                                            </apex:commandLink>
+                                                            &nbsp;
+                                                            <apex:commandLink onclick="if (!confirmDelete()) return false;" action="{!remove}" style="text-decoration: none;" reRender="myform">
+                                                                <apex:param name="cdiID" value="{!cdi.id}" assignTo="{!SelectedId}"/>
+                                                                <span class="bi bi-x-circle warning TArea" title="Remove"></span>
+                                                            </apex:commandLink>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!count1 }"/>
+                                                            <apex:variable var="count1" value="{!count1 + 1}"/> 
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!cdi.Name}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!cdi.Nome__c}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!cdi.Descrizione__c}"/>
+                                                        </td>
+                                                    </tr>
+                                                </apex:repeat>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!odl = 'CDU'}">
+                                <div class="opsheader" align="center">
+                                    <h3>{!$Label.Output_Conditions}</h3>
+                                </div>
+                                <div id="opscontent">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <th width="10%">
+                                                    <a href="/apex/newStrategiaDataInput?type=CDU&idTestata={!myTestata.id}&action=Crea" target="blank" style="text-decoration: none;">
+                                                        <span class="bi bi-plus" style="color: blue;"></span>
+                                                    </a>
+                                                </th>
+                                                <th>#</th>
+                                                <th>{!$Label.Code}</th>
+                                                <th>{!$Label.Name}</th>
+                                                <th>{!$Label.Description}</th>
+                                            </thead>
+                                            <tbody>
+                                                <apex:variable var="count2" value="{!0}" />
+                                                <apex:repeat value="{!myCDU}" var="cdu">
+                                                    <tr>
+                                                        <td>
+                                                            <apex:commandLink action="{!$Page.newStrategiaDataInput}?type=CDU&idTestata={!myTestata.id}&action=Modifica&RecordId={!cdu.id}" target="blank" style="text-decoration: none;">
+                                                                <span class="bi bi-pencil TArea" title="Edit"></span>
+                                                            </apex:commandLink>
+                                                            &nbsp;
+                                                            <apex:commandLink action="{!$Page.newStrategiaDataInput}?type=CDU&idTestata={!myTestata.id}&action=Clone&RecordId={!cdu.id}" target="blank" style="text-decoration: none;">
+                                                                <span class="bi bi-files TArea" title="Clone"></span>
+                                                            </apex:commandLink>
+                                                            &nbsp;
+                                                            <apex:commandLink onclick="if (!confirmDelete()) return false;" action="{!remove}" style="text-decoration: none;" reRender="myform">
+                                                                <apex:param name="cdiID" value="{!cdu.id}" assignTo="{!SelectedId}"/>
+                                                                <span class="bi bi-x-circle warning TArea" title="Remove"></span>
+                                                            </apex:commandLink>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!count2}"/>
+                                                            <apex:variable var="count2" value="{!count2 + 1}"/> 
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!cdu.Name}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!cdu.Nome__c}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!cdu.Descrizione__c}"/>
+                                                        </td>
+                                                    </tr>
+                                                </apex:repeat>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!odl = 'S'}">
+                                <div class="opsheader" align="center">
+                                    <h3>Steps</h3>
+                                </div>
+                                <div id="opscontent">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <th width="10%">
+                                                    <a href="/apex/newStrategiaDataInput?type=STEP&idTestata={!myTestata.id}&Action=Crea" target="blank" style="text-decoration: none;">
+                                                        <span class="bi bi-plus" style="color: blue;"></span>
+                                                    </a>
+                                                </th>
+                                                <th>#</th>
+                                                <th>{!$Label.Code}</th>
+                                                <th>{!$Label.Name}</th>
+                                                <th>{!$Label.activity} {!$Label.parent}</th>
+                                                <th>{!$Label.Type}</th>
+                                                <th>{!$Label.Activity_type}</th>
+                                                <th>{!$Label.Be_Entrusted}?</th>
+                                                <th>Priority</th>
+                                            </thead>
+                                            <tbody>
+                                                <apex:variable var="count3" value="{!0}" />
+                                                <apex:repeat value="{!myStep}" var="s">
+                                                    <tr>
+                                                        <td>
+                                                            <apex:commandLink action="{!$Page.newStrategiaDataInput}?type=STEP&idTestata={!myTestata.id}&action=Modifica&RecordId={!s.id}" target="blank" style="text-decoration: none;">
+                                                                <span class="bi bi-pencil TArea" title="Edit"></span>
+                                                            </apex:commandLink>
+                                                            &nbsp;
+                                                            <apex:commandLink action="{!$Page.newStrategiaDataInput}?type=STEP&idTestata={!myTestata.id}&action=Clone&RecordId={!s.id}" target="blank" style="text-decoration: none;">
+                                                                <span class="bi bi-files TArea" title="Clone"></span>
+                                                            </apex:commandLink>
+                                                            &nbsp;
+                                                            <apex:commandLink onclick="if (!confirmDelete()) return false;" action="{!remove}" style="text-decoration: none;" reRender="myform">
+                                                                <apex:param name="cdiID" value="{!s.id}" assignTo="{!SelectedId}"/>
+                                                                <span class="bi bi-x-circle warning TArea" title="Remove"></span>
+                                                            </apex:commandLink>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!count3}"/>
+                                                            <apex:variable var="count3" value="{!count3 + 1}"/> 
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!s.Name}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!s.Nome__c}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!s.attivit_padre__r.Nome__c}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!s.Tipologia__c }"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!s.Tipo_attivita__c }"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!s.E_da_affidare__c}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!s.priority__c }"/>
+                                                        </td>
+                                                    </tr>
+                                                </apex:repeat>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!odl = 'J'}">
+                                <div class="opsheader" align="center">
+                                    <h3>{!$Label.Jumps}</h3>
+                                </div>
+                                <div id="opscontent">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <th width="10%">
+                                                    <a href="/apex/newStrategiaDataInput?type=JUMP&idTestata={!myTestata.id}&Action=Crea" target="blank" style="text-decoration: none;">
+                                                        <span class="bi bi-plus" style="color: blue;"></span>
+                                                    </a>
+                                                </th>
+                                                <th>#</th>
+                                                <th>{!$Label.Code}</th>
+                                                <th>{!$Label.Name}</th>
+                                                <th>Jump From</th>
+                                                <th>Jump To</th>
+                                                <th>{!$Label.Automatic_Flag}</th>
+                                            </thead>
+                                            <tbody>
+                                                <apex:variable var="count4" value="{!0}" />
+                                                <apex:repeat value="{!mySalto}" var="j">
+                                                    <tr>
+                                                        <td>
+                                                            <apex:commandLink action="{!$Page.newStrategiaDataInput}?type=JUMP&idTestata={!myTestata.id}&action=Modifica&RecordId={!j.id}" target="blank" style="text-decoration: none;">
+                                                                <span class="bi bi-pencil TArea" title="Edit"></span>
+                                                            </apex:commandLink>
+                                                            &nbsp;
+                                                            <apex:commandLink action="{!$Page.newStrategiaDataInput}?type=JUMP&idTestata={!myTestata.id}&action=Clone&RecordId={!j.id}" target="blank" style="text-decoration: none;">
+                                                                <span class="bi bi-files TArea" title="Clone"></span>
+                                                            </apex:commandLink>
+                                                            &nbsp;
+                                                            <apex:commandLink onclick="if (!confirmDelete()) return false;" action="{!remove}" style="text-decoration: none;" reRender="myform">
+                                                                <apex:param name="cdiID" value="{!j.id}" assignTo="{!SelectedId}"/>
+                                                                <span class="bi bi-x-circle warning TArea" title="Remove"></span>
+                                                            </apex:commandLink>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!count4 }"/>
+                                                            <apex:variable var="count4" value="{!count4 + 1}"/> 
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!j.Name}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!j.Nome__c}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputPanel rendered="{!j.Jump_From__r.size > 0}">
+                                                                <apex:outputText value="{!j.Jump_From__r[0].Nome__c}"/>
+                                                            </apex:outputPanel>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!j.Jump_To__r.Nome__c}"/>
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputText value="{!j.isAutomaticJump__c}"/>
+                                                        </td>
+                                                    </tr>
+                                                </apex:repeat>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:repeat>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </apex:form>
+
+</apex:page>
+   <!-- <apex:form id="myform">
+
+    <apex:pageBlock title="Strategia" rendered="{!ShowPage == 'Correct'}">
+     
+         <apex:pageBlockSection title="Testata" columns="2" collapsible="false" id="mystato">
+             <apex:outputField value="{!myTestata.Nome__c}" />
+             <apex:outputField value="{!myTestata.Stato__c}" />
+             <apex:outputField value="{!myTestata.Descrizione__c}" />
+             <apex:outputField value="{!myTestata.Versione__c}" />
+             <apex:outputField value="{!myTestata.Name}" />
+             <!--*** MSala - Disattivata x CRABB Standard ***--
+             <apex:outputField value="{!myTestata.Activation_roles__c}" />
+             <apex:outputPanel ></apex:outputPanel>             
+             <!--apex:commandLink value="Modifica testata" action="/apex/PaginaModifica?type=testata&id={!myTestata.id}" shape="circle"  target="_blank" style="float:right;"/--
+             
+             <apex:commandButton value="Attiva strategia" action="{!cambiStato}" rendered="{!myTestata.Stato__c != 'Attiva'}" id="cambiStatoBottone"/> 
+             <apex:commandLink value="Modifica testata" 
+                             action="/apex/CRABB_DEV__newStrategiaDataInput?type=STR&idTestata={!myTestata.id}&action=modifica&recordId={!myTestata.id}" 
+                             shape="circle"  target="_blank" style="float:right;"/>                 
+         </apex:pageBlockSection>
+          
+         <apex:pageBlockSection title="Condizioni di ingresso " columns="1" id="table1"  collapsible="false"> 
+              
+             <apex:pageBlockTable value="{!myCDI }" var="cdi"  id="table" width="100%" >
+         <!-- Qui visualizziomo tutti i campi delle testate-- 
+          
+         <apex:variable var="count1" value="{!0}" />
+                    <apex:column width="10%">
+                       <apex:facet name="header">#</apex:facet>
+                            <apex:outputText value="{!count1 }"/>
+                            <apex:variable var="count1" value="{!count1 + 1}"/> 
+                    </apex:column>
+
+                    <apex:column width="20%">
+                        <apex:facet name="header">Codice</apex:facet>
+                            <apex:outputText value="{!cdi.Name}"/>
+                    </apex:column>
+                    
+                    <apex:column width="20%">
+                        <apex:facet name="header">Nome</apex:facet>
+                            <apex:outputText value="{!cdi.Nome__c}"/>
+                    </apex:column>
+                    
+                     <!--<apex:column width="20%" >
+                        <apex:facet name="header">Regole</apex:facet>
+                            <apex:outputText value="{!cdi.Activation_roles__c}"/>
+                    </apex:column>--
+
+                     <apex:column width="20%" >
+                        <apex:facet name="header">Descrizione</apex:facet>
+                            <apex:outputText value="{!cdi.Descrizione__c}"/>
+                    </apex:column>
+                    
+                     <apex:column >
+                        <apex:facet name="header" >Azione</apex:facet>
+                        <apex:commandLink value="Modifica" 
+                                    action="/apex/CRABB_DEV__newStrategiaDataInput?type=CDI&idTestata={!myTestata.id}&action=Modifica&RecordId={!cdi.id}"
+                                    target="_blank"/> 
+                        &nbsp;&nbsp;
+                        <apex:commandLink value="Clone" 
+                                    action="/apex/CRABB_DEV__newStrategiaDataInput?type=CDI&idTestata={!myTestata.id}&action=Clone&RecordId={!cdi.id}"
+                                    target="_blank"/> 
+                       &nbsp;
+                       <apex:actionStatus id="mySaveStatus">
+                          <apex:facet name="stop">
+                          <apex:commandLink value="Elimina" target="_blank" onClick="if (!confirmDelete()) return false;" status="mySaveStatus" action="{!remove}" rerender="table,mystato,cambiStatoBottone"> 
+                          <apex:param name="cdiID" value="{!cdi.id}" assignTo="{!SelectedId}"/> 
+                        
+                          </apex:commandLink>
+                          </apex:facet>
+                        </apex:actionStatus> 
+                                
+                    </apex:column>
+                    
+             </apex:pageblockTable>  
+             <apex:commandLink value="Crea una nuova condizione di ingresso" 
+                         action="/apex/CRABB_DEV__newStrategiaDataInput?type=CDI&idTestata={!myTestata.id}&action=Crea" 
+                         shape="circle"  target="_blank" style="float:right;"/>                 
+         </apex:pageBlockSection>
+         
+         <apex:pageBlockSection title="Condizioni di uscita " columns="1" collapsible="false">
+                            
+             <apex:pageBlockTable value="{!myCDU }" var="cdu"  id="table" width="100%">
+         <!-- Qui visualizziomo tutti i campi delle testate--
+         <apex:variable var="count2" value="{!0}"/>       
+                    <apex:column width="10%">
+                       <apex:facet name="header">#</apex:facet>
+                            <apex:outputText value="{!count2 }"/>
+                            <apex:variable var="count2" value="{!count2 + 1}"/> 
+                    </apex:column>
+
+                    <apex:column width="20%" >
+                        <apex:facet name="header">Codice</apex:facet>
+                            <apex:outputText value="{!cdu.Name}"/>
+                    </apex:column>
+                                        
+                    <apex:column width="20%" >
+                        <apex:facet name="header">Nome</apex:facet>
+                            <apex:outputText value="{!cdu.Nome__c}"/>
+                    </apex:column>
+                    
+                     <!--<apex:column width="20%" >
+                        <apex:facet name="header">Regole</apex:facet>
+                            <apex:outputText value="{!cdu.Activation_roles__c}"/>
+                    </apex:column>--
+                     <apex:column width="20%" >
+                        <apex:facet name="header">Descrizione</apex:facet>
+                            <apex:outputText value="{!cdu.Descrizione__c}"/>
+                    </apex:column>                                        
+                     <apex:column >
+                        <apex:facet name="header">Azione</apex:facet>
+                    <!--    <apex:commandLink value="Modifica" action="/apex/PaginaModifica?Id={!cdu.id}&type=CDU"  /> --
+                    
+                        <apex:commandLink value="Modifica" 
+                                    action="/apex/CRABB_DEV__newStrategiaDataInput?type=CDU&idTestata={!myTestata.id}&action=Modifica&RecordId={!cdu.id}" target="_blank"/>
+                        &nbsp;&nbsp;
+                        <apex:commandLink value="Clone" 
+                                    action="/apex/CRABB_DEV__newStrategiaDataInput?type=CDU&idTestata={!myTestata.id}&action=Clone&RecordId={!cdu.id}" target="_blank"/>
+                        &nbsp;    
+                        <apex:actionStatus id="mySaveStatus">
+                          <apex:facet name="stop">
+                          <apex:commandLink value="Elimina" onClick="if (!confirmDelete()) return false;" status="mySaveStatus" action="{!remove}" rerender="table,mystato,cambiStatoBottone"> 
+                          <apex:param name="cdiID" value="{!cdu.id}" assignTo="{!SelectedId}"/> 
+                        
+                          </apex:commandLink>
+                          </apex:facet>
+                          <!--<apex:facet name="start"> 
+                          <apex:commandLink value="Elimina..."  status="mySaveStatus" action="{!remove}" rerender="table,mystato,cambiStatoBottone">
+                          </apex:commandLink> 
+                          </apex:facet>--
+                        </apex:actionStatus>     
+                    </apex:column>
+                    
+ </apex:pageblockTable>  
+             <apex:commandLink value="Crea una nuova condizione di uscita" action="/apex/CRABB_DEV__newStrategiaDataInput?type=CDU&idTestata={!myTestata.id}&action=Crea"  shape="circle"  target="_blank" style="float:right;"/>          
+         </apex:pageBlockSection>
+         
+         <apex:pageBlockSection title="Step" columns="1" collapsible="false">
+                            
+             <apex:pageBlockTable value="{!myStep}" var="step"  id="table" width="100%">
+         <!-- Qui visualizziomo tutti i campi delle testate--
+            <apex:variable var="count3" value="{!0}"/>
+                    <apex:column >
+                       <apex:facet name="header">#</apex:facet>
+                            <apex:outputText value="{!count3 }"/>
+                            <apex:variable var="count3" value="{!count3 + 1}"/> 
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">Codice</apex:facet>
+                            <apex:outputText value="{!step.Name}"/>
+                    </apex:column>                    
+                    <apex:column >
+                        <apex:facet name="header">Nome</apex:facet>
+                            <apex:outputText value="{!step.Nome__c}"/>
+                    </apex:column>
+                    
+                     <apex:column >
+                        <apex:facet name="header">Ativita Padre</apex:facet>
+                            <apex:outputText value="{!step.attivit_padre__r.Nome__c}"/>
+                    </apex:column>
+                                
+                     <apex:column >
+                        <apex:facet name="header">Tripologia</apex:facet>
+                            <apex:outputText value="{!step.Tipologia__c }"/>
+                    </apex:column>
+                    
+                     <apex:column >
+                        <apex:facet name="header">Tipo di attivita</apex:facet>
+                            <apex:outputText value="{!step.Tipo_attivita__c }"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Da Affidare?</apex:facet>
+                            <apex:outputText value="{!step.E_da_affidare__c}"/>
+                    </apex:column>
+                     <apex:column >
+                        <apex:facet name="header">Priority</apex:facet>
+                            <apex:outputText value="{!step.priority__c }"/>
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:facet name="header">Document code</apex:facet>
+                            <apex:outputText value="{!step.Document_code__c }"/>
+                    </apex:column>
+                      
+                     <apex:column >
+                        <apex:facet name="header">Azione</apex:facet>
+                        <apex:commandLink value="Modifica" 
+                                    action="/apex/CRABB_DEV__newStrategiaDataInput?type=STEP&idTestata={!myTestata.id}&action=Modifica&RecordId={!step.id}" target="_blank"/> 
+                        &nbsp;&nbsp;
+                        <apex:commandLink value="Clone" 
+                                    action="/apex/CRABB_DEV__newStrategiaDataInput?type=STEP&idTestata={!myTestata.id}&action=Clone&RecordId={!step.id}" target="_blank"/> 
+                        &nbsp;
+                        <apex:actionStatus id="mySaveStatus">
+                          <apex:facet name="stop">
+                          <apex:commandLink value="Elimina" onClick="if (!confirmDelete()) return false;" status="mySaveStatus" action="{!remove}" rerender="table,mystato,cambiStatoBottone"> 
+                          <apex:param name="cdiID" value="{!step.id}" assignTo="{!SelectedId}"/> 
+                        
+                          </apex:commandLink>
+                          </apex:facet>
+                        </apex:actionStatus>         
+                    </apex:column>
+                    
+             </apex:pageblockTable>  
+             <apex:commandLink value="Crea un nuovo Step" action="/apex/CRABB_DEV__newStrategiaDataInput?type=STEP&idTestata={!myTestata.id}&Action=Crea" shape="circle"  target="_blank" style="float:right;"/>                
+         </apex:pageBlockSection>
+         
+         <apex:pageBlockSection title="Salti" columns="1" collapsible="false">
+             <apex:pageBlockTable value="{!mySalto }" var="salto"  id="table" width="100%">
+         <!-- Qui visualizziomo tutti i campi delle testate--
+         <apex:variable var="count4" value="{!0}"/>       
+                    <apex:column >
+                       <apex:facet name="header">#</apex:facet>
+                            <apex:outputText value="{!count4 }"/>
+                            <apex:variable var="count4" value="{!count4 + 1}"/> 
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Codice</apex:facet>
+                            <apex:outputText value="{!salto.Name}"/>
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:facet name="header">Nome</apex:facet>
+                            <apex:outputText value="{!salto.Nome__c}"/>
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:facet name="header">Jump from </apex:facet>
+                            <apex:outputPanel rendered="{!salto.Jump_from__r.size > 0}">
+                                <apex:outputText value="{!salto.Jump_from__r[0].Nome__c}"/>
+                            </apex:outputPanel>
+                    </apex:column>                    
+                    
+                     <apex:column >
+                        <apex:facet name="header">Jump to </apex:facet>
+                            <apex:outputText value="{!salto.Jump_to__r.Nome__c}"/>
+                    </apex:column>
+
+                    
+                    <apex:column >
+                        <apex:facet name="header">Flag automatico </apex:facet>
+                            <apex:outputText value="{!salto.isAutomaticJump__c}"/>
+                    </apex:column>
+                    
+                     <apex:column >
+                        <apex:facet name="header">Azione</apex:facet>
+                        
+                        <apex:commandLink value="Modifica" 
+                                    action="/apex/CRABB_DEV__newStrategiaDataInput?type=JUMP&idTestata={!myTestata.id}&action=Modifica&RecordId={!salto.id}" target="_blank"/>                        
+                        &nbsp;&nbsp;
+                        <apex:commandLink value="Clone" 
+                                    action="/apex/CRABB_DEV__newStrategiaDataInput?type=JUMP&idTestata={!myTestata.id}&action=Clone&RecordId={!salto.id}" target="_blank"/>                        
+                        &nbsp;
+                        <apex:actionStatus id="mySaveStatus">
+                          <apex:facet name="stop">
+                          <apex:commandLink value="Elimina" onClick="if (!confirmDelete()) return false;" status="mySaveStatus" action="{!remove}" rerender="table,mystato,cambiStatoBottone"> 
+                          <apex:param name="cdiID" value="{!salto.id}" assignTo="{!SelectedId}"/> 
+                        
+                          </apex:commandLink>
+                          </apex:facet>
+                        </apex:actionStatus> 
+                            
+                    </apex:column>
+                    
+                 </apex:pageblockTable>  
+             <apex:commandLink value="Crea un nuovo Salto" action="/apex/CRABB_DEV__newStrategiaDataInput?type=JUMP&idTestata={!myTestata.id}&Action=Crea" shape="circle"  target="_blank" style="float:right;"/>                               
+         </apex:pageBlockSection>
+         
+     </apex:pageBlock>
+     <apex:pageBlock id="errorBlock" rendered="{!ShowPage == 'Error'}">
+        <!-- AVERTI L'UTENTE PER L'ID E TYPE SBAGLIATO O MANCATO IN URL --
+         <apex:pageBlockSection title="Errore"  collapsible="false"  >
+                <apex:pagemessage strength="2"
+                    title="Attenzione: Dovete scegliere una testata che é esiste!"
+                    rendered="true"
+                    severity="warning" >
+                    <apex:commandButton action="/" value="Ritorna Home Page"
+                                  styleClass="btn"/>      
+                </apex:pagemessage>
+         </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form> 
+</apex:page> -->

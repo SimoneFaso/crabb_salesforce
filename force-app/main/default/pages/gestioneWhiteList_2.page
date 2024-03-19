@@ -1,0 +1,141 @@
+<apex:page controller="GestioneWhiteListCTRL" docType="html-5.0">
+
+    <c:KillerStyle />
+        
+    <head> 
+    <style type="text/css">
+        .Summary{
+                width: 250px;
+                padding: 12px;
+                background-color: #f68b1f; 
+                border: 1px solid  #57B4D1;
+                opacity:0.65;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                color:white;
+                }
+        
+        .fixed{
+                position:fixed;
+                top:5px;
+                }       
+                    
+    </style>
+    </head>
+        <apex:form id="NoRecordSToProcess">
+            <apex:pageBlock title="No Record to process" rendered="{!blankPageFlag}">    
+                <apex:pageMessage summary="Please, select an operation {!$Label.CRABB_DEV__AssignRemove} first from the white list page" severity="info" strength="3"/>
+                <apex:pageblockButtons location="bottom"> 
+                        <apex:commandButton action="/apex/CRABB_DEV__GestioneWhiteList" id="INDIETROBOTTON"  value="{!$Label.CRABB_DEV__Return} {!$Label.CRABB_DEV__To} White List" />                   
+                </apex:pageblockButtons>                 
+            </apex:pageBlock>    
+        </apex:form>        
+        <apex:pageBlock title="{!IF(isPutInWhiteList, '{!$Label.assign} White List', '{!$Label.remove} White List')}" rendered="{!ciSonoAccountDaLavorare && !blankPageFlag}">        
+            
+            <!-- IL SEZIONE DEI FILTRI -->
+            <apex:pageblockSection columns="1" >
+                    <apex:outputPanel id="Filtri" title="{!$Label.CRABB_DEV__FIlter} {!$Label.CRABB_DEV__Pratica}: " >
+                        <div id="accordion" style="width:650px">
+                            <h3 class="AccTitle" >{!$Label.contract}</h3>
+                            <div>
+                                <c:Selectable Index="1" Selezione_Sinistra="{!originalvalues_idEsternoContratto}" Selezione_Destra="{!originalvalues_idEsternoContratto}" Titolo1="{!$Label.CRABB_DEV__Contract} {!$Label.CRABB_DEV__Name}" Titolo2="{!$Label.CRABB_DEV__Contract} {!$Label.CRABB_DEV__Name}" Titolo3="{!$Label.CRABB_DEV__Contract} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle" >{!$Label.CRABB_DEV__Country}</h3>
+                            <div>
+                                <c:Selectable Index="2" Selezione_Sinistra="{!originalValues_Comuni}" Selezione_Destra="{!originalValues_Comuni}" Titolo1="{!$Label.CRABB_DEV__Country}" Titolo2="{!$Label.CRABB_DEV__Country}" Titolo3="{!$Label.CRABB_DEV__Country} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div><h3 class="AccTitle" >{!$Label.CRABB_DEV__RiskClass}</h3>
+                            <div>
+                                <c:Selectable Index="5" Selezione_Sinistra="{!originalValues_CdR}" Selezione_Destra="originalValues_CdR" Titolo1="{!$Label.CRABB_DEV__RiskClass}" Titolo2="{!$Label.CRABB_DEV__RiskClass}" Titolo3="{!$Label.CRABB_DEV__RiskClass} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div><h3 class="AccTitle" >Account {!$Label.CRABB_DEV__Status}</h3>
+                            <div>
+                                <c:Selectable Index="4" Selezione_Sinistra="{!originalValues_Stato}" Selezione_Destra="{!originalValues_Stato}" Titolo1="{!$Label.CRABB_DEV__Status}" Titolo2="{!$Label.CRABB_DEV__Status}" Titolo3="{!$Label.CRABB_DEV__Status} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            
+                        </div>
+                        <br/>
+                        <!-- I FILTRI SALDO MOVIMENTO SCADUTI__c & SALDO TOTALE__c -->
+                        <apex:form >
+                            <apex:outputPanel id="IdForm">
+                                <table style="border:0; table-layout:fixed">
+                                    <!-- INPUT TEXTS DA DEFINIRE I FILTRI DEL ACCOUNT -->
+                                    <tr>
+                                        <td><b>{!$Label.balance} {!$Label.scaduto} {!$Label.transaction}:</b></td>
+                                        <td>
+                                            <apex:input value="{!SaldoMovScadutoDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!SaldoMovScadutoA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{!$Label.CRABB_DEV__Total} {!$Label.CRABB_DEV__Balance}:</b></td>
+                                        <td>
+                                            <apex:input value="{!SaldoTotaleDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!SaldoTotaleA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                 <br/>   
+                                <!-- IL PANELO DEL CONTROLLO DELLA VALIDITÁ DEI DATI ENTRATI -->          
+                                <apex:outputpanel id="ErrorMessagesId"> 
+                                    <apex:pageMessages rendered="{!ErrorValidateDecimal}"/>
+                                </apex:outputpanel>
+                                <apex:commandButton action="{!GestioneWHLStepTipoOp}" value="{!$Label.CRABB_DEV__Back}"/>
+                                <!-- <c:AutoDisablinButton actionToInvoke="{!GestioneWHLStepTipoOp}" disableAll="true" rendered="true" buttonValue="{!$Label.CRABB_DEV__Back}" buttonId="IndietroButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Back}..." ></c:AutoDisablinButton>
+                                -->
+                                <c:AutoDisablinButton actionToInvoke="{!Filtra}" disableAll="true" rendered="true" buttonValue="{!$Label.CRABB_DEV__FIlter}" buttonId="IndietroButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__FIlter}..." ></c:AutoDisablinButton>
+                        
+                            </apex:outputPanel>
+                        </apex:form>
+                    </apex:outputPanel>
+            </apex:pageblockSection>
+            
+        </apex:pageBlock>    
+                                       
+        <!-- QUESTO BLOCK, IMPEDISCE L'UTENTE DI ESEGUIRE OPERAZIONE INADEGUATI(PRECAUTION) -->
+        <apex:form id="TheStatusForm"> 
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus>
+        </apex:form>
+        
+        <script>
+        j$( "#accordion" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        j$( "#accordion2" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        jQuery(document).ready(function($) {
+        var pos = j$(window).height();
+
+        j$(window).scroll(function(){
+        if (j$(window).scrollTop() > pos){
+            j$('.Summary').addClass('fixed');
+        } else {
+            j$('.Summary').removeClass('fixed');
+        }
+        
+        
+        });
+    
+    
+        });   
+    </script>
+</apex:page>

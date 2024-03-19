@@ -1,0 +1,72 @@
+<apex:page controller="CreazioneManualeTaskCTRL" docType="html-5.0">
+    <c:KillerStyle />
+    <!-- Blocko di errore, se l'id é errato -->
+    <apex:pageMessages />
+    <!-- <apex:form rendered="{!erroreHappened}"> -->
+        <apex:pageBlock id="errorBlock1" rendered="{!erroreHappened}">
+            <!-- AVERTI L'UTENTE PER L'ID E TYPE SBAGLIATO O MANCATO IN URL -->
+             <apex:pageBlockSection title="{!$Label.CRABB_DEV__Error}"  collapsible="false"  >
+                    <apex:pagemessage strength="2"
+                        title="{!$Label.CRABB_DEV__CreaManTask}"
+                        rendered="true"
+                        severity="warning" >                              
+                    
+                        <apex:form >
+                            <apex:commandButton action="/{!idPratica}" value="{!$Label.CRABB_DEV__Return_to_Dossier}"
+                                      styleClass="btn"/>
+                            <apex:commandButton action="/" value="{!$Label.CRABB_DEV__Return_to_Home_Page}"
+                                      styleClass="btn"/>                            
+                        </apex:form>                   
+                        <!--<apex:commandButton action="/{!idPratica}" value="Torna alla pratica"
+                                      styleClass="btn"/>
+                        <apex:commandButton action="/" value="Ritorna Home Page"
+                                      styleClass="btn"/>--> 
+                  </apex:pagemessage>                 
+             </apex:pageBlockSection>
+        </apex:pageBlock>
+    <!--</apex:form>     -->
+    
+    <apex:pageBlock title="{!$Label.CRABB_DEV__Create_Manual_Activity}:" rendered="{! !erroreHappened}">
+        <apex:pageBlockSection id="SelezioniInizialiNew" columns="1" >
+            <apex:form >
+                <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__SelectTheStrategy}" />                
+                <apex:selectList value="{!StrategieSelectable}" size="1">
+                    <apex:actionsupport status="TheStatus" event="onchange" action="{!RecuperaTask}" rerender="SelezioniIniziali,SelezioniInizialiNew"/>
+                    <apex:selectOptions value="{!UnselectedStrategie}" />
+                </apex:selectList>
+            </apex:form>
+            <apex:form id="TaskDaFormMore">
+                <apex:outputPanel id="TaskAPanel">
+                    <apex:repeat value="{!OriginalValuesTaskDa}" var="TaskDa1" >
+                        <apex:outputPanel >
+                            <apex:outputtext styleclass="KillerBtnTask" value="{!TaskDa1}" rendered="{!IF(TaskDa1=TaskA,false,true)}"/> <!---->
+                            <apex:actionSupport event="onclick" action="{!UpdateTaskA}" rerender="SelezioniInizialiNew">
+                                <apex:param name="pTaska" value="{!TaskDa1}"/>
+                            </apex:actionSupport>
+                        </apex:outputPanel>
+                    </apex:repeat>
+                </apex:outputPanel>
+            </apex:form>
+            <apex:form id="TaskAForm">
+                <apex:outputPanel id="TaskAPanel">
+                    <apex:outputLabel styleClass="Bold">{!$Label.CRABB_DEV__task_to_create}:</apex:outputLabel>
+                    <apex:outputtext styleclass="KillerBtnTaskSel" value="{!TaskA}"/>
+                    <br/>
+                </apex:outputPanel>
+            </apex:form>
+            <apex:message id="errorMsg"/>
+            <apex:form id="BtnContinua">
+                <apex:commandButton action="{!Indietro}"  value="{!$Label.CRABB_DEV__Back}"/>
+                <apex:commandButton rerender="SelezioniInizialiNew" action="{!creaTaskManuale}" disabled="{!(TaskA = 'NA')}" value="{!$Label.CRABB_DEV__Create_Task}" status="TheStatus" onclick="if(!confirm('\n {!$Label.CRABB_DEV__AreYouSureCreateTask} ?')){return};"/> 
+            </apex:form>
+        </apex:pageBlockSection>        
+    <apex:form id="TheStatusForm"> 
+        <apex:actionstatus id="TheStatus">
+            <apex:facet name="start">
+                <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:form>
+
+   </apex:pageBlock>
+</apex:page>

@@ -1,0 +1,88 @@
+<apex:page controller="FlowFasceController" docType="html-5.0">
+    
+    <c:BalanceStyle />
+    
+    <apex:outputPanel id="flowPanel">
+        <apex:form >
+        <apex:pageBlock Title="{!$Label.CRABB_DEV__End_Insertion}"  rendered="{!ShowFine}">
+            <div class="center">
+                <table class="list" style="margin: auto;" border="0" cellpadding="0" cellspacing="0">
+                  <tr class="headerRow">
+                     <th style="text-align: center;">{!$Label.Number_of_Bands}</th>
+                     <th></th>
+                     <th style="text-align: center;">{!$Label.First_Band_Fee}</th>
+                     <th></th>
+                     <th style="text-align: center;">{!$Label.Second_Band_Fee}</th>
+                     <th></th>
+                     <th style="text-align: center;">{!$Label.Third_Band_Fee}</th>
+                     <th></th>
+                     <th style="text-align: center;">{!$Label.Fourth_Band_Fee}</th>
+                     <th></th>
+                     <th style="text-align: center;">{!$Label.Fifth_Band_Fee}</th>
+                  </tr>
+                  <tr class="dataRow">
+                    <td><apex:input type="text" html-placeholder="{!SelFasce}" value="{!SelFasce}"/></td>
+                    <td></td>
+                    <td><apex:input type="text" value="{!ListFasceShow[0]}" rendered="{!IF(LenFasce>0,true,false)}"/></td>
+                    <td></td>
+                    <td><apex:input type="text" value="{!ListFasceShow[1]}" rendered="{!IF(LenFasce>1,true,false)}"/></td>
+                    <td></td>
+                    <td><apex:input type="text" value="{!ListFasceShow[2]}" rendered="{!IF(LenFasce>2,true,false)}"/></td>
+                    <td></td>
+                    <td><apex:input type="text" value="{!ListFasceShow[3]}" rendered="{!IF(LenFasce>3,true,false)}"/></td>
+                    <td></td>
+                    <td><apex:input type="text" value="{!ListFasceShow[4]}" rendered="{!IF(LenFasce>4,true,false)}"/></td>
+                    <td></td>
+                  </tr>
+                </Table>
+            </div>
+            <BR/><BR/>
+            <div class="center">
+                <table class="list" style="margin: auto;" border="0" cellpadding="0" cellspacing="0">
+                    <tr class="headerRow">
+                       <th style="text-align: center;">{!$Label.First_Threshold}</th>
+                       <th></th>
+                       <th style="text-align: center;">{!$Label.Second_Threshold}</th>
+                       <th></th>
+                       <th style="text-align: center;">{!$Label.Third_Threshold}</th>
+                       <th></th>
+                       <th style="text-align: center;">{!$Label.Fourth_Threshold}</th>
+                     </tr>
+                    <tr class="dataRow">
+                      <td><apex:input type="text" html-placeholder="{!CompensoPrimaFascia}" value="{!CompensoPrimaFascia}"/></td>
+                      <td></td>
+                      <td><apex:input type="text" html-placeholder="{!ListSoglieShow[1]}" value="{!ListSoglieShow[1]}" rendered="{!IF(LenSoglie>1,true,false)}"/></td>
+                      <td></td>
+                      <td><apex:input type="text" html-placeholder="{!ListSoglieShow[2]}" value="{!ListSoglieShow[2]}" rendered="{!IF(LenSoglie>2,true,false)}"/></td>
+                      <td></td>
+                      <td><apex:input type="text" html-placeholder="{!ListSoglieShow[3]}" value="{!ListSoglieShow[3]}" rendered="{!IF(LenSoglie>3,true,false)}"/></td>
+                      <td></td>
+                    </tr>
+                </Table>
+            </div>  
+             <BR/><BR/>
+            <div style="width: 100%; text-align: center">
+                <apex:commandLink value="{!$Label.CRABB_DEV__End}" styleClass="KillerBtn" action="{!AggiornaCollector}" rendered="{!ShowTermina}"></apex:commandlink>
+                <apex:commandLink value="{!$Label.CRABB_DEV__Show_Summary}" styleClass="KillerBtn" action="{!Riepilogo}" rendered="{!ShowFine}" reRender="flowPanel"></apex:commandlink>
+            </div>         
+            
+            </apex:pageBlock>
+        </apex:form>
+
+        <apex:outputPanel id="FlowControl">
+            <flow:interview name="FlowAssegnaFasceCollector" interview="{!FAFC}" finishLocation="{!FinishUrl}" rendered="{!ShowFlow}">
+                <apex:param name="ShowFlow" value="{!ShowFlow}"/>
+                <apex:param name="ShowFine" value="{!ShowFine}"/>
+                <apex:param name="RagioneSocialeCollector" value="{!RagioneSocialeCollector}"/>
+                <apex:param name="SelFasce" value="{!SelFasce}"/>
+                <apex:param name="IdColl" value="{!IdColl}"/>
+                <apex:param name="ListFasce" value="{!ListFasce}"/>
+                <apex:param name="ListSoglie" value="{!ListSoglie}"/>
+                <apex:param name="ListToLoop" value="{!ListToLoop}"/>
+                <apex:param name="CompensoUnivoco" value="{!CompensoUnivoco}"/>
+            </flow:interview>
+        </apex:outputPanel>
+        
+    </apex:outputPanel> 
+
+</apex:page>

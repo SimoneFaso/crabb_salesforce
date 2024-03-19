@@ -1,0 +1,211 @@
+<apex:page controller="LogDeleteCTRL" showHeader="true" sidebar="false" docType="html-5.0">
+
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.min.css')}"/>
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  /> -->
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.css')}"  />
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.css')}"  />-->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+	<apex:form id="formId">
+
+		<apex:actionFunction name="showPageError" action="{!showError}" rerender="messages">
+		  	<apex:param name="message" assignTo="{!message}" value="" />
+		</apex:actionFunction>
+
+		<apex:actionFunction name="showPageConfirm" action="{!showConfirm}" rerender="messages">
+		  	<apex:param name="message" assignTo="{!message}" value="" />
+		</apex:actionFunction>
+
+		<div id="balancecontainer" class="crabbpackage">
+
+			<div class="page-header">
+                <h1><span class="bi bi-file-earmark-x" style="color: #7AC29A"></span> Log Managing</h1>
+            </div>
+
+            <apex:pagemessages id="messages" ></apex:pagemessages>
+            
+            <br />
+        
+            <div align="center">
+                <apex:commandButton styleClass="btn btn-primary" action="{!deleteAll}" value="Delete All"/>
+                &nbsp;
+                <apex:commandButton styleClass="btn btn-primary" action="{!refresh}" value="Refresh"/>
+            </div>
+
+            <br />
+
+            <div class="col-xs-12">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">Reschedule parameters</div>
+                    <div class="panel-body">
+                        <div class="col-xs-4">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Select From Date</div>
+                                <div class="panel-body">
+                                    <apex:inputField value="{!tempFROM.Last_running__c}" label="From Date" styleClass="classFrom form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Select To Date</div>
+                                <div class="panel-body">
+                                    <apex:inputField value="{!tempTO.Last_running__c}" label="To Date" styleClass="classTo form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <apex:commandLink styleClass="btn btn-primary" onclick="checkdates();return false;" value="Delete Selected"/>
+                                    <script type="text/javascript">
+                                    	function checkdates(){
+	                                    	var dFrom = document.getElementsByClassName('classFrom')[0].value;
+	                                    	var dTo = document.getElementsByClassName('classTo')[0].value;
+	                                    	if( (dFrom == null || dFrom == '') && (dTo == null || dTo == '') ){
+												showPageError('Please select at least From or To date');
+	                                    	}else{
+	                                    		$('#fromid')[0].value = dFrom;
+	                                    		$('#toid')[0].value = dTo;
+	                                    		$('#delModal').modal('show');
+	                                    	}
+	                                    }
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           <!-- <div id="delModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                            <h4 class="modal-title">You are deleting logs :</h4>
+                            <br />
+                            <h5>From : </h5><h5><input id="fromid" value="" disabled="true" size="30" class="form-control" /></h5>
+                            <br />
+                            <h5>To : </h5><h5><input id="toid" value="" disabled="true" size="30" class="form-control" /></h5>
+                            <br /><br />
+                            <h4>Continue ?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="callMethod();" data-dismiss="modal">YES</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    function callMethod(){
+                    	var f = $('#fromid')[0].value;
+                    	var t = $('#toid')[0].value;
+
+                    	Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.LogDeleteCTRL.deletePartial}',
+                            f,
+                            t,
+                            function(result, event){
+                                if(result == null || result == '' || result == 'error'){
+                                	showPageError('Please select at least From or To date.');
+                                }
+
+                                if(result == 'invalid'){
+                                	showPageError('Invalid Date and Time.');
+                                }
+
+                                if(result == 'confirm'){
+                                	showPageConfirm('Delete is running.');
+                                }
+                            }
+                        );
+                    }
+                </script>
+            </div>-->
+
+		<apex:pageBlock title="Logs information" >
+
+			<apex:pageBlockTable value="{!tw}" var="t" rendered="{!tw != null}">
+
+				<apex:column headerValue="Total number of logs" value="{!t.total}"/>
+				<apex:column headerValue="Newest log date" value="{!t.ne}"/>
+				<apex:column headerValue="Oldest log date" value="{!t.old}"/>
+
+			</apex:pageBlockTable>
+
+		</apex:pageBlock>
+
+	</div>
+        <div id="delModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                        <h4 class="modal-title">You are deleting logs :</h4>
+                        <br />
+                        <h5>From : </h5><h5><input id="fromid" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>To : </h5><h5><input id="toid" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod();" data-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                    function callMethod(){
+                    	var f = $('#fromid')[0].value;
+                    	var t = $('#toid')[0].value;
+
+                    	Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.LogDeleteCTRL.deletePartial}',
+                            f,
+                            t,
+                            function(result, event){
+                                if(result == null || result == '' || result == 'error'){
+                                	showPageError('Please select at least From or To date.');
+                                }
+
+                                if(result == 'invalid'){
+                                	showPageError('Invalid Date and Time.');
+                                }
+
+                                if(result == 'confirm'){
+                                	showPageConfirm('Delete is running.');
+                                }
+                            }
+                        );
+                    }
+                </script>
+        </div>
+	</apex:form>
+
+</apex:page>

@@ -1,0 +1,84 @@
+<apex:page controller="newStrategiaCTRL"  tabStyle="Strategia__c" >
+  <apex:sectionHeader title="{!$Label.crabb_dev__strategy_configuration}" subtitle="Step 2 of 4" rendered="{!type != 'STR'}"/>
+  <apex:sectionHeader title="{!$Label.crabb_dev__strategy_configuration}" subtitle="Step 2 of 3" rendered="{!type == 'STR'}"/>  
+  <script type="text/javascript">
+            function selectAllCheckboxes(obj,receivedInputID){
+                var inputCheckBox = document.getElementsByTagName("input");
+                for(var i=0; i<inputCheckBox.length; i++){
+                    if(inputCheckBox[i].id.indexOf(receivedInputID)!=-1){
+                        inputCheckBox[i].checked = obj.checked;
+                    }
+                }
+            }
+    
+        function disableOnSubmit(input) {
+            setTimeout('disableAfterTimeout(\'' + input.id + '\');', 50);              
+        }
+        function disableAfterTimeout(id) {
+            var toDisable = document.getElementById( id );
+            toDisable.disabled = 'disabled';
+            // Use the Salesforce CSS style to make the button appear disabled
+            toDisable.className = 'btnDisabled';
+          
+        }
+    </script>
+    <apex:form >
+        <apex:pageBlock >    
+            <!-- This facet tag defines the "Next" button that appears in the footer of the pageBlock. It calls the step2()
+             controller method, which returns a pageReference to the next step of the wizard. -->
+              <apex:facet name="footer">
+                <apex:outputPanel >
+                  <apex:commandButton action="{!step1}" value="Back" id="backbtn" onclick="disableOnSubmit(this);"
+                                      styleClass="btn"/>
+                  <apex:commandButton action="{!step3}" value="Next" id="nextbtn" onclick="disableOnSubmit(this);"
+                                      styleClass="btn"/>
+                  <a href="/apex/GestioneRegole" class="btn" immediate="true" target="_blank" style="text-decoration:none;float:right;" rendered="{!type == 'STR'}">{!$Label.RulesManagement}</a>
+                </apex:outputPanel>
+               </apex:facet>
+            <apex:commandButton action="{!cancelButton}" value="Cancel" id="canclebtn" onclick="disableOnSubmit(this);"
+                              styleClass="btn" immediate="true"/>
+            <apex:pageblockSection title="NOTE"  collapsible="false" columns="1" rendered="{!type='STEP'}" >
+                {!$Label.crabb_dev__proceed_without_selecting_rules}.
+            </apex:pageblockSection>           
+            <apex:pageblockSection title="{!$Label.crabb_dev__select_the_rules_to_use} " collapsible="false" columns="1" >
+            <apex:pageBlockTable value="{!cRuleList}" var="ruWrap" id="table" title="All Rules" width="100%">
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:inputCheckbox onclick="selectAllCheckboxes(this,'inputId')"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!ruWrap.selected}" id="inputId"/>
+                    </apex:column>
+                    <apex:column width="10%"  >
+                        <apex:facet name="header">Name</apex:facet>
+                        <apex:outputText value="{!ruWrap.myCRule.Name}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Rule name</apex:facet>
+                        <apex:outputText value="{!ruWrap.myCRule.Rule_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Api field name</apex:facet>
+                        <apex:outputText value="{!ruWrap.myCRule.Api_field_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Api object name</apex:facet>
+                        <apex:outputText value="{!ruWrap.myCRule.Api_object_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Condition</apex:facet>
+                        <apex:outputText value="{!ruWrap.myCRule.Condition__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.crabb_dev__strategy_api_field_name}</apex:facet>
+                        <apex:outputText value="{!ruWrap.myCRule.Strategia_api_field_name__c  }"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.crabb_dev__notes3}</apex:facet>
+                        <apex:outputText value="{!ruWrap.myCRule.Note__c}"/>
+                    </apex:column> 
+               
+                </apex:pageBlockTable>
+             </apex:pageblockSection>        
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

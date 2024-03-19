@@ -1,0 +1,538 @@
+<apex:page showHeader="true" standardController="Pratica__c" extensions="RiepilogoTaskCTRL" sidebar="true" docType="html-5.0" cache="false">
+    <!--<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/js/bootstrap.min.js')}"/> -->
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.min.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.bundle.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+
+
+
+
+    <c:KillerStyle />
+    <style type="text/css">
+
+        .offer{
+            background:#fff;
+            color: #f68b1f;
+            border:1px solid #ddd;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin: 15px 0;
+            overflow:hidden;
+            width: 200px;
+            border-radius: 15px 15px 15px 15px;
+        }
+        .offer:hover {
+            /*background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);*/
+            -webkit-transform: scale(1.1); 
+            -moz-transform: scale(1.1); 
+            -ms-transform: scale(1.1); 
+            -o-transform: scale(1.1); 
+            transform:rotate scale(1.1); 
+            -webkit-transition: all 0.4s ease-in-out; 
+            -moz-transition: all 0.4s ease-in-out; 
+            -o-transition: all 0.4s ease-in-out;
+            transition: all 0.4s ease-in-out;
+            background:#f68b1f url(images/ui-bg_glass_20_f68b1f_1x400.png) 50% 50% repeat-x;
+            color: white;
+            /*background-image: linear-gradient(to bottom, #f2dede 0%, #ff7f35 100%);*/
+            cursor: pointer;
+        }
+        .offer-radius{ border-radius:7px; }
+        .offer-danger { border-color: #d9534f; }
+        .offer-success { border-color: #5cb85c; }
+        .offer-default { border-color: #999999; }
+        .offer-primary { border-color: #428bca; }
+        .offer-info { border-color: #5bc0de; }
+        .offer-warning { border-color: #f0ad4e; }
+        .offer-content{ padding:0 20px 10px; }
+
+        .offerdisabled{
+            background:#fff;
+            color: #000000;
+            border:1px solid #ddd;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin: 15px 0;
+            overflow:hidden;
+            width: 200px;
+            border-radius: 15px 15px 15px 15px;
+        }
+
+        .offer-disabled{
+            background-color: #D2D2D2;
+            cursor: not-allowed !important;
+            border-color: black;
+        }
+
+        @media (min-width: 487px) {
+            .container { max-width: 250px; }
+            .col-sm-6 { width: 10%; }
+        }
+        @media (min-width: 900px) {
+            .container { max-width: 10%; }
+            .col-md-4 { width: 33.33333333333333%; }
+        }
+
+        @media (min-width: 1200px) {
+            .container { max-width: 10%; }
+            .col-lg-3 { width: 25%; }
+        }
+
+
+    </style>
+
+    <script type="text/javascript">
+        function showLoading(){
+            $('.loadingIcon').css('display','inline');
+        }
+
+        function hideLoading(){
+            $('.loadingIcon').css('display','none');
+        }
+    </script>
+
+    <apex:form id="formid">
+
+        <div id="balancecontainer" class="crabbpackage">
+            
+            <apex:outputPanel layout="none" rendered="{!!isAffido}">
+                <div class="page-header">
+                    <h1><span class="bi bi-card-list warning"></span> {!$Label.BULKOUTCOMESACRONYM} <small>{!$Label.Balance_Bulk_Outcome_Task}</small></h1>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!isAffido}">
+                <div class="page-header">
+                    <h1><span class="bi bi-arrow-left-right warning"></span> {!$Label.BULKOUTCOMESACRONYM2} <small>{!$Label.Balance_Bulk_Outcome_Assignment}</small></h1>
+                </div>
+            </apex:outputPanel>
+
+            <apex:pageMessages id="messages"/>
+            <div class="container-fluid">
+                <apex:outputPanel Id="Refresh" rendered="{!currentStep = '0'}" style="object-position: center; align-items: center; align-content: center;">
+                        <br/>
+                        <div class="col-xs-4">
+                        </div>
+                        <div class="col-xs-4" align="center">
+                            <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__Owner_choice}"/>
+                            <apex:selectList value="{!selectedVisibility}" size="1" multiselect="false" styleClass="form-control">
+                                <apex:selectOptions value="{!pickVisibilityResult}"/>
+                                <apex:actionSupport action="{!createObjects}" event="onchange" onsubmit="showLoading();" oncomplete="hideLoading();"/>
+                            </apex:selectList>
+                            <span id="loadingSpan">
+                                <img class="loadingIcon" width="26px" height="26px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                            </span>
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                        <br/><br/>
+                        <br/><br/>
+
+                        <div id="opsdashboard" >
+                            <apex:repeat value="{!mapWrapper}" var="key" >
+                                <div class="opsheader">
+                                    <h3>
+                                        <apex:outputPanel layout="none" rendered="{!!mapSottoDisabled[key]}">
+                                            <span class="bi bi-check" style="color: green;"></span>&nbsp;<apex:outputText value="{!key}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel layout="none" rendered="{!mapSottoDisabled[key]}">
+                                            <span class="bi bi-x-circle warning"></span>&nbsp;<apex:outputText value="{!key}"/>
+                                        </apex:outputPanel>
+                                        <span style="float: right;">
+                                            {!mapTipoTotal[key]}&nbsp;<small>{!mapTipoOldest[key]} {!$Label.Days}</small>
+                                        </span>
+                                    </h3>
+                                </div>
+
+                                <div id="opscontent" align="center">
+                                    <div class="MapHeader-div">
+                                        <apex:outputPanel layout="none" rendered="{!!mapSottoDisabled[key]}">
+                                            <apex:commandLink action="{!createStepOne}" reRender="formid" status="TheStatus">
+                                                <apex:param name="tipoesotto" value="{!key}"/>
+                                                <apex:param name="owner" value="all"/>
+                                                <div class="offer offer-default" style="display: inline-block;">
+                                                    <div class="offer-content">
+                                                        <span>
+                                                            <strong><br /><apex:outputText value="{!$Label.CRABB_DEV__See_all_records} {!$Label.CRABB_DEV__of}: {!key}"/></strong>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </apex:commandLink>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel layout="none" rendered="{!mapSottoDisabled[key]}">
+                                            <div class="offerdisabled offer-disabled" style="display: inline-block;">
+                                                <div class="offer-content">
+                                                    <span>
+                                                        <strong><br /><apex:outputText value="{!$Label.CRABB_DEV__See_all_records} {!$Label.CRABB_DEV__of}: {!key}"/></strong>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                    </div>
+                                    <apex:repeat value="{!mapWrapper[key]}" var="keyInt">
+                                        <apex:outputPanel layout="none" rendered="{!!mapSottoDisabled[key]}">
+                                            <apex:commandLink action="{!createStepOne}" style="text-decoration: none;" reRender="formid" status="TheStatus">
+                                                <apex:param name="tipoesotto" value="{!key}"/>
+                                                <apex:param name="owner" value="{!keyInt.Owner}"/>
+                                                <div class="offer offer-default" style="display: inline-block; padding: 5px 5px 5px 5px;">
+                                                    <div class="offer-content">
+                                                        <br />
+                                                        <span class="owner-name"> 
+                                                            <strong><apex:outputText value="{!keyInt.Owner}"/></strong>
+                                                        </span>
+                                                        <br /> 
+                                                        <div align="right">
+                                                            <span class="owner-count">
+                                                                <span class="owner-number"><strong><apex:outputText value="{!keyInt.totCount}"/></strong></span>
+                                                                <br />
+                                                                <span class="owner-days"><small><apex:outputText value="{!keyInt.giorni} {!$Label.CRABB_DEV__Days}"/></small></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </apex:commandLink>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel layout="none" rendered="{!mapSottoDisabled[key]}">
+                                            <div class="offerdisabled offer-disabled" style="display: inline-block; padding: 5px 5px 5px 5px;">
+                                                <div class="offer-content">
+                                                    <br />
+                                                    <span class="owner-name"> 
+                                                        <strong><apex:outputText value="{!keyInt.Owner}"/></strong>
+                                                    </span>
+                                                    <br /> 
+                                                    <div align="right">
+                                                        <span class="owner-count">
+                                                            <span class="owner-number"><strong><apex:outputText value="{!keyInt.totCount}"/></strong></span>
+                                                            <br />
+                                                            <span class="owner-days"><small><apex:outputText value="{!keyInt.giorni} {!$Label.CRABB_DEV__Days}"/></small></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                    </apex:repeat>
+                                </div>
+                            </apex:repeat>
+                        </div>
+
+                        <script>
+                            j$(document).ready(function(){
+                                j$( "#opsdashboard" ).accordion(
+                                    {   
+                                        header: '.opsheader', 
+                                        collapsible: true, 
+                                        active: false,
+                                        heightStyle: 'content',
+                                    }
+                                );
+                            });
+                        </script>
+                </apex:outputPanel>
+
+                <apex:outputPanel layout="none" rendered="{!currentStep = '1'}" id="idstep1">
+
+                    <div class="col-xs-4" id="panelItems">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">Source Object</div>
+                            <div class="panel-body">
+                                <apex:selectList value="{!selectedPickValue}" size="1" multiselect="false" styleClass="form-control" id="selpickval">
+                                    <apex:selectOptions value="{!picklistValues}"/>
+                                    <apex:actionSupport event="onchange" action="{!picklistMethod}" reRender="filterid" />
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+
+                    <apex:outputPanel id="filterid">
+                        <div class="col-xs-4">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">Set Filter</div>
+                                <div class="panel-body">
+                                    <h5>{!selField}</h5><br/><br/>
+                                    <apex:inputText rendered="{!isString}" styleClass="form-control input-sm" id="sField" value="{!sInput}">
+                                        <small> {!$Label.CRABB_DEV__Partial_search_use_wildcard} "%" </small>
+                                    </apex:inputText>
+
+                                    <apex:outputText rendered="{!isDate}" value="{!$Label.CRABB_DEV__From} " />
+                                    <apex:input type="date" rendered="{!isDate}" styleClass="form-control input-sm" id="dField1" value="{!dInputStart}" /> <br hidden="{!!isDate}" />
+                                    <apex:outputText rendered="{!isDate}" value="{!$Label.CRABB_DEV__To} " /> 
+                                    <apex:input type="date" rendered="{!isDate}" styleClass="form-control input-sm" id="dField2" value="{!dInputFinish}" />
+
+                                    <apex:outputText rendered="{!isInteger}" value="{!$Label.CRABB_DEV__From} " /> 
+                                    <apex:inputText rendered="{!isInteger}" styleClass="form-control input-sm" id="iField1" value="{!iInputStart}" /><br hidden="{!!isInteger}"/>
+                                    <apex:outputText rendered="{!isInteger}" value="{!$Label.CRABB_DEV__To} " /> 
+                                    <apex:inputText rendered="{!isInteger}" styleClass="form-control input-sm" id="iField2" value="{!iInputFinish}" />
+
+                                    <apex:outputText rendered="{!isDouble}" value="{!$Label.CRABB_DEV__From} " /> 
+                                    <apex:inputText rendered="{!isDouble}" styleClass="form-control input-sm" id="ndField1" value="{!ndInputStart}" /><br hidden="{!!isDouble}"/>
+                                    <apex:outputText rendered="{!isDouble}" value="{!$Label.CRABB_DEV__To} " /> 
+                                    <apex:inputText rendered="{!isDouble}" styleClass="form-control input-sm" id="ndField2" value="{!ndInputFinish}" />
+
+                                    <apex:inputCheckbox rendered="{!isCheckbox}" value="{!cInput}" id="cField" styleClass="checkbox"/>
+
+                                    <apex:inputField rendered="{!isObject}" value="{!anPratica[selectedPickValue]}"/>
+                                    
+                                    <apex:selectList rendered="{!isPicklist}" styleClass="form-control input-sm" id="pField" value="{!pInput}" size="5" multiselect="true">
+                                        <apex:selectOptions value="{!pkInputList}"/>
+                                    </apex:selectList>
+                                </div>
+                                <apex:outputPanel layout="none" rendered="{!AND(selectedPickValue != null,selectedPickValue != '')}">
+                                    <div class="panel-footer" >
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="setFilter();"> {!$Label.Add_Filter}
+                                                <span class="bi bi-plus"></span>
+                                            </button>
+                                        </div>
+                                        <apex:actionFunction action="{!setFilter}" name="setFilter" reRender="filtri"></apex:actionFunction>
+                                    </div>
+                                </apex:outputPanel>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="allfilterid">
+                        <div class="col-xs-4">
+                            <apex:outputPanel id="filtri"> 
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">Filter</div>
+                                    <div class="panel-body" >
+                                        <apex:repeat value="{!searchList}" var="f" >
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="deleteFilter('{!f}');" >
+                                                <span class="bi bi-eraser"></span>
+                                            </button>
+                                            <apex:outputText value="   " />
+                                            <apex:outputText value="{!f}"/><br/>
+                                        </apex:repeat>
+                                        <apex:actionFunction action="{!deleteFilter}" name="deleteFilter" reRender="filtri">
+                                            <apex:param name="delF" assignTo="{!delF}" value="" />
+                                        </apex:actionFunction>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="refresh();"> {!$Label.Apply}
+                                                <span class="bi bi-funnel"></span>
+                                            </button>
+                                        </div>
+                                        <apex:actionFunction action="{!createStepOne}" name="refresh" reRender="tableid" status="TheStatus"></apex:actionFunction>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="clearFilter();"> {!$Label.Erase}
+                                                <span class="bi bi-eraser"></span>
+                                            </button>
+                                        </div>
+                                        <apex:actionFunction action="{!clearFilter}" name="clearFilter" reRender="tableid,idstep1" status="TheStatus"></apex:actionFunction>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="tableid">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <apex:outputPanel layout="none" rendered="{!!selPage}">
+                                                    <apex:inputCheckbox value="{!selPage}">
+                                                        <apex:actionSupport event="onchange" action="{!selectPage}" reRender="tableid" />
+                                                    </apex:inputCheckbox>&nbsp;{!$Label.Select_Page}
+                                                </apex:outputPanel>
+                                                <apex:outputPanel layout="none" rendered="{!selPage}">
+                                                    <apex:inputCheckbox value="{!selPage}">
+                                                        <apex:actionSupport event="onchange" action="{!selectPage}" reRender="tableid" />
+                                                    </apex:inputCheckbox>&nbsp;{!$Label.Deselect_Page}
+                                                </apex:outputPanel>
+                                            </th>
+                                            <th><i>{!$Label.CRABB_DEV__Dossier_Code}</i></th>
+                                            <th><i>Account</i></th>
+                                            <th><i>{!$Label.CRABB_DEV__Strategy}</i></th>
+                                            <th><i>{!$Label.CRABB_DEV__Reminder_sending}</i></th>
+                                            <th><i>{!$Label.CRABB_DEV__Expired}</i></th>
+                                            <th><i>{!$Label.CRABB_DEV__Start_date_expired}</i></th>
+                                            <th><i>{!$Label.CRABB_DEV__Status}</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!stdCtrl.records}" var="rec">
+                                            <tr>
+                                                <td>
+                                                    <apex:inputCheckbox value="{!mapSelected[rec.Id]}" />
+                                                </td>
+                                                <td>
+                                                    <a href="/{!rec.Id}" target="blank">{!rec['Name']}</a>
+                                                </td>
+                                                <td>
+                                                    <a href="/{!rec['Account__c']}" target="blank">{!rec['Account__r.Name']}</a>
+                                                </td>
+                                                <td>
+                                                    <a href="/{!rec['Strategia__c']}" target="blank">{!rec['Strategia__r.Nome__c']}</a>
+                                                </td>
+                                                <td>
+                                                    {!rec['Modalit_Invio_Sollecito__c']}
+                                                </td>
+                                                <td>
+                                                    {!rec['Residuo_Totale__c']}
+                                                </td>
+                                                <td>
+                                                    {!rec['Data_inizio_scaduto__c']}
+                                                </td>
+                                                <td>
+                                                    {!rec['Stato__c']}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td>
+                                                <output>
+                                                    <span class="label label-success">{!$Label.CRABB_DEV__Selected}: {!numSelected}</span>
+                                                </output>
+                                            </td>
+                                            <td>
+                                                <output>
+                                                    <apex:selectList value="{!selectedNumOfRec}" size="1" multiselect="false" styleClass="form-control">
+                                                        <apex:selectOptions value="{!numOfRecords}"/>
+                                                        <apex:actionSupport event="onchange" action="{!setNumOfRec}" reRender="tableid" />
+                                                    </apex:selectList>
+                                                </output>
+                                            </td>
+                                            <td>
+                                                <output>
+                                                    <apex:commandButton styleClass="btn btn-danger btn-xs" value="{!$Label.CRABB_DEV__Select_all}" action="{!selectAll}" reRender="tableid" onclick="$('.loadingIconSel').css('display','inline');" oncomplete="$('.loadingIconSel').css('display','none');">
+                                                        <apex:param name="selAll" assignTo="{!selAll}" value="true"/>
+                                                    </apex:commandButton>
+                                                    <span id="loadingSpanSel">
+                                                        <img class="loadingIconSel" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                                    </span>
+                                                    <apex:commandButton styleClass="btn btn-danger btn-xs" value="{!$Label.CRABB_DEV__Deselect_all}" action="{!selectAll}" reRender="tableid" onclick="$('.loadingIconDes').css('display','inline');" oncomplete="$('.loadingIconDes').css('display','none');">
+                                                        <apex:param name="selAll" assignTo="{!selAll}" value="false"/>
+                                                    </apex:commandButton>
+                                                    <span id="loadingSpanDes">
+                                                        <img class="loadingIconDes" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                                    </span>
+                                                </output>
+                                            </td>
+                                            <td colspan="2">
+                                                <output>
+                                                    <apex:outputPanel rendered="{!stdCtrl.hasPrevious}">
+                                                        <apex:commandLink action="{!stdCtrl.previous}" style="text-decoration: none;" styleClass="btn btn-danger btn-xs" reRender="tableid">
+                                                            <span class="bi bi-caret-left"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!!stdCtrl.hasPrevious}">
+                                                        <apex:commandLink onclick="return false;" style="text-decoration: none; background-color: #D2D2D2; cursor: not-allowed; color: black;" styleClass="btn btn-xs">
+                                                             <span class="bi bi-caret-left"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!stdCtrl.hasPrevious}">
+                                                        <apex:commandLink action="{!stdCtrl.first}" style="text-decoration: none;" styleClass="btn btn-danger btn-xs" reRender="tableid">
+                                                            <span class="bi bi-skip-backward">></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!!stdCtrl.hasPrevious}">
+                                                        <apex:commandLink onclick="return false;" style="text-decoration: none; background-color: #D2D2D2; cursor: not-allowed; color: black;"  styleClass="btn btn-xs">
+                                                            <span class="bi bi-skip-backward"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!stdCtrl.hasNext}">
+                                                        <apex:commandLink action="{!stdCtrl.last}" style="text-decoration: none;" styleClass="btn btn-danger btn-xs" reRender="tableid">
+                                                            <span class="bi bi-skip-forward"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!!stdCtrl.hasNext}">
+                                                        <apex:commandLink onclick="return false;" style="text-decoration: none; background-color: #D2D2D2; cursor: not-allowed; color: black;"  styleClass="btn btn-xs">
+                                                            <span class="bi bi-skip-forward"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!stdCtrl.hasNext}">
+                                                        <apex:commandLink action="{!stdCtrl.next}" style="text-decoration: none;" styleClass="btn btn-danger btn-xs" reRender="tableid">
+                                                            <span class="bi bi-caret-right"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!!stdCtrl.hasNext}">
+                                                        <apex:commandLink onclick="return false;" style="text-decoration: none; background-color: #D2D2D2; cursor: not-allowed; color: black;"  styleClass="btn btn-xs">
+                                                            <span class="bi bi-caret-right"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                </output>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <output>
+                                                    <apex:commandButton styleClass="btn btn-danger btn-xs" action="{!AffidaLista}" value="{!$Label.CRABB_DEV__Entrust_Dossier}" rendered="{!isAffido}" />
+                                                    <apex:commandButton styleClass="btn btn-danger btn-xs" action="{!ConfermaLista}" value="{!$Label.CRABB_DEV__dossier_processing}" rendered="{!!isAffido}" />
+                                                </output>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>              
+                        </div>
+                    </apex:outputPanel>
+
+                </apex:outputPanel>
+
+                <apex:outputPanel rendered="{!currentStep = '2'}">
+
+                    <apex:outputPanel layout="none" rendered="{!batchRunning}" id="batchid">
+                        <apex:pageMessage summary="{!$Label.CRABB_DEV__Processing_Reload}." severity="info" strength="3"/>
+                        <br />
+                        <center>
+                            <apex:commandButton value="Refresh" styleClass="btn btn-primary" action="{!empty}" />
+                        </center>
+                        <br />
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table" id="tab_logic">
+                                    <thead>
+                                        <tr align="center">
+                                            <th><i>{!$Label.TotalBatch}</i></th>
+                                            <th><i>{!$Label.ProcessedBatch}</i></th>
+                                            <th><i>{!$Label.Batch_Status}</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {!aaj.TotalJobItems}
+                                            </td>
+                                            <td>
+                                                {!aaj.JobItemsProcessed}
+                                            </td>
+                                            <td>
+                                                {!aaj.Status}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel layout="none" rendered="{!!batchRunning}">
+                        <apex:pageMessage summary="{!$Label.CRABB_DEV__EndActivity}: {!countTask}" severity="info" strength="3" />
+                        <div align="center">
+                            <apex:commandButton value="{!$Label.CRABB_DEV__Back}" action="{!backTo}" rendered="{!currentStep = '2'}" id="indietronew" styleClass="btn btn-primary"/>
+                            &nbsp;
+                            <apex:commandButton value="HomePage" action="{!homePage}" rendered="{!currentStep = '2'}" id="homepagenew" styleClass="btn btn-primary"/>
+                        </div>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </div>
+        </div>
+
+        <apex:actionstatus id="TheStatus">
+           <apex:facet name="start">
+               <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" ImageUrl="{!$Resource.Loading}" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+           </apex:facet>
+        </apex:actionstatus>
+    </apex:form>
+</apex:page>

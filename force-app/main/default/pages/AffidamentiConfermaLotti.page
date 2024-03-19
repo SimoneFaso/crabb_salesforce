@@ -1,0 +1,227 @@
+<apex:page controller="AffidamentilottizzazioneCTRL" tabStyle="Pratica__c" docType="html-5.0" >
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <apex:form id="form">
+        <div id="balancecontainer" class="crabbpackage">
+            <div class="page-header">
+                <h1><span class="bi bi-distribute-horizontal" style="color: #F3BB45"></span> {!$Label.PreAssignment_Creation} <small>Step 3 of 4</small></h1>
+            </div>
+
+            <apex:pageMessages />
+
+            <div class="container-fluid" >
+
+                <div class="row">
+
+                    <apex:outputPanel layout="none" rendered="{!!sonoIDatiCongelati}">
+
+                        <div class="col-xs-12">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading" style="color: black;"><strong> {!$Label.crabb_dev__selectandorder}</strong></div>
+                                <div class="panel-body">
+                                    <c:Multiselect leftLabel="{!$Label.crabb_dev__selectablecollectors}" leftOptions_="{!collectorSelezionabili}" rightLabel="{!$Label.crabb_dev__selectedcollectors}" rightOptions_="{!collectorSelezionati}" size="14" width="120px"></c:Multiselect>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <div class="col-xs-12">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading" style="color: black;"><strong> {!$Label.OrSelectAPreviously}</strong></div>
+                                <div class="panel-body">
+                                    <apex:selectList value="{!configurationSelected}" size="1" multiselect="false" styleClass="form-control">
+                                        <apex:selectOptions value="{!configurationOptions}"/>
+                                    </apex:selectList>
+                                </div>
+                            </div>
+                        </div>
+
+                    </apex:outputPanel>
+    
+                    <apex:outputPanel layout="none" rendered="{!sonoIDatiCongelati}">
+
+                        <apex:outputPanel layout="none" rendered="{!AND(drList.size > 1,OR(configurationSelected = null,configurationSelected = ''))}">
+                            <div class="col-xs-12">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading" style="color: black;"><strong> {!$Label.crabb_dev__selectalgorithm}</strong></div>
+                                    <div class="panel-body">
+                                        <div>
+                                            <apex:selectRadio value="{!algoritmoScelto}" dir="ltr" layout="pageDirection">
+                                                <apex:selectOptions value="{!algoritmi}" id="label"/>
+                                            </apex:selectRadio>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th><i>Collector</i></th>
+                                            <th><i>{!$Label.crabb_dev__order}</i></th>
+                                            <th><i>% {!$Label.crabb_dev__assignments}</i></th>
+                                            <th><i>N° {!$Label.crabb_dev__assignments}</i></th>
+                                            <th><i>{!$Label.crabb_dev__euroentrusted}</i></th>
+                                            <th><i>{!$Label.crabb_dev__prelot} {!$Label.crabb_dev__code}</i></th>
+                                            <th><i>% {!$Label.crabb_dev__effective}</i></th>
+                                            <th><i>% Default</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!drList}" var="d">
+                                            <tr>
+                                                <td>
+                                                    {!d.l.Affidamenti_support_collector_ragSoc__c}
+                                                </td>
+                                                <td>
+                                                    {!d.l.Affidamenti_support_Posizione__c}
+                                                </td>
+                                                <td>
+                                                    <apex:outputPanel layout="none" rendered="{!drList.size < 2}">
+                                                        {!d.l.Affidamenti_support_Percentuale__c}
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel layout="none" rendered="{!drList.size > 1}">
+                                                        <apex:inputField value="{!d.l.Affidamenti_support_Percentuale__c}" />
+                                                    </apex:outputPanel>
+                                                </td>
+                                                <td>
+                                                    {!d.l.Affidamenti_support_numero_affidi__c}
+                                                </td>
+                                                <td>
+                                                    {!d.l.Affidamenti_support_Scaduto_Affidato__c}
+                                                </td>
+                                                <td>
+                                                    {!d.l.Affidamenti_support_Codice_prelotto__c}
+                                                </td>
+                                                <td>
+                                                    {!d.l.Affidamenti_support_Percentuale_effettiv__c}
+                                                </td>
+                                                <td>
+                                                    {!d.l.Affidamento_Percentuale_Affido_Standard__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </div>
+            </div>
+
+            <br />
+
+            <div align="center">
+                <apex:commandButton action="{!IndietroDaAlgortmi}" value="{!$Label.crabb_dev__back}" rendered="{!sonoIDatiCongelati!=true}" styleClass="btn btn-primary" />
+                &nbsp;
+                <apex:commandButton action="{!congelaDati}" value="{!$Label.crabb_dev__freezechoices}" reRender="form" status="TheStatus" rendered="{!sonoIDatiCongelati!=true}" styleClass="btn btn-primary" />
+                &nbsp;
+                <apex:outputPanel layout="none" rendered="{!collectorSelezionabili.size != 1}">
+                    <apex:commandButton action="{!scongelaDati}" value="{!$Label.crabb_dev__edit} {!$Label.crabb_dev__selection}" reRender="form" status="TheStatus" rendered="{!sonoIDatiCongelati=true}" styleClass="btn btn-primary" />                 
+                </apex:outputPanel>
+                &nbsp;
+                <apex:commandButton action="{!calcolaDistribuzione}" value="{!$Label.crabb_dev__assign} {!$Label.crabb_dev__dossier}" reRender="form" status="TheStatus" rendered="{!AND(sonoIDatiCongelati,drList.size > 1,OR(configurationSelected = null,configurationSelected = ''))}" styleClass="btn btn-primary" />               
+                &nbsp;
+                <apex:commandButton disabled="{!saveDisabled}" action="{!saveConfiguration}" value="{!IF(saveDisabled,$Label.crabb_dev__save2,$Label.crabb_dev__save3)}" rendered="{!AND(sonoIDatiCongelati=true,praticheAssegnate)}" reRender="form" status="TheStatus" styleClass="btn btn-primary"/>
+                &nbsp;
+                <c:AutoDisablinButton actionToInvoke="{!confermaDistribuzione}" disableAll="true" rendered="{!AND(sonoIDatiCongelati=true,hasBeenRequiredDistribution=true)}" buttonValue="{!$Label.crabb_dev__confirm} {!$Label.crabb_dev__distribution}" buttonId="btnConfermaDistribuzione" styleClass="btn btn-primary" buttonValueDisabled="Pre-lotti in creazione..."></c:AutoDisablinButton>
+            </div>
+        </div>
+
+        <apex:actionstatus id="TheStatus">
+           <apex:facet name="start">
+               <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="5%" width="5%" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+           </apex:facet>
+        </apex:actionstatus> 
+
+    </apex:form>
+
+    <!-- <apex:sectionHeader title="Creazione pre-lotti" subtitle="Step 3 of 4"/>       
+    <apex:form id="form">
+        <apex:messages />
+        <apex:pageBlock title="Algoritmo di distribuzione" >
+            <apex:panelGrid >
+               <Apex:panelGroup >
+                    <div class="selradio">
+                        <apex:selectRadio value="{!algoritmoScelto}" styleClass="Bold" disabled="{!sonoIDatiCongelati=true}">
+                            <apex:selectOptions value="{!algoritmi}"/>
+                        </apex:selectRadio>
+                    </div>
+                </Apex:panelGroup>
+            </apex:panelGrid>
+            <apex:pageblockSection title="Scegli i collector" collapsible="false" columns="1" id="pageBlock" rendered="{!sonoIDatiCongelati!=true}">
+                <apex:outputPanel id="filtri"  >
+                    <b style="color:red;" > Seleziona ed ordina i collector. L'algoritmo processerà la distribuzione delle pratiche ordinando i collector selezionati dall'alto in basso.</b>
+                    <div>
+                        <c:Multiselect leftLabel="Collector Selezionabili"
+                                leftOptions_="{!collectorSelezionabili}"
+                                            rightLabel="Collector Selezionati"
+                                            rightOptions_="{!collectorSelezionati}"
+                                            size="14"
+                                            width="120px"/>
+                    </div>
+                </apex:outputpanel>                 
+            </apex:pageblockSection>           
+            <apex:pageblockSection title="Dettagli Distribuzione" collapsible="false" columns="1" rendered="{!sonoIDatiCongelati=true}">
+                <!-- DEMO VERS 
+                <apex:pageBlockTable value="{!drList}" var="a" id="idAffTable"> 
+                    <apex:column value="{!a.l.Affidamenti_support_collector_ragSoc__c}" headerValue="Collector"/>
+                    <apex:column value="{!a.l.Affidamenti_support_Posizione__c}" headerValue="Ordine"/>
+                    <apex:column headerValue="% affidi">
+                        <apex:inputfield value="{!a.l.Affidamenti_support_Percentuale__c}" />
+                    </apex:column>
+                    <apex:column value="{!a.l.Affidamenti_support_numero_affidi__c}" headerValue="N° Affidi"/> 
+                    <apex:column value="{!a.l.Affidamenti_support_Scaduto_Affidato__c}" headerValue="€ Affidati"/>                        
+                    <apex:column value="{!a.l.Affidamenti_support_Codice_prelotto__c}" headerValue="Codice prelotto"/>    
+                    <apex:column value="{!a.l.Affidamenti_support_Percentuale_effettiv__c}" headerValue="% effettivo"/>  
+                    <!-- ES: Ultima Colonna 
+                    <apex:column value="{!a.l.Affidamento_Percentuale_Affido_Standard__c}" headerValue="% Default"/>                
+                </apex:pageBlockTable>-->
+
+                <!-- ELIOR VERS --
+                <apex:pageBlockTable value="{!drList}" var="a" id="idAffTable"> 
+                    <apex:column value="{!a.l.Affidamenti_support_collector_ragSoc__c}" headerValue="Collector"/>
+                    <apex:column value="{!a.l.Affidamenti_support_Posizione__c}" headerValue="Ordine"/>
+                    <apex:column headerValue="% affidi">
+                        <apex:inputfield value="{!a.l.Affidamenti_support_Percentuale__c}" />
+                    </apex:column>
+                    <apex:column value="{!a.l.Affidamenti_support_numero_affidi__c}" headerValue="N° Affidi"/> 
+                    <apex:column value="{!a.l.Affidamenti_support_Scaduto_Affidato__c}" headerValue="€ Affidati"/>                        
+                    <apex:column value="{!a.l.Affidamenti_support_Codice_prelotto__c}" headerValue="Codice prelotto"/>    
+                    <apex:column value="{!a.l.Affidamenti_support_Percentuale_effettiv__c}" headerValue="% effettivo"/>  
+                    <!-- ES: Ultima Colonna --
+                    <apex:column value="{!a.l.Affidamento_Percentuale_Affido_Standard__c}" headerValue="% Default"/>                
+                </apex:pageBlockTable>
+                
+            </apex:pageblockSection>  
+
+            <apex:pageblockButtons location="Bottom"  >
+                <apex:pagemessages />
+                 <apex:commandButton action="{!IndietroDaAlgortmi}"   value="Indietro" rendered="{!sonoIDatiCongelati!=true}" />
+                 <apex:commandButton action="{!congelaDati}" value="Congela Scelte" reRender="form" status="TheStatus" rendered="{!sonoIDatiCongelati!=true}" />
+                 <apex:commandButton action="{!scongelaDati}" value="Modifica Scelte" reRender="form" status="TheStatus" rendered="{!sonoIDatiCongelati=true}" />                 
+                 <apex:commandButton action="{!calcolaDistribuzione}" value="Assegna pratiche" reRender="form" status="TheStatus" rendered="{!sonoIDatiCongelati=true}" />               
+                 <c:AutoDisablinButton actionToInvoke="{!confermaDistribuzione}" disableAll="true" rendered="{!AND(sonoIDatiCongelati=true,hasBeenRequiredDistribution=true)}" buttonValue="Conferma distribuzione" buttonId="btnConfermaDistribuzione" styleClass="buttonStyle" buttonValueDisabled="Pre-lotti in creazione..." />                 
+            </apex:pageblockButtons>  
+        </apex:pageBlock>   
+    </apex:form>    
+        <!-- QUESTO BLOCK, IMPEDISCE L'UTENTE DI ESEGUIRE OPERAZIONE INADEGUATI(PRECAUTION) --
+        <apex:form id="TheStatusForm"> 
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="5%" width="5%" Message="Attendere prego..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus> 
+        </apex:form>       -->
+
+</apex:page>

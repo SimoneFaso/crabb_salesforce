@@ -1,0 +1,91 @@
+<apex:page sidebar="false" controller="ImportStrategie" docType="html-5.0">
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <apex:form >
+        <div id="balancecontainer" class="crabbpackage">
+            <div class="page-header">
+                <h1><i class="bi bi-upload" style="color: #EB5E28"></i> {!$Label.Import_Strategies}</h1>
+            </div>
+            <apex:pagemessages />
+            <div class="container-fluid" >
+                <div class="row">
+                    <center>
+                        <apex:inputFile value="{!contentFile}" filename="{!nameFile}" />
+                        <apex:commandButton action="{!ReadFile}" value="Upload File" id="theButton" styleClass="btn btn-primary btn-xs"/>
+                        <br/> <br/>
+                        <font color="red"> <b>Note: Please use the standard template to upload Strategies.</b> </font>
+                    </center>  
+
+                    <apex:outputPanel rendered="{!NOT(ISNULL(uploadedStrategie))}">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th><i>{!$Label.crabb_dev__strategy} {!$Label.crabb_dev__name}</i></th>
+                                            <th><i>Record Type</i></th>
+                                            <th width="50%"><i>{!$Label.crabb_dev__rule}</i></th>
+                                            <th><i>SLA</i></th>
+                                            <th><i>{!$Label.crabb_dev__description}</i></th>
+                                            <th><i>{!$Label.crabb_dev__status}</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!uploadedStrategie}" var="s" rendered="{!NOT(ISNULL(uploadedStrategie))}">
+                                            <tr>
+                                                <td>
+                                                    <apex:outputField value="{!s.Nome__c}"/>
+                                                </td>
+                                                <td>
+                                                    <apex:outputField value="{!s.RecordTypeId}"/>
+                                                </td>
+                                                <td>
+                                                    <apex:outputField value="{!s.Activation_roles__c}"/>
+                                                </td>
+                                                <td>
+                                                    <apex:outputField value="{!s.SLA__c}"/>
+                                                </td>
+                                                <td>
+                                                    <apex:outputField value="{!s.Descrizione__c}"/>
+                                                </td>
+                                                <td>
+                                                    <apex:outputField value="{!s.Stato__c}"/>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat> 
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </div>
+
+                <br />
+                <br />
+
+                <apex:outputPanel rendered="{!IF(OR($Profile.Name = 'System Administrator',$Profile.Name = 'Amministratore del sistema'),true,false)}">
+                    <div class="col-xs-4"></div>
+                    <div align="center">
+                        <div class="col-xs-4">
+                            {!$Label.AccountNumberToGenerate}<apex:inputText value="{!numAccTest}" styleClass="form-control" style="text-align: center;" />
+                            <br />
+                            &nbsp;<apex:commandButton action="{!generateTestData}" value="{!$Label.crabb_dev__createtestdata}" id="testbutton" styleClass="btn btn-primary btn-xs"/>
+                            &nbsp;<apex:commandButton action="{!runBatch}" value="{!$Label.crabb_dev__startmanualbatchimport}" id="thebatch" styleClass="btn btn-primary btn-xs"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-4"></div>
+                </apex:outputPanel>
+            </div>
+        </div>
+
+        <br />
+        
+    </apex:form>   
+
+</apex:page>

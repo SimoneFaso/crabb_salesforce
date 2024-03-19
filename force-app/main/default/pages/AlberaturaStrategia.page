@@ -1,0 +1,175 @@
+<apex:page sidebar="false" controller="AlberaturaStrategiaCTRL">
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <style type="text/css">
+
+        .modal-dialog{
+            width: 50% !important;
+        }
+
+        .modal-body{
+            background-image: -webkit-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+            background-image: -o-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#f2dede), to(#ebcccc));
+            background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2dede', endColorstr='#ffebcccc', GradientType=0);
+            background-repeat: repeat-x;
+        }
+
+        .offer{
+            background:#fff;
+            color: #f68b1f;
+            border:1px solid #ddd;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin: 15px 0;
+            overflow:hidden;
+            width: 200px;
+            border-radius: 15px 15px 15px 15px;
+        }
+        .offer:hover {
+            -webkit-transform: scale(1.1); 
+            -moz-transform: scale(1.1); 
+            -ms-transform: scale(1.1); 
+            -o-transform: scale(1.1); 
+            transform:rotate scale(1.1); 
+            -webkit-transition: all 0.4s ease-in-out; 
+            -moz-transition: all 0.4s ease-in-out; 
+            -o-transition: all 0.4s ease-in-out;
+            transition: all 0.4s ease-in-out;
+            background:#f68b1f url(images/ui-bg_glass_20_f68b1f_1x400.png) 50% 50% repeat-x;
+            color: white;
+            cursor: default;
+        }
+        .offer-radius{ border-radius:7px; }
+        .offer-danger { border-color: #d9534f; }
+        .offer-success { border-color: #5cb85c; }
+        .offer-default { border-color: #999999; }
+        .offer-primary { border-color: #428bca; }
+        .offer-info { border-color: #5bc0de; }
+        .offer-warning { border-color: #f0ad4e; }
+        .offer-content{ padding:0 20px 10px; }
+
+        .offerdisabled{
+            background:#fff;
+            color: #000000;
+            border:1px solid #ddd;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin: 15px 0;
+            overflow:hidden;
+            width: 200px;
+            border-radius: 15px 15px 15px 15px;
+        }
+
+        .offer-disabled{
+            background-color: #D2D2D2;
+            cursor: not-allowed !important;
+            border-color: black;
+        }
+
+        @media (min-width: 487px) {
+            .container { max-width: 250px; }
+            .col-sm-6 { width: 10%; }
+        }
+        @media (min-width: 900px) {
+            .container { max-width: 10%; }
+            .col-md-4 { width: 33.33333333333333%; }
+        }
+
+        @media (min-width: 1200px) {
+            .container { max-width: 10%; }
+            .col-lg-3 { width: 25%; }
+        }
+
+        .google-visualization-orgchart-node{
+            background: #dfdfdf !important;
+            //background-image: linear-gradient(to bottom, #dff0d8 0%, #d0e9c6 100%);
+            //background: #e4e4e4 !important;
+            color: #3c763d !important;
+            border: 2px;
+            border-color: #3c763d;
+        }
+
+        #gchart_div .google-visualization-orgchart-linebottom {
+            border-bottom: 3px solid #3c763d;
+        }
+
+        #gchart_div .google-visualization-orgchart-lineleft {
+            border-left: 3px solid #3c763d;
+        }
+
+        #gchart_div .google-visualization-orgchart-lineright {
+            border-right: 3px solid #3c763d;
+        }
+
+        #gchart_div .google-visualization-orgchart-linetop {
+            border-top: 3px solid #3c763d;
+        }
+
+        .box {float:left; background: white; width:100px; color: white; text-align: center;}
+        .salvia-box {float:left; background-color:#64a59e; width: 150px; color: white; text-align: center;}
+        .avio-box {float:left; background-color:#3DB0D7; width: 150px; color: white; text-align: center;}
+        .peach-box {float:left; background-color:#fb927d; width: 150px; color: white; text-align: center;}
+        .gold-box {float:left; background-color:#f1c40f; width: 150px; color: green; text-align: center;}
+        .orange-box {float:left; background-color:#e67e22; width: 150px; color: green; text-align: center;}
+    </style>
+
+    <apex:form >
+
+        <div id="balancecontainer" class="crabbpackage">
+
+            <div class="page-header">
+                <h1><span class="bi bi-clipboard-plus" style="color: #EB5E28"></span> {!$Label.Schema_della_strategia}</h1>
+            </div>
+
+            <apex:pageMessages id="messages"/>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading" align="center">
+                                <h3>{!$Label.Scheme}</h3>
+                            </div>
+                            
+                            <div class="panel-body" style="background-color: #FFFFFF !important;">
+                            
+                                <c:OrgChartGoogle DRows="{!DRows}"/>
+
+                            </div>
+
+                            <div class="panel-body" style="background-color: #FFFFFF !important;">
+                                <B>
+                                <div>{!$Label.crabb_dev__legenda}</div>
+                                <BR/>
+                                <div class="salvia-box"><BR/>Automatic Step<BR/><BR/></div>
+                                <div class="box">...</div>
+                                <div class="avio-box"><BR/>Manual Step<BR/><BR/></div>
+                                <div class="box">...</div>
+                                <div class="peach-box"><BR/>Wait Step<BR/><BR/></div>
+                                <div class="box">...</div>
+                                <div class="gold-box"><BR/>AutoJump Step<BR/><BR/></div>
+                                <div class="box">...</div>
+                                <div class="orange-box"><BR/>Jump Step<BR/><BR/></div>
+                                </B>
+                                <BR/><BR/>
+                                <BR/><BR/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </apex:form>
+
+    <!-- <apex:pageBlock title={!$Label.Schema_della_strategia}>
+        <!--<apex:outputText>{!DRows}</apex:outputText>--
+        <c:OrgChartGoogle DRows="{!DRows}"/>
+    </apex:pageBlock>  -->
+</apex:page>

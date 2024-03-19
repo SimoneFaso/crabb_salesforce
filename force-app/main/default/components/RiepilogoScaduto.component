@@ -1,0 +1,79 @@
+<!-- ---------------------------------------------------------------------------------------------------------------------
+Name:            RiepilogoScaduto.component
+Description:     Component used in CruscottoCliente, CruscottoClienteEmbedded, CruscottoPratica, CruscottoPraticaEmbedded,
+                 ExpiredAmountAgeing Pages to build a data table of expired amounts with related ageing ranges
+
+Date         Version  Author               Summary of Changes
+-----------  -------  -------------------  -----------------------------------------------------------------------------
+             0.1      Matteo Sala          First Version
+04-Feb-2021  0.2      Giulia Mameli        Introduced Range, Transactions, Scaduto and Risk Status custom labels for
+                                           translation purpose
+-------------------------------------------------------------------------------------------------------------------- -->
+
+<apex:component >
+
+    <apex:attribute name="ChartData" description="Lista dei dati da rappresentare nel grafico" type="ChrtData[]" required="true"/>
+    
+    <apex:pageBlock >
+        <apex:facet name="header">
+            <div class="crabbpackage">
+                <div class="panel panel-primary">
+                    <div class="panel-heading" style ="font-size:14px">{!$Label.crabb_dev__expiredamountsummary}</div>
+                </div>
+            </div>
+        </apex:facet>
+        <!--<apex:pageBlockTable value="{!ChartData}" var="tabella">
+            <apex:column >
+                <apex:facet name="header">Situazione</apex:facet>
+                <apex:image url="/img/samples/light_green.gif" rendered="{!tabella.data1=0}"/>
+                <apex:image url="/img/samples/light_yellow.gif" rendered="{!tabella.data1=1}"/>
+                <apex:image url="/img/samples/light_red.gif" rendered="{!tabella.data1>1}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Fascia</apex:facet>
+                <apex:outputtext value="{!tabella.name}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header"># Movimenti</apex:facet>
+                <apex:outputtext value="{!tabella.data1}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Tot Scaduto</apex:facet>
+                <apex:outputtext value="€ {!tabella.data2}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Media Scaduto</apex:facet>
+                <apex:outputtext rendered="{!tabella.data1>0}" value="€ {!tabella.data2/tabella.data1}"/>
+                <apex:outputtext rendered="{!tabella.data1=0}" value="€ 0.00"/>
+            </apex:column>
+        </apex:pageBlockTable>-->
+        <div id="tblMatrix"> 
+            <apex:dataTable value="{!ChartData}" var="tabella">
+                <apex:column >
+                    <apex:facet name="header">{!$Label.crabb_dev__range}</apex:facet>
+                    <apex:outputtext value="{!tabella.name}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header"># {!$Label.crabb_dev__transactions}</apex:facet>
+                    <apex:outputtext value="{!tabella.data1}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">{!$Label.crabb_dev__scaduto}</apex:facet>
+                    <apex:outputtext rendered="{!tabella.data2>0}" value="€ {!tabella.data2}"/>
+                    <apex:outputtext rendered="{!tabella.data2=0}" value="€ 0.00"/>
+                </apex:column>
+                <!--<apex:column >
+                    <apex:facet name="header">Media Scaduto</apex:facet>
+                    <apex:outputtext rendered="{!tabella.data1>0}" value="€ {!FLOOR(tabella.data2/tabella.data1)}"/>
+                    <apex:outputtext rendered="{!tabella.data1=0}" value="€ 0"/>
+                </apex:column>-->
+                <apex:column >
+                    <apex:facet name="header">{!$Label.crabb_dev__riskstatus}</apex:facet>
+                    <apex:image url="/img/samples/light_green.gif" rendered="{!tabella.data1=0}"/>
+                    <apex:image url="/img/samples/light_yellow.gif" rendered="{!tabella.data1=1}"/>
+                    <apex:image url="/img/samples/light_red.gif" rendered="{!tabella.data1>1}"/>
+                </apex:column>
+            </apex:dataTable>
+        </div>
+    </apex:pageBlock>
+</apex:component>

@@ -1,0 +1,221 @@
+<apex:page controller="ModificaPreLotti" sidebar="false" cache="false" docType="html-5.0">
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.bundle.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <c:KillerStyle />
+
+    <style type="text/css">
+        .buttom{
+            position: absolute;
+            right:    0;
+            bottom:   0;
+        } 
+    </style>
+
+    <apex:form id="formid">
+
+        <div id="balancecontainer" class="crabbpackage">
+            
+            <div class="page-header">
+                <h1>{!$Label.PreLot_Edit}</h1>
+            </div>
+
+            <apex:pageMessages id="messages"/>
+
+            <div class="container-fluid" >
+
+                <div class="row">
+
+                    <apex:outputPanel id="rerenderTable">
+                        <div class="col-xs-12">
+
+                            <apex:outputPanel rendered="{!!affidEsiste}">
+                                <apex:pageMessage severity="warning" strength="3" >        
+                                    <apex:outputText value="{!$Label.CRABB_DEV__Pre_Lot2} {!Lotto.Name} {!$Label.CRABB_DEV__NoChangesAllowed}"/>
+                                </apex:pageMessage>
+                            </apex:outputPanel>
+
+                            <apex:outputPanel id="IdFormAffidamento" rendered="{!affidEsiste}">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading"><h4>{!$Label.CRABB_DEV__Total_Assignment} : {!initialTotal}</h4></div>
+                                    <div class="panel-body">
+                                        <center>
+                                            <c:AutoDisablinButton actionToInvoke="{!ReturnToLotti}" disableAll="true" buttonValue="{!$Label.CRABB_DEV__Previous}" buttonId="GestioneLotti" styleClass="btn btn-primary" buttonValueDisabled="{!$Label.CRABB_DEV__PreLotManagement}..." ></c:AutoDisablinButton>
+                                            <c:AutoDisablinButton actionToInvoke="{!GeneraLotto}" disableAll="true" buttonValue="{!$Label.CRABB_DEV__CreateLot}" buttonId="GeneraLotto" styleClass="btn btn-primary" buttonValueDisabled="{!$Label.CRABB_DEV__CreateLot}..." ></c:AutoDisablinButton>
+                                        </center>
+                                        <br />
+                                        <apex:outputpanel layout="block" rendered="{!initialTotal>25}">
+                                            {!$Label.Number_of_Lines}: &nbsp;
+                                            <apex:selectList value="{!recordsForPage}" size="1"  style="margin:0 auto; position:right;">
+                                                <apex:selectOptions value="{!recordsForPageValues}"></apex:selectOptions>
+                                                <apex:actionSupport event="onchange" action="{!sizeTable}" rerender="rerenderTable" status="TheStatus"/>   
+                                            </apex:selectList>
+                                        </apex:outputpanel>
+                                        <br />
+                                        <div class="table-responsive">
+                                            <table class="table" id="tab_logic">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%"></th>
+                                                        <th><i>{!$Label.Assignment}</i></th>
+                                                        <th><i>{!$Label.Country}</i></th>
+                                                        <th><i>{!$Label.Account_Name}</i></th>
+                                                        <th><i>{!$Label.Expired_Dossier}</i></th>
+                                                        <th><i>{!$Label.Dossier_Activation_Date}</i></th>
+                                                        <th><i>{!$Label.Dossier}</i></th>
+                                                        <th><i>{!$Label.Service}</i></th>
+                                                        <th><i>{!$Label.Lot_Expiration_Date}</i></th>
+                                                        <th><i>{!$Label.Collector_Type}</i></th>
+                                                        <th><i>{!$Label.Collector_Name}</i></th>
+                                                        <th><i>{!$Label.Status}</i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <apex:repeat value="{!ListAffidamenti}" var="Aff" rows="{!recordsForPage}" id="repeatId">
+                                                        <tr>
+                                                            <td>
+                                                                <apex:commandLink action="{!DeleteAffidamenti_PreLotti}" status="TheStatus" reRender="IdFormAffidamento">
+                                                                    <apex:param name="IdAffido" value="{!Aff.Id}" assignTo="{!IdAffido}"/>
+                                                                    <span class="bi bi-x-circle warning"></span>
+                                                                </apex:commandLink>
+                                                            </td>
+                                                            <td><apex:outputLink value="/{!Aff.Id}" target="_blank">{!Aff.Name}</apex:outputLink></td>
+                                                            <td><apex:outputText value="{!Aff.Pratica__r.Comune__c}"/></td>
+                                                            <td><apex:outputLink value="/{!Aff.Pratica__r.Account__r.Id}" target="_blank">{!Aff.Pratica__r.Account__r.Name}</apex:outputLink></td>
+                                                            <td><apex:outputField value="{!Aff.Pratica__r.Residuo_Totale__c}"/></td>
+                                                            <td><apex:outputField value="{!Aff.Pratica__r.Data_Apertura__c}"/></td>
+                                                            <td><apex:outputLink value="/{!Aff.Pratica__r.Id}" target="_blank">{!Aff.Pratica__r.Name}</apex:outputLink></td>
+                                                            <td><apex:outputText value="{!Aff.Pratica__r.Servizio_Fornitura__r.Name}"/></td>
+                                                            <td><apex:outputText value="{!Aff.Lotto__r.Data_scadenza__c}"/></td>
+                                                            <td><apex:outputText value="{!Aff.Tipo_collector__c}"/></td>
+                                                            <td><apex:outputText value="{!Aff.Nome_Collector__c}"/></td>
+                                                            <td><apex:outputText value="{!Aff.Stato__c}"/></td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                        <center>
+                                            <apex:commandLink value="<< {!$Label.CRABB_DEV__Start}" styleClass="btn btn-danger btn-xs" action="{!Beginning}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                                            <apex:commandLink value="< {!$Label.CRABB_DEV__Previous}" styleClass="btn btn-danger btn-xs" action="{!Previous}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                                            <apex:commandLink value="{!$Label.CRABB_DEV__Next} >" styleClass="btn btn-danger btn-xs" action="{!Next}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                                            <apex:commandLink value="{!$Label.CRABB_DEV__End} >>" styleClass="btn btn-danger btn-xs" action="{!End}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                                        </center>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </apex:outputPanel>
+                </div>
+
+            </div>
+
+        </div>
+
+    </apex:form>
+
+    <apex:form id="TheStatusForm"> 
+        <apex:actionstatus id="TheStatus">
+            <apex:facet name="start">
+                <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="5%" width="5%" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:form>
+
+    <!-- <apex:form >
+        <apex:pageBlock id="MainBlock" title="MODIFICA PRE-LOTTO">
+            <apex:outputPanel rendered="{!affidEsiste}"  id="IdFormAffidamento">
+                <apex:outputpanel layout="block" rendered="{!initialTotal>25}">
+                    Numero di righe per pagina: &nbsp;
+                    <apex:selectList value="{!recordsForPage}" size="1"  style="margin:0 auto; position:right;">
+                        <apex:selectOptions value="{!recordsForPageValues}"></apex:selectOptions>
+                    <apex:actionSupport event="onchange"  action="{!sizeTable}"  rerender="IdFormAffidamento" status="TheStatus"/>   
+                    </apex:selectList>
+                </apex:outputpanel>
+                Tot. Affidamenti : {!initialTotal}
+                <div style="position: relative;left: 40%;">
+                    <c:AutoDisablinButton actionToInvoke="{!ReturnToLotti}" disableAll="true" buttonValue="Indietro" buttonId="GestioneLotti" styleClass="buttonStyle" buttonValueDisabled="Gestione Pre-Lotti..." ></c:AutoDisablinButton>
+                    <c:AutoDisablinButton actionToInvoke="{!GeneraLotto}" disableAll="true" buttonValue="Genera Lotto" buttonId="GeneraLotto" styleClass="buttonStyle" buttonValueDisabled="Genera Lotto..." ></c:AutoDisablinButton>
+                </div>
+                <br/>
+                <apex:pageBlockTable value="{!ListAffidamenti}" var="Aff" id="AffPageBlock"  width="100%">          
+                    <apex:column >
+                        <apex:facet name="header">Affido</apex:facet>
+                        <apex:outputLink value="/{!Aff.Id}" target="_blanc" >{!Aff.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Comune</apex:facet>
+                        <apex:outputText value="{!Aff.Pratica__r.Comune__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Nome Account</apex:facet>
+                        <apex:outputLink value="/{!Aff.Pratica__r.Account__r.Id}">{!Aff.Pratica__r.Account__r.Name}</apex:outputLink>
+                    </apex:column> 
+                    <apex:column >
+                        <apex:facet name="header">Scaduto Pratica</apex:facet>
+                        <apex:outputField value="{!Aff.Pratica__r.Residuo_Totale__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Data Attivazione Pratica</apex:facet>
+                        <apex:outputField value="{!Aff.Pratica__r.Data_Apertura__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Pratica</apex:facet>
+                        <apex:outputLink value="/{!Aff.Pratica__r.Id}">{!Aff.Pratica__r.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Servizio</apex:facet>
+                        <apex:outputText value="{!Aff.Pratica__r.Servizio_Fornitura__r.Name}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Data Scadenza Lotto</apex:facet>
+                        <apex:outputText value="{!Aff.Lotto__r.Data_scadenza__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Tipologia Collector</apex:facet> 
+                        <apex:outputText value="{!Aff.Tipo_collector__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Nome Collector</apex:facet>
+                        <apex:outputText value="{!Aff.Nome_Collector__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Stato</apex:facet>
+                        <apex:outputText value="{!Aff.Stato__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Azione</apex:facet>
+                        <apex:commandLink value="Elimina" action="{!DeleteAffidamenti_PreLotti}" status="TheStatus" reRender="IdFormAffidamento">
+                            <apex:param name="IdAffido" value="{!Aff.Id}" assignTo="{!IdAffido}"/>
+                        </apex:commandLink> 
+                    </apex:column>
+                </apex:pageBlockTable>
+                <br/>
+                <div style="width: 100%; text-align: center">
+                    <apex:actionRegion >
+                        <apex:commandLink value="<< Inizio" styleClass="KillerBtn" action="{!Beginning}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                        <apex:commandLink value="< Precedente" styleClass="KillerBtn" action="{!Previous}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                        <apex:commandLink value="Successiva >" styleClass="KillerBtn" action="{!Next}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                        <apex:commandLink value="Fine >>" styleClass="KillerBtn" action="{!End}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                    </apex:actionRegion>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!!affidEsiste}">
+                <apex:pageMessage severity="warning" strength="3" >        
+                    <apex:outputText value="Il Pre-lotto {!Lotto.Name} non contiene affidamenti. Non è possibile apportare alcuna modifica."/>
+                </apex:pageMessage>
+            </apex:outputPanel>
+            <apex:pageBlockButtons location="bottom" >
+                <c:AutoDisablinButton actionToInvoke="{!ReturnToLotti}" disableAll="true" buttonValue="Indietro" buttonId="GestioneLotti" styleClass="buttonStyle" buttonValueDisabled="Gestione Pre-Lotti..." ></c:AutoDisablinButton>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form> -->
+
+</apex:page>

@@ -1,0 +1,72 @@
+/**
+ * Created by msala on 04/05/2020.
+ */
+:host {
+  background: white;
+  display: block;
+}
+
+.Title {
+  margin-top: 100px;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.ChartContainer {
+  display: flex;
+  position: relative;
+  z-index: 1;
+}
+
+.ChartContainer .PieBox {
+  width: 60%;
+  position: relative;
+  display: flex;
+  padding-top: 60px;
+  justify-content: center;
+  height: 516px;
+  border: 1px solid #DDDBDA;
+  border-radius: 4px;
+  margin-left: 16px;
+  margin-bottom: 16px;
+}
+.ChartContainer .PieContainer {
+  position: relative;
+}
+.ChartContainer .PieContainer .DropTarget {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  margin-top: 27px;
+}
+.Legend {
+  margin-top: 140px;
+  margin-left: 20px;
+}
+.Legend .Bullet {
+  width: 13px;
+  height: 13px;
+  display: inline-block;
+  margin-right: 4px;
+  border-radius: 50%;
+}
+.ColumnBox {
+  margin-left: 50px;
+  padding-top: 40px;
+}
+.TableContainer {
+  padding: 16px;
+}
+
+.Disclaimer {
+  height: 48px;
+  background: #F3F2F2;
+  display: flex;
+  align-items: center;
+}
+.Disclaimer img {
+  margin-right: 12px;
+  margin-left: 16px;
+}

@@ -1,0 +1,88 @@
+<apex:page showHeader="true" sidebar="true" docType="html-5.0">
+    <c:KillerStyle />
+    
+    <apex:pageBlock title="{!$Label.CRABB_DEV__MassiveManagement}" >
+        <apex:outputpanel >   
+            <div id="accordion" style="width:650px">
+                
+                <!--<h3 class="AccTitle" >Profilazione Utenti</h3>
+                <div>
+                     <apex:outputLink styleClass="KillerBtn" value="/005" target="_blank">Utenti</apex:outputLink>    
+                     <br/>
+                     <br/>
+                     <apex:outputLink styleClass="KillerBtn" value="/00e?setupid=EnhancedProfiles&retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DUsers" target="_blank">Profili</apex:outputLink>
+                     <br/>
+                     <br/>
+                     <apex:outputLink styleClass="KillerBtn" value="/ui/setup/user/RoleViewPage?setupid=Roles" target="_blank">Ruoli</apex:outputLink>
+                </div>
+                
+                <h3 class="AccTitle" >Configurazione Strategie</h3>
+                <div>
+                     <apex:outputLink styleClass="KillerBtn" value="/apex/GestioneStrategie" target="_blank">Gestione Strategie</apex:outputLink>    
+                </div>
+                
+                <h3 class="AccTitle" >Configurazione Collector</h3>
+                <div>
+                     <apex:outputLink styleClass="KillerBtn" value="/a0B/o" target="_blank">Gestione Collector</apex:outputLink>    
+                </div>
+                
+                
+                <h3 class="AccTitle" >Affidamenti</h3>
+                <div>
+                     <apex:outputLink styleClass="KillerBtn" value="/apex/GestioneAffidamenti" target="_blank">Gestione Affidamenti</apex:outputLink>    
+                     <br/>
+                     <br/>
+                     <apex:outputLink styleClass="KillerBtn" value="/apex/gestionerevoca" target="_blank">Revoca Affidamenti</apex:outputLink>
+                     <br/>
+                     <br/>
+                     <apex:outputLink styleClass="KillerBtn" value="/apex/GestioneProroga" target="_blank">Proroga Affidamenti</apex:outputLink>
+                </div>-->
+                
+                <h3 class="AccTitle" >{!$Label.MassiveFunctionalities}</h3>
+                <div>
+                     <apex:outputLink styleClass="KillerBtn" value="/apex/BloccoSblocco" target="_blank">{!$Label.CRABB_DEV__Lock_Unlock_Dossier}</apex:outputLink>
+                     <br/>
+                     <br/>
+                     <apex:outputLink styleClass="KillerBtn" value="/apex/GestioneWhiteList" target="_blank">{!$Label.CRABB_DEV__WhiteListManagement}</apex:outputLink>
+                     <br/>
+                     <br/>
+                     <apex:outputLink styleClass="KillerBtn" value="/apex/CambioAttivitaNew" target="_blank">{!$Label.CRABB_DEV__Manually_Changed_Activity}</apex:outputLink>
+                     <br/>
+                     <br/>
+                     <apex:outputLink styleClass="KillerBtn" value="" target="_blank">{!$Label.CRABB_DEV__ChangeStrategy}</apex:outputLink>
+                </div>
+                
+                <!--
+                <h3 class="AccTitle" >Cruscotti</h3>
+                <div>
+                     <apex:outputLink styleClass="KillerBtn" value="/apex/RiepilogoIntegrazione" target="_blank">Riepilogo Integrazione</apex:outputLink>
+                </div>-->
+            </div>
+        </apex:outputpanel>
+    </apex:pageBlock>
+    
+  
+    
+    <script>
+        j$( "#accordion" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: true, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        jQuery(document).ready(function($) {
+            var pos = j$(window).height();
+    
+            j$(window).scroll(function(){
+                if (j$(window).scrollTop() > pos){
+                    j$('.Summary').addClass('fixed');
+                } else {
+                    j$('.Summary').removeClass('fixed');
+                }
+            });
+        });   
+    </script>
+
+</apex:page>

@@ -1,0 +1,35 @@
+<apex:component controller="FileUploadController">
+    <apex:attribute name="parentId" description="The ID of the record uploaded documents will be attached to." type="String" required="true"/>
+    
+    <!--<link rel="stylesheet" type="text/css" href="{!$Resource.FileUploadCSS}"/>-->
+    <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>-->
+    
+    <script type="text/javascript" src="{!$Resource.FileUploadJS}"/>
+
+    <script type="text/javascript">
+            var parentId = '{!parentId}'; //Will be used by FileUploadJS.js but must be declared here. Static resources dont support dynamic values.
+    </script>
+
+    <c:KillerStyle />
+    <div class="uploadBox">
+        <div id="upl" class="drop" ondrop="handleFileSelect(event);" ondragover="handleDragOver(event);">
+            {!$Label.Drop_your_files_here}
+        </div>
+        <div class="crabbpackage" >
+        <apex:outputpanel id="PanelUpload">
+            <input id="uploadBtn" type="button" title="Upload" Class="btn btn-primary btn-xs" value=" Upload "/>
+            <input id="clear" type="button" title="Clear" Class="btn btn-primary btn-xs" value=" Clear "/>
+        </apex:outputpanel>
+        </div>
+   
+        <!--<table cellpadding="0" cellspacing="0" class="uploadTable">
+            <tr>
+                <td><input type="file" multiple="true" id="filesInput" name="file" /></td>
+                <td class="buttonTD">
+                    <input id="uploadButton" type="button" title="Upload" class="btn" value=" Upload "/>
+                    <input id="clear" type="button" title="Clear" class="btn" value=" Clear "/>
+                </td>
+            </tr>   
+        </table>-->
+    </div>
+</apex:component>

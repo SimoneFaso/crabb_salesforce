@@ -1,0 +1,19 @@
+<!--
+ - Created by Matteo on 18/03/2021.
+ -->
+ 
+<!-- Crabb Pdr Table Account -->
+<template>
+        <template if:false={isEmpty}>
+                <lightning-datatable
+                        columns={columns}
+                        data={tableData}
+                        hide-checkbox-column
+                        key-field="Id"
+                        show-row-number-column>
+                </lightning-datatable>
+        </template>
+        <template if:true={isEmpty}>
+                <p class="slds-p-horizontal_small">{label.noActivePdr}</p>
+        </template> 
+</template>

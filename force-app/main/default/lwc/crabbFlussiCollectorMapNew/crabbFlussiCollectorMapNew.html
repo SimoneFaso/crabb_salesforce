@@ -1,0 +1,122 @@
+<!--
+ - Created by MatteoSala on 09/07/2020.
+ -->
+
+<!-- Crabb Flussi Collector Map New -->
+<template>
+    <lightning-card title={label.flowColTitle} icon-name="custom:custom14">
+        <div class="slds-text-align_center">
+            <lightning-button variant="brand" label={label.save} title={label.save} onclick={onSavePressed} class="slds-m-left_x-large">
+            </lightning-button>
+        </div>
+        <br />
+        <div class="c-container">
+            <lightning-layout>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <lightning-combobox name="fieldObject" label={label.objField} value={fieldObjectValue}
+                                        placeholder="Select Field Object" options={fieldObjectOptions} onchange={onFieldObjectChange}>
+                    </lightning-combobox>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <lightning-combobox name="fieldLabel" label={label.labField} value={fieldObjectValue}
+                                        placeholder="Select Field Label" options={fieldLabelOptions} onchange={onFieldLabelChanged}>
+                    </lightning-combobox>
+                </lightning-layout-item>
+                <lightning-layout-item class="slds-m-top_x-large" flexibility="auto" padding="around-small">
+                    <div class="slds-form-element is-visible-checkbox">
+                        <div class="slds-form-element__control">
+                            <div class="slds-checkbox">
+                                <input type="checkbox" name="isVisible" id="isVisible" checked={isVisibleValue}
+                                       onchange={onIsVisibleChanged} />
+                                <label class="slds-checkbox__label" for="isVisible">
+                                    <span class="slds-checkbox_faux"></span>
+                                    <span class="slds-form-element__label">{label.setIsVis}?</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto, no-grow" padding="horizontal-large" class="slds-m-top_x-large">
+                    <lightning-button variant="brand" label={label.add} title={label.add} disabled={addButtonDisabled} onclick={onAddPressed}>
+                    </lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+        <br />
+        <section class="container">
+            <div class="left">
+                <c-crabb-fields-list fieldslist={listLOF} itemunderid={itemUnder} draggable={tableDraggable}
+                               onlistitemdrag={handleListItemDrag} onitemdrop={handleItemDrop} onlistitemover={handleItemOver}
+                               onlistitemdelete={handleListItemDelete} onlistitemneworder={handleListItemNewOrder}
+                               onlistitemvisiblechanged={handleListItemVisibleChanged} onfieldobjectnamesearch={handleObjectNameSearch}
+                               onfieldapinamesearch={handleFieldNameSearch}></c-crabb-fields-list>
+            </div>
+        </section>
+    </lightning-card>
+
+    <template if:true={openModalBool}>
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                     aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+                                onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" size="medium">
+                            </lightning-icon>
+                            <span class="slds-assistive-text">{label.close}</span>
+                        </button>
+                        <h2 class="slds-text-heading_medium slds-hyphenate">
+                            {label.delRecord}:
+                        </h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <center>
+                            <div class="slds-border_top slds-border_bottom slds-grid slds-wrap">
+                                <div class="slds-size_3-of-12"></div>
+                                <div class="slds-size_2-of-12">
+                                    <div class="slds-box_xx-small slds-text-align_right slds-m-around_small">
+                                        {label.obj}:
+                                    </div>
+                                </div>
+                                <div class="slds-size_4-of-12">
+                                    <div class="slds-box_xx-small slds-text-align_center slds-m-around_xx-small">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <input type="text" value={toBeDeletedObjApiName} class="slds-input slds-text-align_center" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-size_3-of-12"></div>
+                                <div class="slds-size_3-of-12"></div>
+                                <div class="slds-size_2-of-12">
+                                    <div class="slds-box_xx-small slds-text-align_right slds-m-around_small">
+                                        {label.field}:
+                                    </div>
+                                </div>
+                                <div class="slds-size_4-of-12">
+                                    <div class="slds-box_xx-small slds-text-align_center slds-m-around_xx-small">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <input type="text" value={tobeDeleted.CRABB_DEV__Field__c}
+                                                       class="slds-input slds-text-align_center" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-size_3-of-12"></div>
+                            </div>
+                        </center>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label={label.canc} variant="neutral" onclick={closeModal}></lightning-button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <lightning-button label={label.del} variant="destructive" onclick={deleteMethod}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+</template>

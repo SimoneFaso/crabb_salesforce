@@ -1,0 +1,412 @@
+<!-- 
+    Modificato da: ESino, 26/10/2015
+    
+    Edit notes:
+    Tolto le stringe di debug nei bottoni delle "opscontent".
+-->
+<apex:page docType="html-5.0" controller="TaskSemiAutomaticiAffido">
+        <c:KillerStyle />
+        
+         <style>
+        #opsdashboard {
+            width: 880px;
+        }
+        
+        #opsdashboard .opsheader {
+            height:50px;
+        }
+        
+        #opsdashboard .opsheader h3 {
+            display: block;
+            float:left;
+            margin-top:15px;
+            padding:0;
+            font-size: 18px;
+            font-weight: normal;
+        }
+        
+        #opsdashboard .opsheader #count {
+            float:right;
+            width: 100px;
+        }
+        
+        #opsdashboard .opsheader #count .number {
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        #opsdashboard .opsheader #count .days {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            font-weight: italic;
+            margin-top: 5px;
+        }
+        
+        #opscontent {
+            padding: 15px;
+        }
+        
+        #opscontent a {
+            width: 250px;
+            height: 50px;
+            font-size: 14px;
+            margin: 0 20px 20px 0;
+        }
+        
+        #opscontent .owner-name {
+            float: left;
+            margin-top: 10px;
+            width: 150px;
+            text-align: left;
+        }
+        
+        #opscontent .owner-count {
+            float: right;
+            width: 50px;
+        }
+        
+        #opscontent .owner-number {
+            display: block;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 7px;
+        }
+        
+        #opscontent .owner-days {
+            display: block;
+            text-align: center;
+            font-size: 8px;
+            margin-top: 5px;
+        }
+        
+        .MapHeader-div {
+            display: block;
+            width:200px;
+            margin-left:auto;
+            margin-right:auto;
+            clear: both;
+        }
+        
+        </style>
+        <apex:messages />
+        <apex:outputPanel Id="Vai">
+        <apex:messages />
+            <apex:outputPanel Id="Refresh"> 
+                <apex:pageBlock Id="Global" title="{!$Label.CRABB_DEV__ActivitiesDossier}" rendered="{!step = 0}">
+                    <apex:message />
+                    <apex:form >
+                        <br/>
+                        <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__Select} Owner" rendered="{!!TaskElab}"/>
+                        <br/>
+                        <br/>
+                        <apex:selectlist value="{!OptionPickVisibilityResult}" label="{!$Label.CRABB_DEV__Select} Task" size="1" style="width:200px;" rendered="{!!TaskElab}">
+                            <apex:actionsupport status="TheStatus" event="onchange" action="{!HAVEOptionPickVisibilityResult}" rerender="Vai"/>
+                            <apex:selectOptions value="{!pickVisibilityResult}"/>
+                        </apex:selectlist>
+                        <br/>
+                        <br/>
+
+                        <!--  SEZIONE: SCELTA RECORD  -->
+                        <div id="opsdashboard">
+                            <apex:repeat value="{!MapHeader}" var="key" >
+                                <div class="opsheader">
+                                    <h3><apex:outputText value="Key: {!key}"/></h3>
+                                    <div id="count">
+                                        <span class="number">{!MapHeader[key].NRecord}</span>
+                                        <span class="days">{!MapHeader[key].MaxGG} gg</span>
+                                    </div>
+                                </div>
+                                <div id="opscontent">
+                                    <div class="MapHeader-div">
+                                        <apex:commandlink styleClass="MapHeader-link" action="{!VaiATabella}" rerender="{!$Label.CRABB_DEV__go}"  status="TheStatus"><!--rerender="{!$Label.CRABB_DEV__go}"-->
+                                            <apex:param value="{!MapHeader[key].Tipo}" name="Header {!$Label.CRABB_DEV__Type}"/> 
+                                            <apex:param value="{!MapHeader[key].SottoTipo}" name="Header {!$Label.CRABB_DEV__Subtype}"/> 
+                                            <apex:param value="{!$Label.CRABB_DEV__All}" name="OwnerContent"/>                                            
+                                            <apex:param value="Header" name="Header"/> 
+                                            <span >
+                                                <apex:outputText value="{!$Label.CRABB_DEV__See_all_records}: {!key}"/>                                              
+                                            </span>
+                                        </apex:commandlink>
+                                    </div>
+                                   <apex:repeat value="{!MapHeader[key].lCont}" var="keyInt">
+                                        <apex:commandlink styleClass="owner-link" action="{!VaiATabella}"  rerender="{!$Label.CRABB_DEV__go}" status="TheStatus"> <!-- rerender="Vai"-->
+                                             <apex:param value="{!keyInt.Tipo}" name="Content {!$Label.CRABB_DEV__Type}"/> 
+                                             <apex:param value="{!keyInt.SottoTipo}" name="Content {!$Label.CRABB_DEV__Subtype}"/> 
+                                             <apex:param value="{!keyInt.Owner}" name="OwnerContent"/>
+                                             <apex:param value="Content" name="Header_Content"/>  
+                                             <span class="owner-name"> 
+                                                <apex:outputText value="{!keyInt.Owner}"/>                                              
+                                             </span> 
+                                             <span class="owner-count">
+                                                    <span class="onwer-number"><apex:outputText value="{!keyInt.NRecord}"/></span>
+                                                    <span class="owner-days"><apex:outputText value="{!keyInt.MaxGG} gg"/></span>
+                                             </span>
+                                        </apex:commandlink>
+                                    </apex:repeat>
+                                </div>
+                            </apex:repeat>
+                        </div>
+                    </apex:form>
+                <apex:pageblockSection rendered="{!TaskElab}">
+                    <apex:pageMessage summary="{!$Label.CRABB_DEV__NoTask}" severity="info" strength="3" />
+                </apex:pageblockSection>
+                </apex:pageBlock>
+                <script>
+                    j$(document).ready(function()
+                    {
+                        j$( "#opsdashboard" ).accordion(
+                            {   
+                                header: '.opsheader', 
+                                collapsible: true, 
+                                active: false,
+                                heightStyle: 'content',
+                            }
+                        );
+                    });
+                </script>
+            </apex:outputPanel>
+            
+            <apex:pageBlock title="Fine" rendered="{!Step = 2}">
+                <apex:pageblockSection >
+                    <apex:pageMessage summary="{!$Label.CRABB_DEV__EndActivity}: {!Count}" severity="info" strength="3" />
+                </apex:pageblockSection>
+                <apex:pageblockButtons location="Bottom">
+                    <apex:form >
+                        <c:AutoDisablinButton actionToInvoke="{!BackTo}" disableAll="true" rendered="{!Step=2}" buttonValue="{!$Label.CRABB_DEV__Back}" buttonId="IndietroButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Back}..." reRender="redirectPanel"></c:AutoDisablinButton>
+                        <c:AutoDisablinButton actionToInvoke="{!HomePage}" disableAll="true" rendered="{!Step=2}" buttonValue="HomePage" buttonId="HomePage" styleClass="buttonStyle" buttonValueDisabled="HomePage..." ></c:AutoDisablinButton>
+                            <apex:outputPanel id="redirectPanel" >
+                                <apex:outputText rendered="{!shouldRedirect}">
+                                    <script type="text/javascript">
+                                       window.top.location.href = '{!URLENCODE(url_Parent)}';
+                                    </script>
+                                </apex:outputText>
+                            </apex:outputpanel>
+                    </apex:form>
+                </apex:pageblockButtons> 
+            </apex:pageBlock>
+            
+            <apex:pageBlock title="{!$Label.CRABB_DEV__Filters}" rendered="{!Step = 1}">
+                <apex:pageBlockSection >
+                    <apex:outputPanel id="FiltriId"> 
+                        <div id="accordion" style="width:650px">
+                            <h3 class="AccTitle"  >{!$Label.CRABB_DEV__Contract} Id SWH</h3>
+                            <div>
+                                <c:Selectable Index="1" Selezione_Sinistra="{!originalValues_IdContratto}" Selezione_Destra="{!originalValues_IdContratto}" Titolo1="{!$Label.CRABB_DEV__Contract} Id" Titolo2="{!$Label.CRABB_DEV__Contract} Id" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle">{!$Label.CRABB_DEV__Country}</h3>
+                            <div>
+                                <c:Selectable Index="2" Selezione_Sinistra="{!originalValues_Comune}" Selezione_Destra="{!originalValues_Comune}" Titolo1="{!$Label.CRABB_DEV__Country}" Titolo2="{!$Label.CRABB_DEV__Country}" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle">{!$Label.CRABB_DEV__Service_codes}</h3>
+                            <div>
+                                <c:Selectable Index="3" Selezione_Sinistra="{!originalValues_CodiceServizio}" Selezione_Destra="{!originalValues_CodiceServizio}" Titolo1="{!$Label.CRABB_DEV__Service_codes}" Titolo2="{!$Label.CRABB_DEV__Service_codes}" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle">{!$Label.CRABB_DEV__Status}</h3>
+                            <div>
+                                <c:Selectable Index="4" Selezione_Sinistra="{!originalValues_Stato}" Selezione_Destra="{!originalValues_Stato}" Titolo1="{!$Label.CRABB_DEV__Dossier} {!$Label.CRABB_DEV__Status}" Titolo2="{!$Label.CRABB_DEV__Dossier} {!$Label.CRABB_DEV__Status}" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle">{!$Label.CRABB_DEV__RiskClass}</h3>
+                            <div>
+                                <c:Selectable Index="5" Selezione_Sinistra="{!originalValues_ClasseDiRischio}" Selezione_Destra="{!originalValues_ClasseDiRischio}" Titolo1="{!$Label.CRABB_DEV__RiskClass}" Titolo2="{!$Label.CRABB_DEV__RiskClass}" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}" />
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                        <apex:form >
+                            <apex:outputPanel id="IdForm">
+                                <table style="border:0; table-layout:fixed">
+                                    <tr>
+                                        <td><b>{!$Label.CRABB_DEV__Scaduto}:</b></td>
+                                        <td>
+                                            <apex:input value="{!DaScaduto}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!AScaduto}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{!$Label.CRABB_DEV__Scaduto} {!$Label.CRABB_DEV__Consolidated}:</b></td>
+                                        <td>                                
+                                            <apex:input value="{!DaScadutoConsolidato}" type="text" >{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!AScadutoConsolidato}" type="text"  >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    <tr> 
+                                        <td><b>{!$Label.CRABB_DEV__Expenses_Balance}:</b></td>
+                                        <td>                                
+                                            <apex:input value="{!DaSaldoSpese}" type="text"  >{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!ASaldoSpese}" type="text"  >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{!$Label.CRABB_DEV__Balance} {!$Label.CRABB_DEV__Consolidated}:</b></td>
+                                        <td>                                
+                                            <apex:input value="{!DaSaldoConsolidato}" type="text"  >{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!ASaldoConsolidato}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td><b>{!$Label.CRABB_DEV__Balance}:</b></td>
+                                        <td>
+                                            <apex:input value="{!DaSaldo_Totale}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!ASaldo_Totale}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{!$Label.CRABB_DEV__Expired_Expenses}:</b></td>
+                                        <td>
+                                            <apex:input value="{!DaScaduto_Spese}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!AScaduto_Spese}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Ageing:</b></td>
+                                        <td>
+                                            <apex:input value="{!DaAnzianita_scaduto}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                        </td>
+                                        <td>
+                                            <apex:input value="{!AAnzianita_scaduto}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                        </td>
+                                    </tr>
+                                    
+                                    
+                                </table>
+                                <br/>
+                                <br/>
+                                <apex:outputText styleClass="Bold" value="{!$Label.CRABB_DEV__SelectLetter}" rendered="{!BLettera}"/> 
+                                <br/>
+                                <br/>
+                                <apex:selectList value="{!leftselected_Tipo_Lettera}" size="1" rendered="{!BLettera}">
+                                    <apex:actionsupport status="TheStatus" event="onchange" action="{!getleftselected_Tipo_Lettera}" rerender="FiltriId"/>
+                                    <apex:selectOptions value="{!unSelectedValues_Tipo_Lettera}" rendered="{!BLettera}"/>
+                                </apex:selectList>
+                                <br/>
+                                <br/>
+                                <apex:outputpanel id="ErrorMessagesId"> 
+                                    <apex:pageMessages rendered="{!ErrorValidateDecimal}"/>
+                                </apex:outputpanel>
+                                <apex:commandButton action="{!FiltroQuery}" value="Go filter" reRender="{!$Label.CRABB_DEV__go}" status="TheStatus"/>
+                            </apex:outputPanel>
+                        </apex:form>
+                            <script>
+
+                                j$( "#accordion" ).accordion({ 
+                                heightStyle: "content", 
+                                collapsible: true, 
+                                active: false, 
+                                autoHeight: false, 
+                                navigation: true 
+                                });
+                                
+                            </script>
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+                <br/>
+                <br/>
+                <apex:pageBlock title="{!$Label.CRABB_DEV__DossierList}" rendered="{!Step = 1}">
+                    <apex:outputPanel id="IdFormPratiche" rendered="{!PraticheEsisti}">
+                        <apex:form >
+                            <apex:outputLabel value="{!$Label.CRABB_DEV__SelectDeselect}" rendered="{!PraticheEsisti}"/>
+                            <apex:inputcheckbox value="{!bAllSel}">
+                                <apex:actionsupport status="TheStatus" event="onchange" action="{!SelectAll}" rerender="IdFormPratiche"/>
+                            </apex:inputcheckbox>
+                            <apex:pageBlockTable value="{!listPraticheSelectable}" var="PraticaSelectable" rendered="{!PraticheEsisti}"> 
+                                <apex:column headerValue="Select">
+                                   <apex:inputCheckbox value="{!PraticaSelectable.isSelected}">
+                                        <apex:actionsupport status="TheStatus" event="onchange" action="{!AggiornaElementoLista}" rerender="IdFormPratiche">
+                                           <apex:param name="Elem" value="{!PraticaSelectable.Position}"/>
+                                           <apex:param name="Codice_Pratica" value="{!PraticaSelectable.Prat.Name}"/>
+                                           <apex:param name="isSel" value="{!PraticaSelectable.isSelected}"/>
+                                        </apex:actionsupport>
+                                    </apex:inputCheckbox>
+                                </apex:column> 
+                                <apex:column >
+                                    <apex:facet name="header">{!$Label.CRABB_DEV__Dossier} Id</apex:facet>
+                                    <a href="/{!PraticaSelectable.Prat.Id}" target="_blank" title="{!PraticaSelectable.Prat.Id}"><apex:image value="/img/icon/desk24.png" rendered="{!PraticaSelectable.Prat.Id != null}"/></a>
+                                </apex:column>
+                                <apex:column value="{!PraticaSelectable.Prat.Name}" headerValue="{!$Label.CRABB_DEV__Dossier} {!$Label.CRABB_DEV__Code}"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Owner_contratto__c}" headerValue="Owner"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Servizio_Fornitura__r.LookupContratto__r.Id_Esterno__c}" headerValue="{!$Label.CRABB_DEV__Contract} Id SWH"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Strategia__r.Nome__c}" headerValue="{!$Label.CRABB_DEV__Strategy} {!$Label.CRABB_DEV__Name}"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Account__r.Name}" headerValue="{!$Label.CRABB_DEV__Account}"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Servizio_Fornitura__r.LookupContratto__r.Comune__c}" headerValue="{!$Label.CRABB_DEV__Country}"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Classe_di_rischio__c}" headerValue="{!$Label.CRABB_DEV__RiskClass}"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Residuo_Totale__c}" headerValue="{!$Label.CRABB_DEV__Scaduto}"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Anzianita_scaduto__c}" headerValue="Ageing"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Scaduto_Spese__c}" headerValue="{!$Label.CRABB_DEV__Expired_Expenses}"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Servizio_Fornitura__r.RecordType.Name}" headerValue="{!$Label.CRABB_DEV__Service_codes}"/>
+                                <apex:column value="{!PraticaSelectable.Prat.Stato__c}" headerValue="{!$Label.CRABB_DEV__Status}"/>
+                            </apex:pageBlockTable>
+                            <br/>
+                            <div style="width: 100%; text-align: center">
+                                <apex:actionRegion >
+                                    <apex:commandLink value="<< {!$Label.CRABB_DEV__Start} " styleClass="KillerBtn" action="{!Beginning}" rendered="{!(EnablePrevious)}" rerender="{!$Label.CRABB_DEV__go}"/>
+                                    <apex:commandLink value="< {!$Label.CRABB_DEV__Previous} " styleClass="KillerBtn" action="{!Previous}" rendered="{!(EnablePrevious)}" rerender="{!$Label.CRABB_DEV__go}"/>
+                                    <apex:outputText >
+                                        <b>Record:[{!InizioL}-{!FineL}]/{!TotaleRec}</b>
+                                    </apex:outputText>
+                                    <apex:commandLink value=" {!$Label.CRABB_DEV__Next} >" styleClass="KillerBtn" action="{!Next}" rendered="{!(EnableNext)}" rerender="{!$Label.CRABB_DEV__go}"/>
+                                    <apex:commandLink value=" {!$Label.CRABB_DEV__End} >>" styleClass="KillerBtn" action="{!End}" rendered="{!(EnableNext)}" rerender="{!$Label.CRABB_DEV__go}"/>
+                                    <apex:actionsupport status="TheStatus" event="onchange" rerender="IdFormPratiche"/>
+                                </apex:actionRegion>
+                            </div>
+                        </apex:form>    
+                    </apex:outputPanel>
+                </apex:pageBlock>
+                <apex:pageblockSection rendered="{!!PraticheEsisti}">
+                    <apex:pageMessage summary="{!$Label.CRABB_DEV__No_record_found}." severity="info" strength="3" />
+                </apex:pageblockSection>
+            </apex:pageBlock>
+            <apex:pageBlock rendered="{!Step = 1}">
+                <apex:pageblockButtons location="Bottom">
+                    <apex:form >
+                        <c:AutoDisablinButton actionToInvoke="{!Indietro}" disableAll="true" rendered="{!Step=1}" buttonValue="{!$Label.CRABB_DEV__Back}" buttonId="IndietroButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Back}..." ></c:AutoDisablinButton>
+                        <c:AutoDisablinButton actionToInvoke="{!ConfermaLista}" disableAll="true" rendered="{!Step=1}" buttonValue="{!$Label.CRABB_DEV__Confirm}" buttonId="ConfermaButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Confirm}..." ></c:AutoDisablinButton>
+                    </apex:form>
+                </apex:pageblockButtons> 
+            </apex:pageBlock>
+            <apex:form id="TheStatusForm"> 
+                <apex:actionstatus id="TheStatus">
+                   <apex:facet name="start">
+                       <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" ImageUrl="{!$Resource.Loading}" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+                   </apex:facet>
+                </apex:actionstatus>
+            </apex:form>
+            <script>
+                j$(function() {
+                    j$( ".owner-link" ).button()
+                });
+                
+                j$(function() {
+                    j$( ".MapHeader-link" ).button()
+                });
+                
+                
+                function disableEnterKey(e)
+                {   
+                   var key;     
+                   if(window.event)
+                       key = window.event.keyCode; //IE
+                   else
+                       key = e.which; //firefox     
+                   return (key != 13);
+                }
+            </script>
+        </apex:outputPanel>
+    </apex:page>

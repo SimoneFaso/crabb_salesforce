@@ -1,0 +1,181 @@
+<apex:page docType="html-5.0" controller="TaskSemiAutomaticiCTRL">
+    <c:KillerStyle />
+    <style>
+        #opsdashboard {
+            width: 880px;
+        }
+        
+        #opsdashboard .opsheader {
+            height:50px;
+        }
+        
+        #opsdashboard .opsheader h3 {
+            display: block;
+            float:left;
+            margin-top:15px;
+            padding:0;
+            font-size: 18px;
+            font-weight: normal;
+        }
+        
+        #opsdashboard .opsheader #count {
+            float:right;
+            width: 100px;
+        }
+        
+        #opsdashboard .opsheader #count .number {
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        #opsdashboard .opsheader #count .days {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            font-weight: italic;
+            margin-top: 5px;
+        }
+        #opscontent {
+            padding: 15px;
+        }
+        #opscontent a {
+            width: 250px;
+            height: 50px;
+            font-size: 14px;
+            margin: 0 20px 20px 0;
+        }
+        #opscontent .owner-name {
+            float: left;
+            margin-top: 10px;
+            width: 150px;
+            text-align: left;
+        }
+        #opscontent .owner-count {
+            float: right;
+            width: 50px;
+        }
+        #opscontent .owner-number {
+            display: block;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 7px;
+        }
+        #opscontent .owner-days {
+            display: block;
+            text-align: center;
+            font-size: 8px;
+            margin-top: 5px;
+        }
+        .MapHeader-div {
+            display: block;
+            width:200px;
+            margin-left:auto;
+            margin-right:auto;
+            clear: both;
+        }
+    </style>
+    <apex:form >
+        <apex:outputPanel Id="Vai">
+            <apex:outputPanel Id="Refresh">
+                <apex:messages />
+                <apex:pageBlock Id="Global" title="{!$Label.CRABB_DEV__ActivitiesDossier}" >
+                        <apex:outputLabel ><h1>Ownership</h1> &nbsp; &nbsp; </apex:outputLabel>
+                        <apex:selectlist value="{!OptionPickVisibilityResult}" label="Selezione Task" size="1" style="width:200px;" >
+                            <apex:actionsupport status="TheStatus" event="onchange" action="{!HAVEOptionPickVisibilityResult}" rerender="Vai"/>
+                            <apex:selectOptions value="{!pickVisibilityResult}"/>
+                        </apex:selectlist>
+                    <br/>
+
+                    <div id="opsdashboard">
+                                    <apex:repeat value="{!MapHeader}" var="key" >
+                                        <div class="opsheader">
+                                            <h3><apex:outputText value="{!key}"/></h3>
+                                            <div id="count">
+                                                <span class="number">{!MapHeader[key].NRecord}</span>
+                                                <span class="days">{!MapHeader[key].MaxGG} gg</span>
+                                            </div>
+                                        </div>
+                                        <div id="opscontent">
+                                            <div class="MapHeader-div">
+                                                <apex:commandlink styleClass="MapHeader-link" action="{!VaiAFiltri}" ><!---->
+                                                    <apex:param value="{!MapHeader[key].Tipo}" name="TipoHeader"/> 
+                                                    <apex:param value="{!MapHeader[key].SottoTipo}" name="SottoTipoHeader"/> 
+                                                    <apex:param value="Tutti" name="OwnerContent"/>                                            
+                                                    <apex:param value="Header" name="Header"/> 
+                                                    <span class="owner-name">
+                                                        <apex:outputText value="{!$Label.CRABB_DEV__See_all_records}"/> <!-- {!$Label.of}: {!key}"/>                                             --> 
+                                                    </span>
+                                                    <span class="owner-count">
+                                                            <span class="onwer-number">{!MapHeader[key].NRecord}</span>
+                                                            <span class="owner-days">{!MapHeader[key].MaxGG} gg</span>
+                                                    </span>
+                                                </apex:commandlink>
+                                            </div>
+                                            <apex:repeat value="{!MapHeader[key].lCont}" var="keyInt">
+                                                <apex:commandlink styleClass="owner-link" action="{!VaiAFiltri}" > <!-- rerender="Vai"-->
+                                                    <apex:param value="{!keyInt.Tipo}" name="TipoContent"/> 
+                                                    <apex:param value="{!keyInt.SottoTipo}" name="SottoTipoContent"/> 
+                                                    <apex:param value="{!keyInt.Owner}" name="OwnerContent"/>
+                                                    <apex:param value="Content" name="Header_Content"/>  
+                                                    <span class="owner-name"> 
+                                                        <apex:outputText value="{!keyInt.Owner}"/>                                              
+                                                    </span> 
+                                                    <span class="owner-count">
+                                                            <span class="onwer-number"><apex:outputText value="{!keyInt.NRecord}"/></span>
+                                                            <span class="owner-days"><apex:outputText value="{!keyInt.MaxGG} gg"/></span>
+                                                    </span>
+                                                </apex:commandlink>
+                                            </apex:repeat>
+                                        </div>
+                                    </apex:repeat>
+                                </div>
+                </apex:pageBlock>
+            </apex:outputPanel> 
+            <script>
+            j$(document).ready(function()
+            {
+                j$( "#opsdashboard" ).accordion(
+                    {   
+                        header: '.opsheader', 
+                        collapsible: true, 
+                        active: false,
+                        heightStyle: 'content',
+                    }
+                );
+            });
+        </script>
+        <script>
+            j$(function() {
+                j$( ".owner-link" ).button()
+            });
+            
+            j$(function() {
+                j$( ".MapHeader-link" ).button()
+            });
+            
+            
+            function disableEnterKey(e)
+            {   
+               var key;     
+               if(window.event)
+                   key = window.event.keyCode; //IE
+               else
+                   key = e.which; //firefox     
+               return (key != 13);
+            }
+         </script>
+        </apex:outputPanel> 
+    </apex:form>
+    <apex:form id="TheStatusForm"> 
+       <apex:actionstatus id="TheStatus">
+           <apex:facet name="start">
+               <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" ImageUrl="{!$Resource.Loading}" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+           </apex:facet>
+       </apex:actionstatus>
+    </apex:form>
+        
+ </apex:page>

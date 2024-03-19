@@ -1,0 +1,475 @@
+<apex:page controller="GestioneRegolaCTRL" tabStyle="Rule_control__c" sidebar="false">
+    
+   <!-- <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/js/bootstrap.min.js')}"/>-->
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.bundle.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+
+    <apex:form >
+
+    <div id="balancecontainer" class="crabbpackage">
+        <div class="container-fluid">
+            <div class="page-header">
+                <h1><span class="bi bi-arrows-fullscreen" style="color: #EB5E28"></span> {!$Label.RulesManagement} <small>{!$Label.ConfigStrategies}</small></h1>
+            </div>
+        </div>
+
+        <div align="center">
+            <apex:actionRegion >
+                <a href="/apex/GestioneStrategie" class="btn btn-primary">{!$Label.StrategyManagement}</a>
+                &nbsp;
+                <apex:commandLink onclick="$('#newModal').modal('show');return false;" value="{!$Label.crabb_dev__createrule}" styleClass="btn btn-primary" />
+            </apex:actionRegion>
+        </div>
+
+        <!--<div id="newModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                        <h4 class="modal-title">Create new rule :</h4>
+                        <br /><br />
+                        <h5>Rule Name <i class="glyphicon glyphicon-question-sign TArea" title="{!mapFieldHelp['Rname']}" /> : <input type="text" name="newRName" id="newRName" class="form-control" /></h5>
+                        <br />
+                        <h5>Api object name <i class="glyphicon glyphicon-question-sign TArea" title="{!mapFieldHelp['AOname']}" /> : </h5><h5>
+                            <apex:selectList value="{!selectedAOName}" id="newRAoname" size="1" multiselect="false" styleClass="form-control newRAOName">
+                                <apex:selectOptions value="{!aoNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Api field name <i class="glyphicon glyphicon-question-sign TArea" title="{!mapFieldHelp['AFname']}" /> : </h5><h5>
+                            <apex:selectList value="{!selectedAFName}" id="newRAfname" size="1" multiselect="false" styleClass="form-control newRAFName">
+                                <apex:selectOptions value="{!afNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Condition <i class="glyphicon glyphicon-question-sign TArea" title="{!mapFieldHelp['Cond']}" /> : </h5><h5>
+                            <apex:selectList value="{!selectedCondition}" id="newRCond" size="1" multiselect="false" styleClass="form-control newRCond">
+                                <apex:selectOptions value="{!conditionOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>{!$Label.Strategy} api field name <i class="glyphicon glyphicon-question-sign TArea" title="{!mapFieldHelp['SAFname']}" /> : </h5><h5>
+                            <apex:selectList value="{!selectedSAFName}" id="newRSafname" size="1" multiselect="false" styleClass="form-control newRSAFName">
+                                <apex:selectOptions value="{!safNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Note <i class="glyphicon glyphicon-question-sign TArea" title="{!mapFieldHelp['Note']}" /> : <input type="text" name="newRNote" id="newRNote" class="form-control" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethodNew();" data-dismiss="modal">{!$Label.Save}</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">{!$Label.Cancel}</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+
+                function callMethodNew(){
+                    var newrName = $('#newRName')[0].value;
+                    var newrAoname = document.getElementsByClassName('newRAOName')[0].value;
+                    var newrAfname = document.getElementsByClassName('newRAFName')[0].value;
+                    var newrCond = document.getElementsByClassName('newRCond')[0].value;
+                    var newrSafname = document.getElementsByClassName('newRSAFName')[0].value;
+                    var newrNote = $('#newRNote')[0].value;
+
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.GestioneRegolaCTRL.newRecord}',
+                        newrName,
+                        newrAoname,
+                        newrAfname,
+                        newrCond,
+                        newrSafname,
+                        newrNote,
+                        function(result, event){
+                            
+                            if(result == '' || result == null){
+                                return;
+                            }
+
+                            window.location = result;
+                        }
+                    );
+                }
+
+            </script>
+        </div>-->
+
+        <br /> 
+
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table" id="tab_logic">
+                    <thead>
+                        <tr>
+                            <th width="5%"></th>
+                            <th width="5%"></th>
+                            <th><i>Rule Name</i></th>
+                            <th><i>Api field name</i></th>
+                            <th><i>Api object name</i></th>
+                            <th><i>Condition</i></th>
+                            <th><i>{!$Label.Strategy} api field name</i></th>
+                            <th><i>Note</i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!myRules}" var="rules">
+                            <tr>
+                                <td>
+                                    <apex:outputPanel >
+                                       <!-- <button type="button" class="btn btn-link" style="padding:0 0;" onclick="$('#delId')[0].value='{!rules.Id}';$('#ruleName')[0].value='{!rules.Rule_name__c}';$('#afname')[0].value='{!rules.Api_field_name__c}';$('#aoname')[0].value='{!rules.Api_object_name__c}';$('#cond')[0].value='{!rules.Condition__c}';$('#safname')[0].value='{!rules.Strategia_api_field_name__c}';$('#delModal').modal('show'); return false;">
+                                            <span class="bi bi-x-circle warning"></span>
+                                        </button>
+                                    </apex:outputPanel>-->
+                                        <apex:commandLink onclick="$('#delId')[0].value='{!rules.Id}';$('#ruleName')[0].value='{!rules.Rule_name__c}';$('#afname')[0].value='{!rules.Api_field_name__c}';$('#aoname')[0].value='{!rules.Api_object_name__c}';$('#cond')[0].value='{!rules.Condition__c}';$('#safname')[0].value='{!rules.Strategia_api_field_name__c}';$('#delModal').modal('show'); return false;">
+                                            <span class="bi bi-x-circle warning"></span>
+                                        </apex:commandLink>
+                                        </apex:outputPanel>
+
+                                    <!--<div id="delModal" class="modal fade" role="dialog">
+                                        <input id="delId" type="hidden" name="delId" value=""/>
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                                                    <h4 class="modal-title">You are deleting the rule :</h4>
+                                                    <br /><br />
+                                                    <h5>Rule Name : </h5><h5><input id="ruleName" value="" disabled="true" size="30" class="form-control" /></h5>
+                                                    <br />
+                                                    <h5>Api field name : </h5><h5><input id="afname" value="" disabled="true" size="30" class="form-control" /></h5>
+                                                    <br />
+                                                    <h5>Api object name : </h5><h5><input id="aoname" value="" disabled="true" size="30" class="form-control" /></h5>
+                                                    <br />
+                                                    <h5>Condition : </h5><h5><input id="cond" value="" disabled="true" size="30" class="form-control" /></h5>
+                                                    <br />
+                                                    <h5>{!$Label.Strategy} api field name : </h5><h5><input id="safname" value="" disabled="true" size="30" class="form-control" /></h5>
+                                                    <br /><br />
+                                                    <h4>Continue ?</h4>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" onclick="callMethod();" data-dismiss="modal">YES</button>
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script type="text/javascript">
+
+                                            function callMethod(){
+                                                var x = $('#delId')[0].value;
+                                                Visualforce.remoting.Manager.invokeAction(
+                                                    '{!$RemoteAction.GestioneRegolaCTRL.removeRecords}',
+                                                    x,
+                                                    function(result, event){
+                                                        window.location = result;
+                                                    }
+                                                );
+                                            }
+
+                                        </script>
+                                    </div>
+-->
+                                </td>
+                                <td>
+                                    <apex:outputPanel >
+
+
+                                        <apex:commandLink onclick="$('#editId')[0].value='{!rules.Id}';$('#rName')[0].value='{!rules.Rule_name__c}';document.getElementsByClassName('selRAFName')[0].value='{!rules.Api_field_name__c}';document.getElementsByClassName('selRAOName')[0].value='{!rules.Api_object_name__c}';document.getElementsByClassName('selRCond')[0].value='{!rules.Condition__c}';document.getElementsByClassName('selRSAFName')[0].value='{!rules.Strategia_api_field_name__c}';$('#rNote')[0].value='{!rules.Note__c}';$('#editModal').modal('show');return false;">
+                                            <span class="bi bi-pencil"></span>
+                                        </apex:commandLink>
+                                    </apex:outputPanel>
+                                   <!-- <div id="editModal" class="modal fade" role="dialog">
+                                        <input id="editId" type="hidden" name="editId" value=""/>
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                                                    <h4 class="modal-title">You are editing the rule :</h4>
+                                                    <br /><br />
+                                                    <h5>Rule Name : <input type="text" name="rName" id="rName" class="form-control" /></h5>
+                                                    <br />
+                                                    <h5>Api object name : </h5><h5>
+                                                        <apex:selectList value="{!selectedAOName}" id="rAoname" size="1" multiselect="false" styleClass="form-control selRAOName">
+                                                            <apex:selectOptions value="{!aoNameOptions}"/>
+                                                        </apex:selectList></h5>
+                                                    <br />
+                                                    <h5>Api field name : </h5><h5>
+                                                        <apex:selectList value="{!selectedAFName}" id="rAfname" size="1" multiselect="false" styleClass="form-control selRAFName">
+                                                            <apex:selectOptions value="{!afNameOptions}"/>
+                                                        </apex:selectList></h5>
+                                                    <br />
+                                                    <h5>Condition : </h5><h5>
+                                                        <apex:selectList value="{!selectedCondition}" id="rCond" size="1" multiselect="false" styleClass="form-control selRCond">
+                                                            <apex:selectOptions value="{!conditionOptions}"/>
+                                                        </apex:selectList></h5>
+                                                    <br />
+                                                    <h5>{!$Label.Strategy} api field name : </h5><h5>
+                                                        <apex:selectList value="{!selectedSAFName}" id="rSafname" size="1" multiselect="false" styleClass="form-control selRSAFName">
+                                                            <apex:selectOptions value="{!safNameOptions}"/>
+                                                        </apex:selectList></h5>
+                                                    <br />
+                                                    <h5>Note : <input type="text" name="rNote" id="rNote" class="form-control" /></h5>
+                                                    <br /><br />
+                                                    <h4>Continue ?</h4>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" onclick="callMethod2();" data-dismiss="modal">SAVE</button>
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script type="text/javascript">
+
+                                            function callMethod2(){
+                                                var rid = $('#editId')[0].value;
+                                                var rName = $('#rName')[0].value;
+                                                var rAoname = document.getElementsByClassName('selRAOName')[0].value;
+                                                var rAfname = document.getElementsByClassName('selRAFName')[0].value;
+                                                var rCond = document.getElementsByClassName('selRCond')[0].value;
+                                                var rSafname = document.getElementsByClassName('selRSAFName')[0].value;
+                                                var rNote = $('#rNote')[0].value;
+
+                                                Visualforce.remoting.Manager.invokeAction(
+                                                    '{!$RemoteAction.GestioneRegolaCTRL.editRecord}',
+                                                    rid,
+                                                    rName,
+                                                    rAoname,
+                                                    rAfname,
+                                                    rCond,
+                                                    rSafname,
+                                                    rNote,
+                                                    function(result, event){
+                                                        
+                                                        if(result == '' || result == null){
+                                                            return;
+                                                        }
+
+                                                        window.location = result;
+                                                    }
+                                                );
+                                            }
+
+                                        </script>
+                                    </div>-->
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!rules.Rule_name__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!rules.Api_field_name__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!rules.Api_object_name__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!rules.Condition__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!rules.Strategia_api_field_name__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!rules.Note__c}"/>
+                                </td> 
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </div>              
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $( ".TArea" ).tooltip();
+        });
+    </script>
+
+        <div id="newModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                        <h4 class="modal-title">Create new rule :</h4>
+                        <br /><br />
+                        <h5>Rule Name <i class="bi bi-question-circle-fill TArea " title="{!mapFieldHelp['Rname']}" /> : <input type="text" name="newRName" id="newRName" class="form-control" /></h5>
+                        <br />
+                        <h5>Api object name <i class="bi bi-question-circle-fill TArea " title="{!mapFieldHelp['AOname']}" /> : </h5><h5>
+                            <apex:selectList value="{!selectedAOName}" id="newRAoname" size="1" multiselect="false" styleClass="form-control newRAOName">
+                                <apex:selectOptions value="{!aoNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Api field name <i class="bi bi-question-circle-fill TArea" title="{!mapFieldHelp['AFname']}" /> : </h5><h5>
+                            <apex:selectList value="{!selectedAFName}" id="newRAfname" size="1" multiselect="false" styleClass="form-control newRAFName">
+                                <apex:selectOptions value="{!afNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Condition <i class="bi bi-question-circle-fill TArea" title="{!mapFieldHelp['Cond']}" /> : </h5><h5>
+                            <apex:selectList value="{!selectedCondition}" id="newRCond" size="1" multiselect="false" styleClass="form-control newRCond">
+                                <apex:selectOptions value="{!conditionOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>{!$Label.Strategy} api field name <i class="bi bi-question-circle-fill TArea" title="{!mapFieldHelp['SAFname']}" /> : </h5><h5>
+                            <apex:selectList value="{!selectedSAFName}" id="newRSafname" size="1" multiselect="false" styleClass="form-control newRSAFName">
+                                <apex:selectOptions value="{!safNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Note <i class="bi bi-question-circle-fill TArea" title="{!mapFieldHelp['Note']}" /> : <input type="text" name="newRNote" id="newRNote" class="form-control" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethodNew();" data-dismiss="modal">{!$Label.Save}</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{!$Label.Cancel}</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+
+                function callMethodNew(){
+                    var newrName = $('#newRName')[0].value;
+                    var newrAoname = document.getElementsByClassName('newRAOName')[0].value;
+                    var newrAfname = document.getElementsByClassName('newRAFName')[0].value;
+                    var newrCond = document.getElementsByClassName('newRCond')[0].value;
+                    var newrSafname = document.getElementsByClassName('newRSAFName')[0].value;
+                    var newrNote = $('#newRNote')[0].value;
+
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.GestioneRegolaCTRL.newRecord}',
+                        newrName,
+                        newrAoname,
+                        newrAfname,
+                        newrCond,
+                        newrSafname,
+                        newrNote,
+                        function(result, event){
+
+                            if(result == '' || result == null){
+                                return;
+                            }
+
+                            window.location = result;
+                        }
+                    );
+                }
+
+            </script>
+        </div>
+
+        <div id="delModal" class="modal fade" role="dialog">
+            <input id="delId" type="hidden" name="delId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                        <h4 class="modal-title">You are deleting the rule :</h4>
+                        <br /><br />
+                        <h5>Rule Name : </h5><h5><input id="ruleName" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>Api field name : </h5><h5><input id="afname" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>Api object name : </h5><h5><input id="aoname" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>Condition : </h5><h5><input id="cond" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>{!$Label.Strategy} api field name : </h5><h5><input id="safname" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod();" data-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+
+                                            function callMethod(){
+                                                var x = $('#delId')[0].value;
+                                                Visualforce.remoting.Manager.invokeAction(
+                                                    '{!$RemoteAction.GestioneRegolaCTRL.removeRecords}',
+                                                    x,
+                                                    function(result, event){
+                                                        window.location = result;
+                                                    }
+                                                );
+                                            }
+
+                                        </script>
+        </div>
+
+        <div id="editModal" class="modal fade" role="dialog">
+            <input id="editId" type="hidden" name="editId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                        <h4 class="modal-title">You are editing the rule :</h4>
+                        <br /><br />
+                        <h5>Rule Name : <input type="text" name="rName" id="rName" class="form-control" /></h5>
+                        <br />
+                        <h5>Api object name : </h5><h5>
+                            <apex:selectList value="{!selectedAOName}" id="rAoname" size="1" multiselect="false" styleClass="form-control selRAOName">
+                                <apex:selectOptions value="{!aoNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Api field name : </h5><h5>
+                            <apex:selectList value="{!selectedAFName}" id="rAfname" size="1" multiselect="false" styleClass="form-control selRAFName">
+                                <apex:selectOptions value="{!afNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Condition : </h5><h5>
+                            <apex:selectList value="{!selectedCondition}" id="rCond" size="1" multiselect="false" styleClass="form-control selRCond">
+                                <apex:selectOptions value="{!conditionOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>{!$Label.Strategy} api field name : </h5><h5>
+                            <apex:selectList value="{!selectedSAFName}" id="rSafname" size="1" multiselect="false" styleClass="form-control selRSAFName">
+                                <apex:selectOptions value="{!safNameOptions}"/>
+                            </apex:selectList></h5>
+                        <br />
+                        <h5>Note : <input type="text" name="rNote" id="rNote" class="form-control" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod2();" data-dismiss="modal">SAVE</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CANCEL</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+
+                                            function callMethod2(){
+                                                var rid = $('#editId')[0].value;
+                                                var rName = $('#rName')[0].value;
+                                                var rAoname = document.getElementsByClassName('selRAOName')[0].value;
+                                                var rAfname = document.getElementsByClassName('selRAFName')[0].value;
+                                                var rCond = document.getElementsByClassName('selRCond')[0].value;
+                                                var rSafname = document.getElementsByClassName('selRSAFName')[0].value;
+                                                var rNote = $('#rNote')[0].value;
+
+                                                Visualforce.remoting.Manager.invokeAction(
+                                                    '{!$RemoteAction.GestioneRegolaCTRL.editRecord}',
+                                                    rid,
+                                                    rName,
+                                                    rAoname,
+                                                    rAfname,
+                                                    rCond,
+                                                    rSafname,
+                                                    rNote,
+                                                    function(result, event){
+
+                                                        if(result == '' || result == null){
+                                                            return;
+                                                        }
+
+                                                        window.location = result;
+                                                    }
+                                                );
+                                            }
+
+                                        </script>
+        </div>
+</apex:form>
+
+</apex:page>

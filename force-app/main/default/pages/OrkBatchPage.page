@@ -1,0 +1,191 @@
+<apex:page controller="OrkBatchCTRL" showHeader="true" sidebar="false" doctype="html-5.0">
+    
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.min.css')}"/>
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  /> -->
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryNew, '/jquery-ui-1.13.2/jquery-ui.structure.css')}"  />
+<!--    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/external/jquery/jquery.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.min.css')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.theme.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.min.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.13.0/jquery-ui.structure.css')}"  />-->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+    
+    <apex:form >
+        
+        <div id="balancecontainer" class="crabbpackage">
+            
+            <div class="page-header">
+                <h1><span class="bi bi-clock" style="color: #7AC29A"></span> OrkBatch Managing</h1>
+            </div>
+            
+            <apex:pagemessages ></apex:pagemessages>
+            
+            <br />
+        
+            <div align="center">
+                <apex:commandButton styleClass="btn btn-primary" action="{!runOrkBatch}" value="Run OrkBatch Once" rendered="{!canRun}"/>
+                &nbsp;
+                <apex:commandButton styleClass="btn btn-primary" action="{!rescheduleEveryHour}" value="Reschedule Every Hour"/>
+                &nbsp;
+                <apex:commandButton styleClass="btn btn-primary" action="{!refresh}" value="Refresh"/>
+            </div>
+            
+            <br />
+            
+            <div>
+
+                <div class="col-xs-12">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">Reschedule parameters</div>
+                        <div class="panel-body">
+                            <div class="col-xs-3">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">Select Hour</div>
+                                    <div class="panel-body">
+                                        <apex:selectList value="{!selectedHour}" size="1" multiselect="false" styleClass="form-control">
+                                            <apex:selectOptions value="{!hourOptions}"/>
+                                            <!-- <apex:actionSupport action="{!retrieveListFields}" event="onchange" reRender="panelFields"></apex:actionSupport> -->
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-3">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">Select Day</div>
+                                    <div class="panel-body">
+                                        <apex:selectList value="{!selectedDay}" size="1" multiselect="false" styleClass="form-control">
+                                            <apex:selectOptions value="{!dayOptions}"/>
+                                            <!-- <apex:actionSupport action="{!retrieveListFields}" event="onchange" reRender="panelFields"></apex:actionSupport> -->
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-3">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">Select Month</div>
+                                    <div class="panel-body">
+                                        <apex:selectList value="{!selectedMonth}" size="1" multiselect="false" styleClass="form-control">
+                                            <apex:selectOptions value="{!monthOptions}"/>
+                                            <!-- <apex:actionSupport action="{!retrieveListFields}" event="onchange" reRender="panelFields"></apex:actionSupport> -->
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-2">
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <apex:commandButton styleClass="btn btn-primary" action="{!reschedule}" value="Reschedule"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xs-12">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">Scheduled Job</div>
+                        <div class="panel-body">
+                            <apex:pageBlock rendered="{!scheduledList.size > 0}">
+                                <apex:pageBlockTable value="{!scheduledList}" var="j" rows="10">
+                                    <apex:column headerValue="">
+                                        <apex:commandLink action="{!abortBatch}" title="Abort">Abort
+                                            <apex:param name="idparam" value="{!j.Id}" id="idparam" />
+                                        </apex:commandLink>
+                                    </apex:column>
+                                    <apex:column headerValue="Name" value="{!j.CronJobDetail.Name}"/>
+                                    <apex:column headerValue="Status" value="{!j.State}"/>
+                                    <apex:column headerValue="Start Time" value="{!j.StartTime}"/>
+                                    <apex:column headerValue="Previous Fire Time" value="{!j.PreviousFireTime}"/>
+                                    <apex:column headerValue="Next Fire Time" value="{!j.NextFireTime}"/>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            <apex:outputText rendered="{!scheduledList.size = 0}">{!$Label.CRABB_DEV__No_execution_in_progress}</apex:outputText>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">Active Job</div>
+                        <div class="panel-body">
+                            <apex:pageBlock rendered="{! IF(activeList != null,IF(activeList.size>0,true,false),false)}">
+                                <apex:pageBlockTable value="{!activeList}" var="j" rows="10">
+                                    <apex:column headerValue="">
+                                        <apex:commandLink action="{!abortBatch}" title="Abort">Abort
+                                            <apex:param name="idparam" value="{!j.Id}" id="idparam" />
+                                        </apex:commandLink>
+                                    </apex:column>
+                                    <apex:column headerValue="Name" value="{!j.ApexClass.Name}"/>
+                                    <apex:column headerValue="Status" value="{!j.Status}"/>
+                                    <apex:column headerValue="Total Items" value="{!j.TotalJobItems}"/>
+                                    <apex:column headerValue="Items Processed" value="{!j.JobItemsProcessed}"/>
+                                    <apex:column headerValue="Created Date" value="{!j.CreatedDate}"/>
+                                    <apex:column headerValue="Error">
+                                        <a class="TArea" href="#" title="{!j.ExtendedStatus}"><apex:image value="/img/setup_plus.gif" rendered="{!AND(j.ExtendedStatus != '',j.ExtendedStatus != null)}"/></a>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            <apex:outputText rendered="{! IF(activeList = null,true,IF(activeList.size = 0,true,false))}">{!$Label.CRABB_DEV__No_execution_in_progress}</apex:outputText>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xs-12">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">Last Executions</div>
+                        <div class="panel-body">
+                            <apex:pageBlock rendered="{! IF(completedList != null,IF(completedList.size > 0,true,false),false)}">
+                                <apex:pageBlockTable value="{!completedList}" var="j" rows="10">
+                                    <apex:column headerValue="Name" value="{!j.ApexClass.Name}"/>
+                                    <apex:column headerValue="Status" value="{!j.Status}"/>
+                                    <apex:column headerValue="Total Items" value="{!j.TotalJobItems}"/>
+                                    <apex:column headerValue="Items Processed" value="{!j.JobItemsProcessed}"/>
+                                    <apex:column headerValue="Number Of Errors" value="{!j.NumberOfErrors}"/>
+                                    <apex:column headerValue="Completed Date" value="{!j.CompletedDate}"/>
+                                    <apex:column headerValue="Error">
+                                        <a class="TArea" href="#" title="{!j.ExtendedStatus}"><apex:image value="/img/setup_plus.gif" rendered="{!AND(j.ExtendedStatus != '',j.ExtendedStatus != null)}"/></a>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            <apex:outputText rendered="{! IF(completedList = null,true,IF(completedList.size = 0,true,false))}">{!$Label.CRABB_DEV__No_previous_execution}.</apex:outputText>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>        
+        
+        </div>
+        
+        <script>
+            var j$ = jQuery.noConflict();
+            j$(function() {
+                j$( ".TArea" ).tooltip();
+            });
+        </script>
+        
+    </apex:form>
+    
+</apex:page>

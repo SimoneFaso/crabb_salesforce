@@ -1,0 +1,20 @@
+<apex:component >
+
+    <apex:attribute name="ChartData" description="Lista dei dati da rappresentare nel grafico" type="ChrtData[]" required="true"/>
+    <apex:attribute name="MinRes" description="Valore minimo da visualizzare in ascissa" type="Decimal" required="true"/>
+    <apex:attribute name="MaxRes" description="Valore massimo da visualizzare in ascissa" type="Decimal" required="true"/>
+    <apex:attribute name="Steps" description="Numero di tacche" type="Integer" required="true"/>
+    <apex:attribute name="TitoloGenerale" description="Titolo Generale" type="String" required="true" />
+    <apex:attribute name="TitoloAsse1" description="Titolo dell'asse DX" type="String" required="true" /> 
+    <apex:attribute name="TitoloAsse2" description="Titolo dell'asse SX" type="String" required="true" />     
+    
+    <apex:chart height="250" width="1000" data="{!ChartData}" colorSet="#AAAAFF">
+        <apex:axis type="Numeric" position="right" fields="data1" title="{!TitoloAsse1}" minimum="{!MinRes}" steps="{!Steps}"/>   
+        <apex:axis type="Category" position="bottom" fields="name" title="{!TitoloGenerale}"/> 
+        <apex:axis type="Numeric" position="left" fields="data2" title="{!TitoloAsse2}"/>
+        <apex:barSeries colorSet="#FDDC99" orientation="vertical" axis="left" xField="name" yField="data2" highlight="true" title="{!TitoloAsse2}"/>
+        <apex:lineSeries axis="right" xField="name" yField="data1" markerType="circle" markerSize="5" markerFill="#ff9933" title="{!TitoloAsse1}"/>  
+        <apex:legend position="bottom"/> 
+    </apex:chart>
+    
+</apex:component>

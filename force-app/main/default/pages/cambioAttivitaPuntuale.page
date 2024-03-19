@@ -1,0 +1,75 @@
+<apex:page controller="CambioAttivitaPuntualeCTRL" docType="html-5.0">
+    <c:KillerStyle />
+    <!-- Blocko di errore, se l'id é errato -->
+    <apex:pageBlock id="errorBlock" rendered="{! erroreHappened}">
+            <!-- AVERTI L'UTENTE PER L'ID E TYPE SBAGLIATO O MANCATO IN URL -->
+             <apex:pageBlockSection title="{!$Label.CRABB_DEV__Error}"  collapsible="false"  >
+                    <apex:pagemessage strength="2"
+                        title="{!$Label.CRABB_DEV__CheckAttOpen}"
+                        rendered="true"
+                        severity="warning" >
+                        <apex:form >
+                            <apex:commandButton action="/{!idPratica}" value="{!$Label.CRABB_DEV__Return_to_Dossier}"
+                                      styleClass="btn"/>
+                            <apex:commandButton action="/" value="{!$Label.CRABB_DEV__Return_to_Home_Page}"
+                                      styleClass="btn"/>                            
+                        </apex:form>                           
+                    </apex:pagemessage>
+             </apex:pageBlockSection>
+    </apex:pageBlock>    
+    
+    <apex:pageBlock title="{!$Label.CRABB_DEV__ManualActivityChange}" rendered="{! !erroreHappened}">
+        <apex:pageBlockSection id="SelezioniInizialiNew" columns="1" >
+            <apex:form id="TaskDaForm" rendered="{!Numsteps == 1}">
+                <apex:outputPanel id="TaskDaPanel">
+                    <apex:outputLabel styleClass="Bold">{!$Label.CRABB_DEV__The_starting_task}:</apex:outputLabel>
+                    <apex:outputtext styleclass="KillerBtnTaskSel" value="{!TaskDa}"/>
+                    <br/>
+                </apex:outputPanel>
+            </apex:form>
+            <apex:form id="TaskDaFormMore" rendered="{!Numsteps > 1}">
+                <apex:outputPanel id="TaskDaPanelMore">
+                    <apex:outputLabel styleClass="Bold">{!$Label.CRABB_DEV__Select} {!$Label.CRABB_DEV__The_starting_task}:</apex:outputLabel>
+                    <apex:outputtext styleclass="KillerBtnTaskSel" value="{!TaskDa}"/>
+                    <br/>
+                    <apex:repeat value="{!OriginalValuesTaskDa}" var="TaskDa1" >
+                        <apex:outputPanel >
+                            <apex:outputtext styleclass="KillerBtnTask" value="{!TaskDa1}" rendered="{!IF(OR(TaskDa1=TaskDa,TaskDa1=TaskA),false,true)}"/>
+                            <apex:actionSupport event="onclick" action="{!UpdateTaskDa}" rerender="SelezioniInizialiNew">
+                                <apex:param name="pTaskDa" value="{!TaskDa1}"/>
+                            </apex:actionSupport>
+                        </apex:outputPanel>
+                    </apex:repeat>
+                </apex:outputPanel>
+            </apex:form>
+            <apex:form id="TaskAForm">
+                <apex:outputPanel id="TaskAPanel">
+                    <apex:outputLabel styleClass="Bold">{!$Label.CRABB_DEV__Select} {!$Label.CRABB_DEV__The_arrival_task}:</apex:outputLabel>
+                    <apex:outputtext styleclass="KillerBtnTaskSel" value="{!TaskA}"/>
+                    <br/>
+                    <apex:repeat value="{!OriginalValuesTaskA}" var="TaskA1">
+                        <apex:outputPanel >
+                            <apex:outputtext styleclass="KillerBtnTask" value="{!TaskA1}" rendered="{!IF(OR(TaskA1=TaskA,TaskA1=TaskDA),false,true)}"/>
+                            <apex:actionSupport event="onclick" action="{!UpdateTaskA}" rerender="SelezioniInizialiNew">
+                                <apex:param name="pTaskA" value="{!TaskA1}"/>
+                            </apex:actionSupport>
+                        </apex:outputPanel>
+                    </apex:repeat>
+                </apex:outputPanel>
+            </apex:form>
+            <apex:message id="chooseTask"/>
+            <apex:form id="BtnContinua">
+                <apex:commandButton action="{!Conferma}" disabled="{!(TaskDa = 'NA') || (TaskA = 'NA')}" value="{!$Label.CRABB_DEV__Confirm}" status="TheStatus" onclick="if(!confirm('\n {!$Label.CRABB_DEV__You_are_moving_from} {!TaskDa} {!$Label.CRABB_DEV__Over} {!TaskA}.\n {!$Label.CRABB_DEV__Are_you_sure_to_confirm}?')){return};"/>
+            </apex:form>
+        </apex:pageBlockSection>
+        
+    <apex:form id="TheStatusForm"> 
+        <apex:actionstatus id="TheStatus">
+            <apex:facet name="start">
+                <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:form>
+
+   </apex:pageBlock>
+</apex:page>

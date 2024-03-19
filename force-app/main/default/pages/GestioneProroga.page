@@ -1,0 +1,179 @@
+<apex:page controller="GestioneProrogaCTRL1" docType="html-5.0">
+    <c:KillerStyle />
+    <head> 
+    <style type="text/css">
+        .Summary
+        {
+            width: 250px;
+            padding: 12px;
+            background-color: #f68b1f; 
+            border: 1px solid  #57B4D1;
+            opacity:0.85;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            color:white;
+        }
+        /* .fixed
+        { 
+            position:fixed; top:5px;
+        } */
+    </style>
+    </head>
+        <apex:pageBlock title="{!IF(ciSonoAffidamentiDaLavorare,$Label.CRABB_DEV__FilterExtentions,$Label.CRABB_DEV__NoExtentions)}">                      
+            <!-- (1)IL SEZIONE DEI FILTRI -->
+            <apex:pageblockSection columns="1" >
+                    <apex:outputPanel id="Filtri" title="{!$Label.CRABB_DEV__FIlter} {!$Label.CRABB_DEV__Assignments} " rendered="{!ciSonoAffidamentiDaLavorare}">
+                        <div id="accordion" style="width:650px">
+                                <h3 class="AccTitle" >{!$Label.Lot}</h3>
+                                <div >                                   
+                                    <apex:outputPanel rendered="{!originalValues_LottoSize>0}">
+                                        <c:Selectable Index="1" Selezione_Sinistra="{!originalValues_Lotto}" Selezione_Destra="{!originalValues_Lotto}" Titolo1="{!$Label.CRABB_DEV__Lot} {!$Label.CRABB_DEV__Name}" Titolo2="{!$Label.CRABB_DEV__Contract} {!$Label.CRABB_DEV__Name}" Titolo3="{!$Label.CRABB_DEV__Lot} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}" />                                
+                                    </apex:outputPanel>
+                                </div>
+                            
+                                <h3 class="AccTitle" >Collector</h3>
+                                <div>
+                                    <apex:outputPanel rendered="{!originalValues_CollectorSize>0}">                                      
+                                        <c:Selectable Index="2" Selezione_Sinistra="{!originalValues_Collector}" Selezione_Destra="{!originalValues_Collector}" Titolo1="{!$Label.CRABB_DEV__Country}" Titolo2="Collector {!$Label.CRABB_DEV__Name}" Titolo3="Collector {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                                    </apex:outputPanel>
+                                </div> 
+                                <h3 class="AccTitle" >Collector {!$Label.CRABB_DEV__Type}</h3>
+                                <div>  
+                                    <apex:outputPanel rendered="{!originalValues_TipoCollectorSize>0}">
+                                            <c:Selectable Index="3" Selezione_Sinistra="{!originalValues_TipoCollector}" Selezione_Destra="{!originalValues_TipoCollector}" Titolo1="{!$Label.CRABB_DEV__Type}" Titolo2="Collector {!$Label.CRABB_DEV__Type}" Titolo3="{!$Label.CRABB_DEV__Type} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                                    </apex:outputPanel>
+                                </div>            
+                                <h3 class="AccTitle" >{!$Label.CRABB_DEV__Service}</h3>
+                                <div>                     
+                                <apex:outputPanel rendered="{!originalValues_ServizioSize>0}">     
+                                    <c:Selectable Index="4" Selezione_Sinistra="{!originalValues_Servizio}" Selezione_Destra="{!originalValues_Servizio}" Titolo1="{!$Label.CRABB_DEV__Service}" Titolo2="{!$Label.CRABB_DEV__Service}" Titolo3="{!$Label.CRABB_DEV__Service} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                                </apex:outputPanel>
+                                </div>
+                        </div>
+                        <br/>
+                        <!-- I FILTRI SALDO MOVIMENTO SCADUTI__c & SALDO TOTALE__c -->
+                        <apex:form >
+                            <apex:outputPanel id="IdForm" rendered="{!ciSonoAffidamentiDaLavorare}" >
+                                <table style="border:0; table-layout:fixed">
+                                    <!-- INPUT TEXTS DA DEFINIRE I FILTRI DEL ACCOUNT -->
+                                    <tr>
+                                            <td><b>{!$Label.Lot} {!$Label.ExpiredDate}:</b></td>
+                                            <td>
+                                                <apex:input value="{!dataScadenzaLottoDa}"  type="date">D{!$Label.CRABB_DEV__From}</apex:input>
+                                            </td>
+                                            <td>
+                                                <apex:input value="{!dataScadenzaLottoA}" type="date" >{!$Label.CRABB_DEV__To}</apex:input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>{!$Label.CRABB_DEV__Assignments} {!$Label.CRABB_DEV__ExpiredDate}:</b></td>
+                                            <td>
+                                                <apex:input value="{!dataScadenzaAffidamentoDa}"  type="date">{!$Label.CRABB_DEV__From}</apex:input>
+                                            </td>
+                                            <td>
+                                                <apex:input value="{!dataScadenzaAffidamentoA}" type="date" >{!$Label.CRABB_DEV__To}</apex:input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>{!$Label.CRABB_DEV__Scaduto}:</b></td>
+                                            <td>
+                                                <apex:input value="{!decScadutoInizialeDa}"  type="number">{!$Label.CRABB_DEV__From}</apex:input>
+                                            </td>
+                                            <td>
+                                                <apex:input value="{!decScadutoInizialea}" type="number" >{!$Label.CRABB_DEV__To}</apex:input>
+                                            </td>
+                                        </tr>
+                                </table>
+                                
+                                 <br/>   
+                                <!-- IL PANELO DEL CONTROLLO DELLA VALIDITÁ DEI DATI ENTRATI -->          
+                                <apex:outputpanel id="ErrorMessagesId"> 
+                                    <apex:pageMessages rendered="{!ErrorValidateDecimal}"/>
+                                </apex:outputpanel>
+                                <c:AutoDisablinButton actionToInvoke="{!GestioneProrogaStep2}" disableAll="true" rendered="true" buttonValue="{!$Label.CRABB_DEV__FIlter}" buttonId="BlockButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Processing}" ></c:AutoDisablinButton>
+                            </apex:outputPanel>
+                        </apex:form>
+                    </apex:outputPanel>
+                    
+                    <apex:pageMessage summary="{!$Label.CRABB_DEV__NoAff}" severity="info" strength="3" rendered="{!NOT(ciSonoAffidamentiDaLavorare)}" />
+                    <!-- IL PANEL DEL FEEDBACK -->
+                        <apex:outputPanel id="feedback" rendered="{!ciSonoAffidamentiDaLavorare}" >
+                        <div style="position:fixed; top: 25%; right: 10%; " class="Summary">
+                                <apex:outputText value="1 {!$Label.CRABB_DEV__ExtensionRequest} {!$Label.CRABB_DEV__Outstanding}." rendered="{!hawmanyaffidamentiarePresent=1}"/>
+                                <apex:outputText value="{!hawmanyaffidamentiarePresent} {!$Label.CRABB_DEV__ExtensionRequest} {!$Label.CRABB_DEV__Outstanding}." rendered="{!AND(hawmanyaffidamentiarePresent>1,thereAreLessThanLimit)}"/>
+                                <apex:outputText value="{!hawmanyaffidamentiarePresent} {!$Label.CRABB_DEV__OrMore} {!$Label.CRABB_DEV__ExtensionRequest} {!$Label.CRABB_DEV__Outstanding}." rendered="{!NOT(thereAreLessThanLimit)}"/>                                
+                                <apex:outputPanel id="Cont_sel_Header" rendered="{!rightValues_LottoSize>0}">
+                                        <br/> 
+                                        <apex:outputText value="{!$Label.CRABB_DEV__Lot} {!$Label.CRABB_DEV__Selected}: "/>
+                                        <apex:outputPanel id="Cont_sel">
+                                            <apex:repeat value="{!rightValues_Lotto}" var="iselected">
+                                                <apex:outputText value="{!iselected} "></apex:outputText>
+                                            </apex:repeat>
+                                        </apex:outputPanel>
+                                </apex:outputPanel>  
+                                <apex:outputPanel id="Stat_sel_Header" rendered="{!rightvalues_CollectorSize>0}">
+                                    <br/> 
+                                    <apex:outputText value="Collector {!$Label.CRABB_DEV__Selected}: "/>
+                                    <apex:outputPanel id="Stat_sel">
+                                        <apex:repeat value="{!rightvalues_Collector}" var="sselected">
+                                            <apex:outputText value="{!sselected} "></apex:outputText>
+                                        </apex:repeat>
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                                <apex:outputPanel id="Fasc_sel_Header" rendered="{!rightvalues_TipoCollectorSize>0}">
+                                    <br/>
+                                    <apex:outputText value="Collector {!$Label.CRABB_DEV__Type} {!$Label.CRABB_DEV__Selected}: "/>
+                                    <apex:outputPanel id="Fasc_sel">
+                                        <apex:repeat value="{!rightvalues_TipoCollector}" var="fselected">
+                                            <apex:outputText value="{!fselected} "></apex:outputText>
+                                        </apex:repeat>
+                                    </apex:outputPanel>
+                                </apex:outputPanel>                                
+                                <apex:outputPanel id="Ser_sel_Header" rendered="{!rightValues_ServizioSize>0}">
+                                    <br/>
+                                    <apex:outputText value="{!$Label.CRABB_DEV__Service} {!$Label.CRABB_DEV__Type} {!$Label.CRABB_DEV__Selected}: "/>
+                                    <apex:outputPanel id="Ser_sel">
+                                        <apex:repeat value="{!rightValues_Servizio}" var="sselected">
+                                            <apex:outputText value="{!sselected} "></apex:outputText>
+                                        </apex:repeat>
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                        </div>
+                    </apex:outputPanel> 
+            </apex:pageblockSection>
+        </apex:pageBlock>
+        <script>
+        j$( "#accordion" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        j$( "#accordion2" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        jQuery(document).ready(function($) {
+        var pos = j$(window).height();
+
+        j$(window).scroll(function(){
+        if (j$(window).scrollTop() > pos){
+            j$('.Summary').addClass('fixed');
+        } else {
+            j$('.Summary').removeClass('fixed');
+        }
+        
+        
+        });
+    
+    
+        });   
+    </script>
+</apex:page>

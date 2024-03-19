@@ -1,0 +1,133 @@
+/**
+ * Created by msala on 05/05/2020.
+ */
+.LayoutContainer {
+  overflow: hidden;
+}
+
+.CardContainer {
+  margin: -8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.CardContainer lightning-card {
+  margin: 8px auto;
+  border: 1px solid #DDDBDA;
+  background: white;
+  border-radius: 2px;
+}
+
+.FullCardContainer lightning-card {
+  margin: 8px auto !important;
+  width: 100% !important;
+  border: 1px solid #DDDBDA;
+  border-radius: 2px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media screen and (min-width: 740px) {
+  .CardContainer lightning-card {
+    width: calc(100% / 3 - 16px);
+    margin: 8px;
+  }
+
+}
+
+@media screen and (min-width: 1024px) {
+  .CardContainer lightning-card {
+    width: calc(100% / 4 - 16px);
+    margin: 8px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .CardContainer lightning-card {
+    width: calc(100% / 4 - 16px);
+    margin: 8px;
+  }
+}
+
+.CardContainer .CardContent {
+  height: 190px;
+  padding: 0 26px;
+  position: relative;
+}
+
+.CardContainer .CardContent .Title {
+  font-weight: bold;
+  font-size: 16px;
+  height: 20px;
+}
+.CardContainer .CardContent .SubTitle {
+  height: 16px;
+}
+
+.CardContainer .CardContent .Priority {
+  font-size: 8px;
+  height: 10px;
+  font-weight: bold;
+  position: relative;
+}
+.CardContainer .CardContent .Priority::before {
+  content: '';
+  height: 24px;
+  width: 5px;
+  position: absolute;
+  left: -10px;
+  top: 0;
+  border-radius: 4px;
+}
+.CardContainer .CardContent .Priority.Alta {
+  color: #C83A3C;
+}
+.CardContainer .CardContent .Priority.Alta::before {
+  background: #C83A3C;
+}
+
+.CardContainer .CardContent .Priority.Media {
+  color: #FF9A3C;
+}
+.CardContainer .CardContent .Priority.Media::before {
+  background: #FF9A3C;
+}
+
+.CardContainer .CardContent .Priority.Bassa {
+  color: #A094ED;
+}
+.CardContainer .CardContent .Priority.Bassa::before {
+  background: #A094ED;
+}
+
+.CardContainer .CardContent .Description {
+  height: 50px;
+}
+
+.CardContainer .CardContent .Logo {
+  text-align: center;
+  height: 110px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+}
+.CardContainer .CardContent .Logo img {
+  max-width: none;
+  max-height: 110px;
+}
+.CardContainer .CardContent .CardOption {
+  height: 32px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.CardContainer .CardContent .Campanella {
+  position: absolute;
+  right: 20px;
+  top: 0;
+}
+.CardContainer .CardContent .Campanella lightning-helptext {
+  transform: scale(1.5);
+  display: block;
+}

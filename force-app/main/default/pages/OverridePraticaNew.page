@@ -1,0 +1,8 @@
+<apex:page id="page" standardController="Pratica__c">
+    <apex:pageMessage severity="ERROR"
+        strength="3"
+        title="{!$Label.crabb_dev__error_it_is_not_possible_to_create_a_case}"
+        escape="false"
+        summary="<b>{!$Label.crabb_dev__practices_are_created_automatically}</b>." >
+    </apex:pageMessage>
+</apex:page>

@@ -1,0 +1,41 @@
+<!--
+ - Created by Matteo on 05/08/2020.
+ -->
+
+<!-- Crabb Esiti Massivi -->
+<template>
+    <lightning-spinner if:true={isLoading} ></lightning-spinner>
+
+    <lightning-card if:true={isStep1} class="" >
+        <div class="slds-grid slds-wrap slds-p-around_medium">
+            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1">
+                <template if:true={isAffido}>
+                    <h1><span class="glyphicon glyphicon-transfer warning"></span> B.L.M.A. <small>Balance Lavorazione Massiva Affidi</small></h1>
+                </template>
+                <template if:false={isAffido}>
+                    <h1><span class="glyphicon glyphicon-tasks warning"></span> B.E.M.T. <small>Balance Esitazione Massiva TASK</small></h1>
+                </template>
+            </div>
+            <!--<div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-align_absolute-center" style="padding: 10px;">-->
+            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1" style="padding-left: 40px;padding-bottom:10px;padding-top:10px;">
+                <lightning-combobox onchange={onchangeowner} options={pickVisibilityResult} value={selectedVisibility} label="Scelta owner" >
+
+                </lightning-combobox>
+            </div>
+            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1" style="padding-left:40px;">
+                <lightning-accordion class="example-accordion"  active-section-name="B" if:true={mapWrapper} >
+                    <template for:each={mapWrapper} for:item="mapData">
+                        <c-crabb-esiti-massivi-tipologia-accordion map-sotto-disabled={mapSottoDisabled} key={mapData.key}
+                                                                   map-data={mapData.value} map-key={mapData.key}
+                                                                   map-tipo-oldest={mapTipoOldest} map-tipo-total={mapTipoTotal}
+                                                                   onopenmodalreport={openModalReport} ></c-crabb-esiti-massivi-tipologia-accordion>
+                    </template>
+                </lightning-accordion>
+            </div>
+        </div>
+    </lightning-card>
+    <lightning-card if:true={isStep2} class="" >
+        <c-crabb-table-esiti-massivi table-records={filteredDossiers} tipo-sottotipo={tipoSottotipoKey}></c-crabb-table-esiti-massivi>
+    </lightning-card>
+    <c-crabb-modal-get-report onsenddossierids={goToSecondStep}  onhide={hidemodal} ></c-crabb-modal-get-report> 
+</template>

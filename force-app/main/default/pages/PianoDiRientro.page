@@ -1,0 +1,97 @@
+<apex:page StandardController="Piano_di_Rientro__c" extensions="PdRContrExt" id="allPage" docType="html-5.0">
+    <c:KillerStyle />
+    <!-- KM:13/March/2014 added as a style class for the errorMessaging -->
+    <style>
+      .styleError { color: red; font-weight: strong;}
+    </style>    
+    <apex:outputPanel >
+        <apex:messages id="mess" />
+        <apex:form id="form">
+            <apex:pageBlock title="{!$Label.CRABB_DEV__IssueRepaymentPlan}" id="PB">
+                <apex:pageBlockButtons id="Button">                    
+                    <apex:outputPanel id="CalcolaPDR">
+                        <apex:outputText styleClass="KillerBtn" value="{!$Label.CRABB_DEV__EvaluateRepaymentPlan}"/>
+                        <apex:actionSupport status="PDR" event="onclick" action="{!CalcolaPdR}" rerender="CalcolaPDR,RateTbl,mess"/>
+                        <apex:actionStatus startText="{!$Label.CRABB_DEV__Calculating}" id="PDR"/>
+                        &nbsp;
+                    </apex:outputPanel>
+                    <apex:outputPanel id="AggiungiRata">
+                        <apex:outputText styleClass="KillerBtn" value="{!$Label.CRABB_DEV__AddInstallment}"/>
+                        <apex:actionSupport status="theStatus" event="onclick" action="{!AddRata}" rerender="AggiungiRata,RateTbl,mess"/>
+                        <!--<apex:actionStatus startText="Inserimeno della rata in corso..." id="AddRata"/>-->
+                        <apex:actionstatus id="theStatus">
+                            <apex:facet name="start">
+                                <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" ImageUrl="{!$Resource.Loading}" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+                            </apex:facet>
+                        </apex:actionstatus> 
+                        &nbsp;
+                    </apex:outputPanel>
+                    <apex:outputPanel id="SubmitPDR">
+                        <apex:outputText styleClass="KillerBtn" value="{!$Label.CRABB_DEV__IssueTheRepaymentPlan}"/>
+                        <!-- KM:13/March/2014 added to show the error messages when the piano di rientro is submitted -->
+                        <apex:messages styleClass="styleError"/>
+                        
+                        <apex:actionSupport status="AddPDR" event="onclick" action="{!Submit}"/>
+                        <apex:actionStatus startText="{!$Label.CRABB_DEV__IssuingTheRepaymentPlan}" id="AddPDR"/>
+                        &nbsp;
+                    </apex:outputPanel>
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection title="{!$Label.CRABB_DEV__SelectTheCase}:" columns="2">
+                    <apex:actionRegion >
+                        <apex:inputField id="Pratica" value="{!Piano_di_Rientro__c.Pratica__c}">
+                            <apex:actionSupport event="onchange" rerender="Scaduto,Scad"/>
+                        </apex:inputField>
+                    </apex:actionRegion>
+                    <apex:outputLabel id="Scaduto" value="{!$Label.CRABB_DEV__CaseExpiredAmounts}: €{!Importo}"></apex:outputLabel>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection id="Rateizzazione" Title="{!$Label.CRABB_DEV__FillOneOfTheFollowingFields}:">
+                    <apex:inputField id="NumeroRate" value="{!Piano_di_Rientro__c.Numero_di_Rate__c}"/>
+                    <apex:inputField id="ImportoRate" value="{!Piano_di_Rientro__c.Importo_Rata__c}"/>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection title="{!$Label.CRABB_DEV__FirstInstallmentDate}:" columns="2" id="data">
+                    <apex:input Type="date" value="{!d}"/>
+                </apex:pageBlockSection>
+                <apex:outputPanel id="RateTbl">
+                    <apex:pageBlockSection title="{!$Label.CRABB_DEV__InstallmentPlan}:" columns="2">
+                        <apex:outputLabel id="Num" value="{!$Label.CRABB_DEV__NumberOfInstallments}: {!NumeroRate}"></apex:outputLabel>
+                        <apex:outputLabel id="Imp" value="{!$Label.CRABB_DEV__InstallmentAmount}: €{!ImportoRata}"></apex:outputLabel>
+                        <apex:outputLabel id="Tot" value="{!$Label.CRABB_DEV__AllInstallmentsAmount}: €{!TotRate}"></apex:outputLabel>
+                        <apex:outputLabel id="Scad" value="{!$Label.CRABB_DEV__CaseExpiredAmounts}: €{!Importo}"></apex:outputLabel>
+                        <apex:image url="/img/samples/light_green.gif" rendered="{!Importo = TotRate}"/>
+                        <apex:outputText rendered="{!Importo = TotRate}">{!$Label.CRABB_DEV__InstEqualsExp}</apex:outputText>
+                        <apex:image url="/img/samples/light_red.gif" rendered="{!Importo <> TotRate}"/>
+                        <apex:outputText value="{!$Label.CRABB_DEV__InstLesserExp}: €{!TotRate-Importo}" rendered="{!Importo > TotRate}" styleClass="Important" />
+                        <apex:outputText value="{!$Label.CRABB_DEV__InstGreaterExp}: €{!TotRate-Importo}" rendered="{!Importo < TotRate}" styleClass="Important"/>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockTable value="{!mapRate}" var="key" >
+                    <!-- Aggiunta colonna per gestire azioni puntuali sui record KM:13/March/2014 -->
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Actions}</apex:facet>
+                            <apex:commandLink value="{!$Label.CRABB_DEV__Delete}" action="{!actionDeleteInstalment}" immediate="true" >
+                                <apex:param value="{!Key}" assignTo="{!actionSupportParameter}" name="EliminaParameter"/> 
+                            </apex:commandLink>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header"># {!$Label.CRABB_DEV__Installment}</apex:facet>
+                            <apex:outputtext value="{!key}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Amount}</apex:facet>
+                            <apex:inputField value="{!mapRate[Key].Importo_Rata__c}">
+                                <apex:actionSupport event="onchange" action="{!RicalcolaImpTot}"/>
+                            </apex:inputField>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Date}</apex:facet>
+                            <!--apex:input Type="date" value="{!mapRate[Key].Data_Scadenza_Rata__c}"/-->
+                            <apex:inputField value="{!mapRate[Key].Data_Scadenza_Rata__c}"/>
+                            <!--<apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+                                <apex:param value="{!mapRate[Key].Data_Scadenza_Rata__c}" /> 
+                            </apex:outputText>-->
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputpanel>        
+</apex:page>

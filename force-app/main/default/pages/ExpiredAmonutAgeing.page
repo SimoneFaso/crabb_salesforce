@@ -1,0 +1,37 @@
+<apex:page language="{!lingua}" standardController="Pratica__c" extensions="CruscottoPraticaCTRL" standardStylesheets="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.min.css')}"/>
+    <!-- <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />
+     <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  /> -->
+
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <style>
+        [hidden], template{
+            display:block !important;
+        }
+    </style>
+
+    <c:KillerStyle />
+
+    <apex:pageBlock id="StackedChart">
+        <apex:facet name="header">
+            <div class="crabbpackage">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Ageing {!$Label.CRABB_DEV__Expired}</div>
+                </div>
+            </div>
+        </apex:facet>
+        <apex:pageBlockSection >
+            <c:StckdChart8Val StkData="{!StkData}" MinRes="0" MaxRes="{!MaxRes}" TopSteps="5" BottomSteps="10"/>
+        </apex:pageBlockSection>
+        <apex:pageblockSection >
+            <c:Chart2Val ChartData="{!PieData}" MinRes="0" MaxRes="100" Steps="5" TitoloGenerale="{!$Label.CRABB_DEV__month}" TitoloAsse1="{!$Label.CRABB_DEV__Expired}" TitoloAsse2="{!$Label.CRABB_DEV__Amount2}"/>
+        </apex:pageblockSection>
+    </apex:pageBlock>
+    <c:RiepilogoScaduto ChartData="{!pieData}"/>
+    
+</apex:page>

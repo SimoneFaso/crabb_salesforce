@@ -1,0 +1,24 @@
+/**
+ * Created by Matteo on 05/08/2020.
+ */
+.iconLight{
+    position: relative;
+    top: -39px;
+    left: -47px;
+}
+
+.paddingAccordion{
+    padding-left:50px;
+}
+
+.tileContainer{
+    background-color: rgb(242, 242, 242);
+    cursor : pointer;
+    border: 1px solid black;
+}
+
+.slds-badge {
+  --sds-c-badge-color-background: #ce2228;
+  --sds-c-badge-text-color: white;
+  --sds-c-badge-radius-border: 4px;
+}

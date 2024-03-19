@@ -1,0 +1,78 @@
+<apex:page standardController="Flussi_Collector__c" extensions="FlussiColDownloadZipCTRL">
+
+    <script>
+        j$( "#accordion" ).accordion({ 
+            heightStyle: "content", 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+    </script>
+    <script>
+    var lastRow;
+    function highlight(elem){
+        if(lastRow != undefined)
+            lastRow.style.backgroundColor = 'white';
+    
+        elem.style.backgroundColor = 'yellow';
+        lastRow = elem;
+    }
+    
+    function selectCheckboxes(receivedInputID){
+        var inputCheckBox = document.getElementsByTagName("input");
+                for(var i=0; i<inputCheckBox.length; i++){
+                    if(inputCheckBox[i].id == receivedInputID){
+                        inputCheckBox[i].checked = true;
+                    }
+                }
+
+    }
+    function aggiornaDawnloaded() {
+        aggiornaTabella();
+    }
+
+    </script>
+    <apex:form id="FormID">
+        <apex:pagemessages rendered="{!errorLoadingFlusso}"  />
+        
+        <apex:pageblock title="{!$Label.crabb_dev__download_attachment}" rendered="{! !errorLoadingFlusso}">
+            <apex:outputPanel id="tableId">
+                <apex:pageBlocktable value="{!myAttachWrapp}" var="a">                
+                    <apex:column headerValue="Downloaded" >
+                           <apex:inputCheckbox value="{!a.isSelected}" disabled="true" id="InputId">
+                           </apex:inputCheckbox> 
+                    </apex:column> 
+                    
+                    <apex:column >
+                           <apex:facet name="header">{!$Label.crabb_dev__attachment_name}</apex:facet>
+                           <apex:outputText style="color: black">{!a.attach.Name}</apex:outputText>
+                    </apex:column>
+                    
+                    <apex:column >
+                           <apex:facet name="header">{!$Label.crabb_dev__last_download_date}</apex:facet>
+                           <apex:outputText style="color: black"><b>{!a.lastDownDate}</b></apex:outputText>
+                    </apex:column>
+                    
+                    <apex:column headerClass="download">    
+                        <apex:outputLink value="/servlet/servlet.FileDownload?file={!a.attach.id}" target="_parent" >{!$Label.crabb_dev__download} 
+                            <apex:actionSupport event="onclick" action="{!AggiornaElementoLista}" status="TheStatus"  rerender="tableId, DatePanel"  >
+                                <apex:param value="{!a.attach.id}" name="attachID"/>
+                            </apex:actionSupport>
+                        </apex:outputLink>  
+                        
+                    </apex:column>
+                </apex:pageBlocktable>
+              </apex:outputPanel>
+          </apex:pageblock>
+    </apex:form>
+    
+
+        <apex:form id="TheStatusForm"> 
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" Message="Please wait..." messageStyle="color:darkred;font-size:10pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus>
+        </apex:form>
+        
+</apex:page>

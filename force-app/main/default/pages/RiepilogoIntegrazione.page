@@ -1,0 +1,200 @@
+<apex:page controller="RiepilogoIntegrazione">
+
+    <c:KillerStyle />
+    
+     <style>
+    #opsdashboard {
+        width: 880px;
+    }
+    
+    #opsdashboard .opsheader {
+        height:50px;
+    }
+    
+    #opsdashboard .opsheader h3 {
+        float:left;
+        margin-top:15px;
+        padding:0;
+        font-size: 18px;
+        font-weight: normal;
+    }
+    
+    #opsdashboard .opsheader #count {
+        float:right;
+        width: 175px;
+    }
+    
+    #opsdashboard .opsheader #count .number {
+        display: block;
+        //text-align: center;
+        text-align: right;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    
+    #opsdashboard .opsheader #count .days {
+        display: block;
+        //text-align: center;
+        text-align: right;
+        font-size: 12px;
+        font-weight: italic;
+        margin-top: 5px;
+    }
+    
+    #opscontent {
+        padding: 15px;
+    }
+    
+    #opscontent a {
+        width: 250px;
+        height: 50px;
+        font-size: 14px;
+        margin: 0 20px 20px 0;
+    }
+    
+    #opscontent .owner-name {
+        float: left;
+        margin-top: 10px;
+        width: 150px;
+        text-align: left;
+    }
+    
+    #opscontent .owner-count {
+        float: right;
+        width: 50px;
+    }
+    
+    #opscontent .owner-number {
+        display: block;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 7px;
+    }
+    
+    #opscontent .owner-days {
+        display: block;
+        text-align: center;
+        font-size: 8px;
+        margin-top: 5px;
+    }
+    
+  </style>
+  
+    <apex:pageBlock title="{!$Label.CRABB_DEV__Integration_Dossier}" >
+        <div id="opsdashboard">
+            <apex:repeat value="{!MapHeader}" var="hkey">
+                <div class="opsheader">
+                    <h3><apex:outputText value="{!hkey}"/></h3>
+                    <div id="count">
+                        <span class="days">{!$Label.CRABB_DEV__Transaction}: 
+                            <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+                                <apex:param value="{!MapHeader[hkey].UltCarMov}" />
+                            </apex:outputText>
+                            <apex:outputText value="NA" rendered="{!IF(MapHeader[hkey].UltCarMov == NULL,true,false)}"/>
+                        </span>
+                        <span class="days">{!$Label.CRABB_DEV__Account_Data}: 
+                            <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+                                <apex:param value="{!MapHeader[hkey].UltCarAna}" />
+                            </apex:outputText>
+                            <apex:outputText value="NA" rendered="{!IF(MapHeader[hkey].UltCarAna == NULL,true,false)}"/>
+                        </span>         
+                    </div>
+                </div>
+                <div id="opscontent">
+                    <apex:pageBlockTable id="Tab" value="{!MapHeader[hkey].lCont}" var="keyInt" >
+                        <apex:column >
+                            <apex:facet name="header">File</apex:facet>
+                            <apex:outputText value="{!keyInt.FileName}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Last_Upload}</apex:facet>
+                            <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+                                <apex:param value="{!keyInt.UltCaricamento}" />
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Account TOT</apex:facet>
+                            <apex:outputText value="{!keyInt.AccountTot}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Account OK</apex:facet>
+                            <apex:outputText value="{!keyInt.AccountOK}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">Account KO</apex:facet>
+                            <apex:outputText value="{!keyInt.AccountKO}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Service} TOT</apex:facet>
+                            <apex:outputText value="{!keyInt.ServiziTot}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Service} OK</apex:facet>
+                            <apex:outputText value="{!keyInt.ServiziOK}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Service} KO</apex:facet>
+                            <apex:outputText value="{!keyInt.ServiziKO}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Item_Services} TOT</apex:facet>
+                            <apex:outputText value="{!keyInt.ServiziItemTot}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Item_Services} OK</apex:facet>
+                            <apex:outputText value="{!keyInt.ServiziItemOK}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Item_Services} KO</apex:facet>
+                            <apex:outputText value="{!keyInt.ServiziItemKO}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Addresses} TOT</apex:facet>
+                            <apex:outputText value="{!keyInt.IndirizziTot}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Addresses} OK</apex:facet>
+                            <apex:outputText value="{!keyInt.IndirizziOK}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Addresses} KO</apex:facet>
+                            <apex:outputText value="{!keyInt.IndirizziKO}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Transaction} TOT</apex:facet>
+                            <apex:outputText value="{!keyInt.MovimentiTot}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Transaction} OK</apex:facet>
+                            <apex:outputText value="{!keyInt.MovimentiOK}"/>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Transaction} KO</apex:facet>
+                            <apex:outputText value="{!keyInt.MovimentiKO}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </div>
+            </apex:repeat> 
+        </div>
+    </apex:pageBlock>
+  
+    <script>
+        j$(function()
+        {
+            j$( "#opsdashboard" ).accordion(
+                { 
+                    header: '.opsheader', 
+                    collapsible: true, 
+                    active: false,
+                    heightStyle: 'content',
+                }
+            );
+        });
+        
+        j$(function() {
+            j$( ".owner-link" ).button()
+        });
+    </script>
+</apex:page>

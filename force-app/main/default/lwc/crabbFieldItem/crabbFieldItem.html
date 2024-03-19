@@ -1,0 +1,59 @@
+<!--
+ - Created by MatteoSala on 09/07/2020.
+ -->
+
+<!-- Crabb Field Item -->
+<template>
+    <div class="draggable slds-border_top slds-border_bottom slds-grid slds-wrap" draggable={draggable}
+         ondragstart={itemDragStart} ondragover={handleDragOver}>
+        <div class="slds-size_1-of-12"></div>
+
+        <div class="slds-size_1-of-12">
+            <div class="slds-box_xx-small slds-text-align_center slds-m-around_xx-small">
+                <lightning-button variant="destructive" label="Delete" title="Delete item" onclick={handleDelete}
+                                  class="slds-m-left_xx-small"></lightning-button>
+            </div>
+        </div>
+
+        <div class="slds-size_3-of-12">
+            <div class="slds-box_small slds-text-align_center slds-m-around_xx-small">
+                {objectApiName}
+            </div>
+        </div>
+
+        <div class="slds-size_3-of-12">
+            <div class="slds-box_small slds-text-align_center slds-m-around_xx-small">
+                {field.CRABB_DEV__Field__c}
+            </div>
+        </div>
+
+        <div class="slds-size_2-of-12">
+            <div class="slds-form-element slds-box_xx-small slds-text-align_center slds-m-around_xx-small">
+                <div class="slds-form-element__control">
+                    <input type="number" id="text-input-id-1" class="slds-input" value={order} onchange={orderEntered} />
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-12">
+            <div class="slds-box_small slds-text-align_center slds-m-around_xx-small">
+                <div class="slds-form-element is-visible-checkbox">
+                    <div class="slds-form-element__control">
+                        <div class="slds-checkbox">
+                            <input type="checkbox" name="isVisible" id="isVisible" checked={field.CRABB_DEV__Show__c}
+                                   onchange={onIsVisibleChanged} />
+                            <label class="slds-checkbox__label" for="isVisible">
+                                <span class="slds-checkbox_faux"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-12"></div>
+    </div>
+    <div if:true={isUnder} class="slds-box slds-text-align_center slds-m-around_xx-small custom">
+        <p></p>
+    </div>
+</template>

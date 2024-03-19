@@ -1,0 +1,29 @@
+<apex:page CONTROLler="GestioneEsitoAffidamentiCTRL" SideBar="false" showheader="false">
+    <apex:form >
+        <apex:pageblock id="mainBlock" title="Selezionare un esito: " rendered="{!validAffId}">
+            <apex:outputPanel id="panelDati">
+                <apex:pageblocksection columns="2">
+                    <apex:inputfield value="{!t.ActivityExtended__r.Esiti_Collector__c}" required="true" />
+                    <apex:inputField value="{!t.ActivityExtended__r.Note_Collector__c}" required="false"/>
+                </apex:pageblocksection>
+            </apex:outputPanel> 
+            <apex:pageBlockButtons >
+                <c:AutoDisablinButton actionToInvoke="{!Salva}" buttonId="salvaIdBtn" buttonValue="{!$Label.crabb_dev__save}" buttonValueDisabled="{!$Label.crabb_dev__save}..." disableAll="true" disabled="false" id="buttonSId" rendered="true"></c:AutoDisablinButton>
+                <!-- <c:AutoDisablinButton actionToInvoke="{!Cancella}" buttonId="salvaIdBtn" buttonValue="Cancella" buttonValueDisabled="Cancella" disableAll="true" disabled="false" id="buttonCancId" rendered="true"></c:AutoDisablinButton>
+                --> <apex:commandbutton value="{!$Label.crabb_dev__delete}" action="{!Cancella}" immediate="true"/>
+            </apex:pageBlockButtons>   
+        </apex:pageblock>
+        
+        <apex:pageBlock id="errorBlock" rendered="{! !validAffId}">
+        <!-- AVERTI L'UTENTE PER L'ID E TYPE SBAGLIATO O MANCATO IN URL -->
+         <apex:pageBlockSection title="{!$Label.crabb_dev__error}"  collapsible="false"  >
+                <apex:pagemessage strength="2"
+                    title="{!$Label.crabb_dev__errorurl}"
+                    rendered="true"
+                    severity="warning" >
+                    <apex:commandButton value="{!$Label.crabb_dev__return_to_home_page}" action="/" />               
+                </apex:pagemessage>
+         </apex:pageBlockSection>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

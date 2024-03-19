@@ -1,0 +1,499 @@
+<!--
+ - Created by MatteoSala on 03/07/2020.
+ -->
+
+<!-- Crabb Administration -->
+
+<template>
+    <lightning-accordion class="example-accordion" active-section-name="Admin" style="background-color: #F4F3EF;">
+        <template if:true={adminAccordionSection}>
+            <lightning-accordion-section name="Admin" label={labels.Accordion_Section_Admin}>
+                <div class="slds-grid slds-wrap slds-grid_vertical-stretch">
+                    <template if:true={currentAS.ConfigurazioneAmministrazione}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="custom:custom47" title="custom47"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner body-heiht">
+                                        <h5 class="customize-title">{labels.Configurazione_Amministrazione_Title}</h5>
+                                        <hr>
+                                        <p >{labels.Configurazione_Amministrazione_Description}</p>
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToGestioneAmministrazione} >{labels.Configurazione_Amministrazione_Button}</button>
+                                        </div>
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.AttivitaProfili}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="action:preview" alternative-text="Attività Profili" title="Attività Profili"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner body-heiht">
+                                        <h5 class="customize-title">{labels.Attivita_Profili_Title}</h5>
+                                        <hr>
+                                        <p >{labels.Attivita_Profili_Description}</p>
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToAffidiSettingsPage}>{labels.Attivita_Profili_Button}</button>
+                                        </div>
+                                    </footer>
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.ProfilazioneUtenti}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="action:user" alternative-text="Profilazione Utenti" title="Profilazione Utenti"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Profilazione_Utenti_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Profilazione_Utenti_Description}</p>
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToUtenti}>{labels.Profilazione_Utenti_Button}</button>
+                                            <button class="slds-button slds-button_brand role-btn-custom-color" onclick={navigateToRuoli}>{labels.Profilazione_Ruoli_Button}</button>
+                                        </div>
+                                    </footer>
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.ImportCustomSettings}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="action:upload"  alternative-text="Import Custom Settings" title="Import Custom Settings"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Custom_Setting_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Custom_Setting_Description}</p>
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" disabled={disableImport} onclick={handleImport}>{labels.Custom_Setting_Button}</button>
+                                        </div>
+                                    </footer>
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </lightning-accordion-section>
+        </template>
+        <template if:true={CRABBSetupAccordionSection}>
+            <lightning-accordion-section name="CRABB Setup" label={labels.Accordion_Section_CRABB_Setup}>
+                <div class="slds-grid slds-wrap slds-grid_vertical-stretch">
+                    <template if:true={currentAS.EstrattoConto}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center> <lightning-icon icon-name="doctype:pdf" alternative-text="PDF" title="PDF"></lightning-icon> </center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Estratto_Conto_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Estratto_Conto_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToPDF}>{labels.Estratto_Conto_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.CruscottoPratica}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="custom:custom102" title="Cruscotto Pratica"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Cruscotto_Pratica_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Cruscotto_Pratica_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToTAB}>{labels.Cruscotto_Pratica_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.CostiAttivita}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="utility:animal_and_nature" title="Costi Attività"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Costi_Attivita_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Costi_Attivita_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToCostiAttivita}>{labels.Costi_Attivita_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </lightning-accordion-section>
+        </template>
+        <template if:true={StrategieAccordionSection}>
+            <lightning-accordion-section name="Strategie" label={labels.Accordion_Section_Strategie}>
+                <div class="slds-grid slds-wrap slds-grid_vertical-stretch">
+                    <template if:true={currentAS.ConfigurazioneStrategie}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="utility:expand" title="Configurazione Strategie"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Configurazione_Strategie_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Configurazione_Strategie_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToGestioneStrategie}>{labels.Configurazione_Strategie_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.ImportStrategie}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="action:upload" alternative-text="Import Strategie" title="Import Strategie"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner body-heiht">
+                                        <h5 class="customize-title">{labels.Import_Strategie_Title}</h5>
+                                        <hr>
+                                        <p >{labels.Import_Strategie_Description}</p>
+                                    </div>
+
+                                    <footer class="slds-card__footer custom-button-padding">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToImportStrategie} >{labels.Import_Strategie_Button}</button>
+                                        </div>
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </lightning-accordion-section>
+        </template>
+        <template if:true={CollectorAccordionSection}>
+            <lightning-accordion-section name="Collector" label={labels.Accordion_Section_Collector}>
+                <div class="slds-grid slds-wrap slds-grid_vertical-stretch">
+                    <template if:true={currentAS.ConfigurazioneCollector}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="action:filter" alternative-text="Configurazione Collector" title="Configurazione Collector"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner body-heiht">
+                                        <h5 class="customize-title">{labels.Configurazione_Collector_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Configurazione_Collector_Description}</p>
+                                    </div>
+
+                                    <footer class="slds-card__footer custom-button-padding">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToGestioneCollector}>{labels.Configurazione_Collector_Button}</button>
+                                        </div>
+                                    </footer>
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.FlussiCollector}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center> <lightning-icon icon-name="doctype:csv" alternative-text="CSV" title="Flussi Collector"></lightning-icon> </center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Flussi_Collector_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Flussi_Collector_Description}</p>
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToCSV}>{labels.Flussi_Collector_Button}</button>
+
+                                        </div>
+                                    </footer>
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.FasceCollector}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center> <lightning-icon icon-name="utility:center_align_text" alternative-text="Fasce Collector" title="Fasce Collector"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Fasce_Collector_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Fasce_Collector_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand"  onclick={navigateToFasce}>{labels.Fasce_Collector_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.AffidoCollector}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="action:manage_perm_sets" alternative-text="Affido Collector" title="Affido Collector"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Affido_Collector_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Affido_Collector_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToGestioneAffidoCollector}>{labels.Affido_Collector_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </lightning-accordion-section>
+        </template>
+        <template if:true={technicalManagementAccordionSection}>
+            <lightning-accordion-section name="Technical Management" label={labels.Accordion_Section_Technical_Management}>
+                <div class="slds-grid slds-wrap slds-grid_vertical-stretch">
+                    <template if:true={currentAS.GestioneOrkBatch}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="utility:clock" title="Gestione OrkBatch"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Gestione_OrkBatch_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Gestione_OrkBatch_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToOrkBatch}>{labels.Gestione_OrkBatch_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.EliminazioneLog}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="utility:cancel_file_request" title="Eliminazione Logs"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Eliminazione_Logs_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Eliminazione_Logs_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToLogDelete}>{labels.Eliminazione_Logs_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.ConfigurazioneMapping}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="utility:rotate" title="Configurazione Mapping"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Configurazione_Mapping_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Configurazione_Mapping_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" onclick={navigateToBRL}>{labels.Configurazione_Mapping_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={currentAS.InitialImportMapping}>
+                        <div class="map-container slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                            <div class="slds-p-around_xx-small height-100">
+                                <article class="slds-card height-100">
+                                    <div class="slds-card__header">
+                                        <h1 slot="title">
+                                            <center><lightning-icon icon-name="utility:upload" title="Initial Import Mapping"></lightning-icon></center>
+                                        </h1>
+                                    </div>
+
+                                    <div class="slds-card__body slds-card__body_inner">
+                                        <h5 class="customize-title">{labels.Initial_Import_Mapping_Title}</h5>
+                                        <hr>
+                                        <p>{labels.Initial_Import_Mapping_Description}</p>
+
+                                    </div>
+
+                                    <footer class="slds-card__footer">
+                                        <div class="slds-no-flex custom-button-position">
+                                            <button class="slds-button slds-button_brand" disabled={disableImportMapping} onclick={handleImportMapping}>{labels.Initial_Import_Mapping_Button}</button>
+                                        </div>
+
+                                    </footer>
+
+                                </article>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </lightning-accordion-section>
+        </template>
+    </lightning-accordion>
+</template>

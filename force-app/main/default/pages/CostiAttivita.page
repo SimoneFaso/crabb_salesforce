@@ -1,0 +1,171 @@
+<apex:page docType="html-5.0" standardController="Collector__c" extensions="CostiAttivitaCTRL">
+
+    <c:BalanceStyle />
+    
+    <apex:outputpanel id="Container">
+        
+        <apex:form styleclass="center">
+            <apex:outputpanel style="margin: auto;" id="FormPersonalizza" rendered="{!IF(Debug='Personalizza',true,false)}">
+                <div class="center">
+                    <table class="list" style="margin: auto;" border="0" cellpadding="0" cellspacing="0">
+                        <tr class="dataRow">
+                            <td>Personalizza {!Tipo} - {!Cost}</td>
+                            <td></td>
+                            <td><apex:input type="text" html-placeholder="{!Cost}" value="{!Cost}"/></td>
+                            <td></td>
+                            <td>
+                                <apex:outputPanel >
+                                    <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Confirm}"/>
+                                    <apex:actionSupport event="onclick" action="{!ConfermaPersonalizza}" rerender="Container">
+                                    </apex:actionSupport>
+                                </apex:outputPanel>
+                            </td>
+                            <td></td>
+                            <td>
+                                <apex:outputPanel >
+                                    <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Cancel}"/>
+                                    <apex:actionSupport event="onclick" action="{!AnnullaModificaPersonalizza}" rerender="Container">
+                                    </apex:actionSupport>
+                                </apex:outputPanel>
+                            </td>
+                         </tr>
+                    </Table>
+                </div>
+                <BR/><BR/>
+            </apex:outputpanel>
+            
+            <apex:outputpanel style="margin: auto;" id="FormModifica"  rendered="{!IF(Debug='Modifica',true,false)}">
+                <div class="center">
+                    <table class="list" style="margin: auto;" border="0" cellpadding="0" cellspacing="0">
+                        <tr class="dataRow">
+                            <td>Modifica {!Tipo} - {!Cost}</td>
+                            <td></td>
+                            <td><apex:input type="text" html-placeholder="{!Cost}" value="{!Cost}"/></td>
+                            <td></td>
+                            <td>
+                                <apex:outputPanel >
+                                    <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Confirm}"/>
+                                    <apex:actionSupport event="onclick" action="{!ConfermaModifica}" rerender="Container">
+                                    </apex:actionSupport>
+                                </apex:outputPanel>
+                            </td>
+                            <td></td>
+                            <td>
+                                <apex:outputPanel >
+                                    <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Cancel}"/>
+                                    <apex:actionSupport event="onclick" action="{!AnnullaModificaPersonalizza}" rerender="Container">
+                                    </apex:actionSupport>
+                                </apex:outputPanel>
+                            </td>
+                         </tr>
+                    </Table>
+                </div>
+                <BR/><BR/>
+            </apex:outputpanel>
+        </apex:form>
+        
+        <apex:outputpanel id="Tabella">
+    
+            <div class="center">
+                
+                <table class="list" style="margin: auto;" border="0" cellpadding="0" cellspacing="0">
+                    <tr class="headerRow">
+                         <th style="text-align: center;">{!$Label.Activity_type}</th>
+                         <th></th>
+                         <th style="text-align: center;">{!$Label.Customization}</th>
+                         <th></th>
+                         <th style="text-align: center;">{!$Label.Cost}</th>
+                         <th></th>
+                         <th style="text-align: center;">{!$Label.Actions}</th>
+                     </tr>
+                     
+                     <apex:repeat value="{!mCosti}" var="mKey">     
+                         <tr class="dataRow">
+                             <apex:repeat value="{!mCosti[mKey]}" var="IntmKey">
+                                 <td><apex:outputtext value="{!mKey}" /></td>
+                                 <td style="width: 20Px;"></td>
+                                 <td style="text-align: center;">
+                                     <apex:image rendered="{!IF(IntmKey='All',false,true)}" value="/img/msg_icons/confirm16.png" />
+                                 </td>
+                                 <td style="width: 50Px;"></td>
+                                 <td style="text-align: right;"><apex:outputtext value="{!mCosti[mKey][IntmKey]}€" /></td>
+                                 <td style="width: 50Px;"></td>
+                                 <td style="text-align: center;">
+                                     <apex:form >
+                                         <apex:outputPanel rendered="{!If(IntmKey='All',true,false)}">
+                                             <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Customize}"/>
+                                             <apex:actionSupport event="onclick" action="{!Personalizza}" rerender="Container">
+                                                 <apex:param name="Costo" Value="{!mCosti[mKey][IntmKey]}"/>
+                                                 <apex:param name="Tipologia" value="{!mKey}"/>
+                                             </apex:actionSupport>
+                                         </apex:outputPanel>
+                                         <apex:outputPanel rendered="{!If(IntmKey='All',false,true)}">
+                                             <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Edit}"/>
+                                             <apex:actionSupport event="onclick" action="{!Modifica}" rerender="Container">
+                                                 <apex:param name="Costo" Value="{!mCosti[mKey][IntmKey]}"/>
+                                                 <apex:param name="Tipologia" value="{!mKey}"/>
+                                             </apex:actionSupport>
+                                         </apex:outputPanel>
+                                     </apex:form>
+                                 </td>
+                             </apex:repeat>
+                         </tr>
+                     </apex:repeat>
+                     
+                </table>
+            </div>
+        </apex:outputpanel>
+        
+        <apex:form styleclass="center">
+            <apex:outputpanel style="margin: auto;" id="NuovoBottone" rendered="{!IF(AND(Debug<>'Personalizza',Debug<>'Modifica',Debug<>'Nuovo') ,true,false)}">
+                <div class="center">
+                    <BR/><BR/>
+                    <table class="list" style="margin: auto;" border="0" cellpadding="0" cellspacing="0">
+                        <tr class="dataRow">
+                            <td>
+                                <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__New}"/>
+                                <apex:actionSupport event="onclick" action="{!NuovoCosto}" rerender="Container"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </apex:outputpanel>
+            <apex:outputpanel style="margin: auto;" id="Nuovo" rendered="{!IF(Debug='Nuovo' ,true,false)}">
+                <div class="center">
+                    <BR/><BR/>
+                    <table class="list" style="margin: auto;" border="0" cellpadding="0" cellspacing="0">
+                        <tr class="dataRow">
+                            <td>
+                                <apex:selectList id="Type" value="{!Type}" size="1" title="{!$Label.CRABB_DEV__Type}">
+                                     <!--<apex:actionsupport event="onchange" action="{!NuovoCosto}" rerender="Container"/>-->
+                                     <apex:selectOptions value="{!soType}"></apex:selectOptions>
+                                 </apex:selectList>
+                            </td>
+                            <td>
+                                <apex:inputcheckbox value="{!bPersonalizzata}" label="Personalizzata"/>
+                            </td>
+                            <td>{!$Label.CRABB_DEV__Cost}: <apex:input type="text" html-placeholder="{!Cost}" value="{!Cost}"/></td>
+                            <td>
+                                <apex:outputPanel >
+                                    <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Confirm}"/>
+                                    <apex:actionSupport event="onclick" action="{!ConfermaNuovoCosto}" rerender="Container">
+                                    </apex:actionSupport>
+                                </apex:outputPanel>
+                            </td>
+                            <td></td>
+                            <td>
+                                <apex:outputPanel >
+                                    <apex:outputtext styleClass="KillerBtn" value="{!$Label.CRABB_DEV__Cancel}"/>
+                                    <apex:actionSupport event="onclick" action="{!AnnullaModificaPersonalizza}" rerender="Container">
+                                    </apex:actionSupport>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </apex:outputpanel>
+        </apex:form>
+    
+    </apex:outputpanel>
+    
+</apex:page>

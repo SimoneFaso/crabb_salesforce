@@ -1,0 +1,107 @@
+<!-- Crabb Pratica Ageing -->
+<template>
+
+    <template if:true={isLoading}>
+
+        <div style="height:50px">
+            <lightning-spinner
+                    alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+
+    </template>
+
+    <template if:false={isLoading}>
+
+
+        <template if:true={editable}>
+            <div style="margin-top: 10px; margin-bottom: 10px;">
+                <div style="display: inline-block; width: 100%; float:left;">
+                    <span style="font-weight: bold;"> {label.TotalAmountMessage} </span>
+                    <div style="display: inline-block; width: 80%; float:right;"> €{importoBonifico}
+                        <div style="display: inline-block; width: 92%; float:right; padding-left: 0%">
+                            <template if:true={checkAmountFlag}>
+                                <lightning-icon icon-name="utility:success" alternative-text="Success!" variant="success" title={label.checkAmountFlagSuccess} size="xx-small"></lightning-icon>
+                            </template>
+                            <template if:false={checkAmountFlag}> 
+                                <lightning-icon icon-name="utility:warning" alternative-text="Warning!" variant="warning" title={label.checkAmountFlagWarning} size="xx-small"></lightning-icon>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: inline-block; width: 100%; float:left;">
+                    <span style="font-weight: bold;"> {label.TotalValueMessage} </span>
+                    <div style="display: inline-block; width: 80%; float:right;"> €{valueSum}
+                        <div style="display: inline-block; width: 92%; float:right; padding-left: 0%">
+                            <template if:true={checkAmountFlag}>
+                                <lightning-icon icon-name="utility:success" alternative-text="Success!" variant="success" title={label.checkAmountFlagSuccess} size="xx-small"></lightning-icon>
+                            </template>
+                            <template if:false={checkAmountFlag}>
+                                <lightning-icon icon-name="utility:warning" alternative-text="Warning!" variant="warning" title={label.checkAmountFlagWarning} size="xx-small"></lightning-icon>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: inline-block; width: 100%; float:left; margin-bottom: 10px">
+                    <span style="font-weight: bold;"> {label.RemainingAmountMessage} </span>
+                    <div style="display: inline-block; width: 80%; float:right;"> €{totalAmount}
+                        <div style="display: inline-block; width: 92%; float:right; padding-left: 0%">
+                            <template if:true={checkAmountFlag}>
+                                <lightning-icon icon-name="utility:success" alternative-text="Success!" variant="success" title={label.checkAmountFlagSuccess} size="xx-small"></lightning-icon>
+                            </template>
+                            <template if:false={checkAmountFlag}>
+                                <lightning-icon icon-name="utility:warning" alternative-text="Warning!" variant="warning" title={label.checkAmountFlagWarning} size="xx-small"></lightning-icon>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <template if:true={editable}>
+                    <span style="font-weight: bold; margin-bottom: 10px">{label.ClickButtonMessage} </span>
+                </template>
+                <!--<ul>
+                    <li><span style="font-weight: bold;"> {label.TotalAmountMessage} </span> €{importoBonifico}</li>
+                    <li><span style="font-weight: bold;"> {label.TotalValueMessage} </span> €{valueSum}</li>
+                    <li style="margin-bottom:10px"><span style="font-weight: bold;"> {label.RemainingAmountMessage} </span> €{totalAmount}</li>
+                    <template if:true={editable}>
+                        <li><span style="font-weight: bold;">{label.ClickButtonMessage} </span> </li>
+                    </template>
+                </ul> -->
+            </div>
+
+            <template if:false={showConfirmation}>
+                <div style="margin-top:20px; margin-bottom: 20px;">
+                    <lightning-button variant="success" label={label.ApproveButton} title="" data-status="Approvata" onclick={handleApproval} class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button variant="destructive" label={label.RejectButton} title="" data-status="Rifiutata" onclick={handleApproval} class="slds-m-left_x-small"></lightning-button>
+                </div>
+            </template>
+            <template if:true={showConfirmation}>
+                <div style="color:black; background-color:rgb(255, 183, 93); padding: 12px; margin-top:20px; margin-bottom: 20px; display: inline-block; border-radius: 5px;" >
+                    {label.ConfirmationMessage}
+                    <div class="slds-align_absolute-center" style="margin-top:10px;">
+                        <lightning-button variant="brand-outline" label={label.YesButton} title="" data-conferma="y" onclick={handleConfirmation} class="slds-m-left_x-small" ></lightning-button>
+                        <lightning-button variant="brand-outline" label={label.NoButton} title="" data-conferma="n" onclick={handleConfirmation} class="slds-m-left_x-small"></lightning-button>
+                    </div>
+                </div>
+            </template>
+
+
+
+        </template>
+
+        <lightning-input type="search" label="Search" onchange={updateSearch}>
+        </lightning-input>
+
+        <div style="height: 300px;margin-top:30px;">
+            <lightning-datatable
+                    key-field="IdPratica"
+                    data={praticaList}
+                    columns={columns}
+                    onsave={handleSave}
+                    draft-values={draftValues}
+            >
+            </lightning-datatable>
+        </div>
+
+    </template>
+
+</template>

@@ -1,0 +1,183 @@
+<apex:page docType="html-5.0" controller="TaskSemiAutomaticiCTRL">
+    <c:KillerStyle />
+    <style type="text/css">
+        .Summary{
+                width: 250px;
+                padding: 12px;
+                background-color: #f68b1f; 
+                border: 1px solid  #57B4D1;
+                opacity:0.65;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                color:white;
+                }
+        
+        .fixed{ position:fixed; top:5px; }
+    </style>
+        <apex:outputPanel Id="Vai">
+            <apex:pageBlock title="{!$Label.CRABB_DEV__Filters}" rendered="{!Step <> 1}">
+                 <apex:pageMessage title="{!$Label.CRABB_DEV__Unauthorized_access}" summary="{!$Label.CRABB_DEV__Semi_Automatic_Task_inteface} " severity="warning" strength="3" rendered="{!Step <> 1}"/>
+            </apex:pageBlock>
+            <apex:pageBlock title="Filtri" rendered="{!Step = 1}">
+                <apex:pageBlockSection >
+                    <apex:outputPanel id="FiltriId"> 
+                        <div id="accordion" style="width:650px">
+                            <h3 class="AccTitle"  >{!$Label.CRABB_DEV__Contract} Id SWH</h3>
+                            <div>
+                                <c:Selectable Index="1" Selezione_Sinistra="{!originalValues_IdContratto}" Selezione_Destra="{!originalValues_IdContratto}" Titolo1="{!$Label.CRABB_DEV__Contract} Id" Titolo2="{!$Label.CRABB_DEV__Contract} Id" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle">{!$Label.CRABB_DEV__Country}</h3>
+                            <div>
+                                <c:Selectable Index="2" Selezione_Sinistra="{!originalValues_Comune}" Selezione_Destra="{!originalValues_Comune}" Titolo1="{!$Label.CRABB_DEV__Country}" Titolo2="{!$Label.CRABB_DEV__Country}" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle">{!$Label.CRABB_DEV__Service_codes}</h3>
+                            <div>
+                                <c:Selectable Index="3" Selezione_Sinistra="{!originalValues_CodiceServizio}" Selezione_Destra="{!originalValues_CodiceServizio}" Titolo1="{!$Label.CRABB_DEV__Service_codes}" Titolo2="{!$Label.CRABB_DEV__Service_codes}" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle">{!$Label.CRABB_DEV__Status}</h3>
+                            <div>
+                                <c:Selectable Index="4" Selezione_Sinistra="{!originalValues_Stato}" Selezione_Destra="{!originalValues_Stato}" Titolo1="{!$Label.CRABB_DEV__Dossier} {!$Label.CRABB_DEV__Status}" Titolo2="{!$Label.CRABB_DEV__Dossier} {!$Label.CRABB_DEV__Status}" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                            </div>
+                            <h3 class="AccTitle">{!$Label.CRABB_DEV__RiskClass}</h3>
+                            <div>
+                                <c:Selectable Index="5" Selezione_Sinistra="{!originalValues_ClasseDiRischio}" Selezione_Destra="{!originalValues_ClasseDiRischio}" Titolo1="{!$Label.CRABB_DEV__RiskClass}" Titolo2="{!$Label.CRABB_DEV__RiskClass}" Titolo3="{!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}" />
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                    </apex:outputPanel> 
+                </apex:pageBlockSection>
+                <apex:pageBlockSection >
+                    <apex:form >
+                        <apex:outputPanel id="IdForm">
+                            <table style="border:0; table-layout:fixed">
+                                <tr>
+                                    <td><b>{!$Label.scaduto} </b></td>
+                                    <td>da &nbsp; <apex:inputField value="{!lforFiltro.FF_Scaduto_da__c}" /> </td>
+                                    <td>a &nbsp; <apex:inputField value="{!lforFiltro.FF_Scaduto_a__c}" /> </td>
+                                </tr>
+                                <tr>
+                                    <td><b>{!$Label.Scaduto} {!$Label.consolidated} </b></td>
+                                    <td>da &nbsp;<apex:inputField value="{!lforFiltro.FF_Scaduto_consolidato_da__c}" /> </td>
+                                    <td>a &nbsp;<apex:inputField value="{!lforFiltro.FF_Scaduto_consolidato_a__c}" /> </td>
+                                </tr>
+                                <tr>
+                                    <td><b>{!$Label.Scaduto} {!$Label.expenses} </b></td> 
+                                    <td>da &nbsp;<apex:inputField value="{!lforFiltro.FF_Scaduto_spese_da__c}" /> </td>
+                                    <td>a &nbsp;<apex:inputField value="{!lforFiltro.FF_Scaduto_spese_a__c}" /> </td>
+                                </tr>
+                                <tr>
+                                    <td><b>{!$Label.balance} </b></td>
+                                    <td>da &nbsp;<apex:inputField value="{!lforFiltro.FF_Saldo_da__c}" /> </td>
+                                    <td>a &nbsp;<apex:inputField value="{!lforFiltro.FF_Saldo_a__c}" /> </td>
+                                </tr>
+                                <tr>
+                                    <td><b>{!$Label.consolidated_balance} </b></td>
+                                    <td>da &nbsp;<apex:inputField value="{!lforFiltro.FF_Saldo_consolidato_da__c}" /> </td>
+                                    <td>a &nbsp;<apex:inputField value="{!lforFiltro.FF_Saldo_consolidato_a__c}" /> </td>
+                                </tr>
+                                <tr>
+                                    <td><b>{!$Label.expenses_balance} </b></td>
+                                    <td>da &nbsp;<apex:inputField value="{!lforFiltro.FF_Saldo_spese_da__c}" /> </td>
+                                    <td>a &nbsp;<apex:inputField value="{!lforFiltro.FF_Saldo_spese_a__c}" /> </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Ageing {!$Label.dossier} </b></td>
+                                    <td>da &nbsp;<apex:inputField value="{!lforFiltro.FF_ageing_pratica_da__c}" /> </td>
+                                    <td>a &nbsp;<apex:inputField value="{!lforFiltro.FF_ageing_pratica_a__c}" /> </td>
+                                </tr>
+                            </table>
+                            <apex:commandButton value="{!$Label.CRABB_DEV__FIlter}"/>
+                            <apex:pageMessages />
+                        </apex:outputPanel>
+                
+                    <apex:outputPanel id="feedback">
+                        <!--div style="position:fixed; top: 25%; right: 15%;"  class="Summary" >
+                            <apex:outputText value="C'é una attività di {!tipoAffido} da lavorare." rendered="{!totalSize=1}"/>
+                            <apex:outputText value="Ci sono in totale {!totalSize} attività di {!tipoAffido} da lavorare." rendered="{!AND(totalSize>1,thereAreLessThanLimit)}"/>
+                            <apex:outputText value="Ci sono {!totalSize} o più attività di {!tipoAffido} da lavorare." rendered="{!NOT(thereAreLessThanLimit)}"/>
+                            <br/> 
+                            <apex:outputText value="Hai selezionato le strategie: "/>
+                            <apex:outputPanel id="Cont_str">
+                                <apex:repeat value="{!strategiaSelezionati}" var="iselected"> <apex:outputText value="{!iselected} "/> </apex:repeat>
+                            </apex:outputPanel>
+                            <br/> 
+                            <apex:outputText value="Hai selezionato i contratti: "/>
+                            <apex:outputPanel id="Cont_contr">
+                                <apex:repeat value="{!contrattiSelezionati}" var="iselected">
+                                    <apex:outputText value="{!iselected} "></apex:outputText>
+                                </apex:repeat>
+                            </apex:outputPanel>
+                            <br/> 
+                            <apex:outputText value="Hai selezionato i comuni: "/>
+                            <apex:outputPanel id="Cont_com">
+                                <apex:repeat value="{!comuniSelezionati}" var="iselected">
+                                    <apex:outputText value="{!iselected} "></apex:outputText>
+                                </apex:repeat>
+                            </apex:outputPanel>
+                            <br/> 
+                            <apex:outputText value="Hai selezionato i servizi: "/>
+                            <apex:outputPanel id="Cont_serv">
+                                <apex:repeat value="{!serviziSelezionati}" var="iselected">
+                                    <apex:outputText value="{!iselected} "></apex:outputText>
+                                </apex:repeat>
+                            </apex:outputPanel>
+                            <br/> 
+                            <apex:outputText value="Hai selezionato gli stati: "/>
+                            <apex:outputPanel id="Cont_stat">
+                                <apex:repeat value="{!statiPraticaSelezionati}" var="iselected">
+                                    <apex:outputText value="{!iselected} "></apex:outputText>
+                                </apex:repeat>
+                            </apex:outputPanel>
+                            <br/> 
+                            <apex:outputText value="Hai selezionato le classi di rischio: "/>
+                            <apex:outputPanel id="Cont_cdr">
+                                <apex:repeat value="{!classiDiRischioScelti}" var="iselected">
+                                    <apex:outputText value="{!iselected} "></apex:outputText>
+                                </apex:repeat>
+                            </apex:outputPanel>                                                    
+                        </div-->
+                    </apex:outputPanel> 
+                    
+                </apex:form>
+                    
+                
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        
+        </apex:outputPanel>
+ <script>
+        j$( "#accordion" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        j$( "#accordion2" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        jQuery(document).ready(function($) {
+        var pos = j$(window).height();
+
+        j$(window).scroll(function(){
+        if (j$(window).scrollTop() > pos){
+            j$('.Summary').addClass('fixed');
+        } else {
+            j$('.Summary').removeClass('fixed');
+        }
+        
+        
+        });
+    
+    
+        });   
+    </script>         
+</apex:page>

@@ -1,0 +1,130 @@
+<apex:page controller="RuleOperationCTRL" tabStyle="Strategia__c">
+    <script>
+        function disableOnSubmit(input) {
+            setTimeout('disableAfterTimeout(\'' + input.id + '\');', 50);
+        }
+        function disableAfterTimeout(id) {
+            var toDisable = document.getElementById( id );
+            toDisable.disabled = 'disabled';
+            // Use the Salesforce CSS style to make the button appear disabled
+            toDisable.className = 'btnDisabled';
+           // toDisable.value = "Saving..."
+        }
+    </script>
+
+    <apex:form id="myForm"> 
+    
+        <apex:pageBlock rendered="{!AND(OR(operation='edit',operation='new'),NOT(isError))}"   >
+        
+            <apex:pageBlockSection title="{!$Label.crabb_dev__rule}" columns="1" collapsible="false"  >       
+                <apex:inputField value="{!str.RC_Rule_Name__c}" required="true"  /> 
+                <apex:inputField value="{!str.RC_Api_object_name__c}"  required="true"  />
+                <apex:inputField value="{!str.RC_Api_field_name__c}"  required="true"  />
+                <apex:inputField value="{!str.RC_Condition__c}"  required="true"  />
+                <apex:inputField value="{!str.RC_Strategia_Api_Field_Name__c}" required="true"  />
+                <apex:inputField value="{!str.RC_Note__c}"  />           
+            </apex:pageBlockSection>
+            
+           <apex:pageBlockButtons id="buttons">
+               
+               <apex:commandButton value="Cancel" action="/apex/CRABB_DEV__GestioneRegole"  id="cancleid"  styleClass="btn" onclick="disableOnSubmit(this);" immediate="true" style="text-decoration:none"/>
+
+            
+               <apex:commandButton action="{!executeOperation}" 
+                    value="Save" 
+                    id="theCommandButton" 
+                    onclick="disableOnSubmit(this);"
+                    styleClass="btn" immediate="false" style="text-decoration:none"/>
+           </apex:pageBlockButtons> 
+              
+        
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!AND(Operation='delete',NOT(isError))}" >
+             <apex:pageBlockSection title="{!$Label.crabb_dev__permanent_deletion_rule}"  collapsible="false" columns="1" >
+                    
+                <apex:outputField value="{!str.RC_Rule_Name__c}"  /> 
+                <apex:outputField value="{!str.RC_Api_object_name__c}"  />
+                <apex:outputField value="{!str.RC_Api_field_name__c}"  />
+                <apex:outputField value="{!str.RC_Condition__c}"  />
+                <apex:outputField value="{!str.RC_Strategia_Api_Field_Name__c}" />
+                <apex:outputField value="{!str.RC_Note__c}"  />                      
+             </apex:pageBlockSection>
+             
+           
+          <apex:pageBlockButtons >
+              <apex:commandLink value="Cancel" action="/apex/CRABB_DEV__GestioneRegole" styleClass="btn" immediate="true" style="text-decoration:none"/>
+              <apex:commandLink value="Confirm" action="{!executeOperation}" styleClass="btn" immediate="false" style="text-decoration:none"/> 
+          </apex:pageBlockButtons>
+          
+        </apex:pageBlock>        
+        <apex:pageBlock rendered="{!isError}" >
+             <apex:pageBlockSection title="{!$Label.crabb_dev__error}"  collapsible="false" columns="1"  showHeader="false">
+                    <apex:pagemessage strength="2"
+                        title="{!$Label.crabb_dev__warning_error_has_occurred}. {!$Label.crabb_dev__unauthorized_operation}." 
+                        rendered="true"
+                        severity="warning" >        
+                    </apex:pagemessage>                     
+             </apex:pageBlockSection>
+             
+           
+           
+          <apex:pageBlockButtons location="bottom" >
+              <apex:commandLink value="{!$Label.crabb_dev__rulesmanagement}" action="/apex/CRABB_DEV__GestioneRegole" styleClass="btn" immediate="true" style="text-decoration:none"/>
+          </apex:pageBlockButtons>
+          
+        </apex:pageBlock> 
+        
+        <apex:pageBlock rendered="{!foundDuplicate == 'true'}" >
+             <apex:pageBlockSection title="Errore"  collapsible="false" columns="1"  showHeader="false">
+                    <apex:pagemessage strength="2"
+                        title="{!$Label.crabb_dev__warning}: {!$Label.crabb_dev__duplicate_occurred}. {!$Label.crabb_dev__check_rules_try_to_create_new_rule}." 
+                        rendered="true"
+                        severity="warning" >        
+                    </apex:pagemessage>                     
+             </apex:pageBlockSection>
+        
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!ruleContainedByTestata == 'true'}" >
+               <apex:pageBlockSection title="{!$Label.crabb_dev__error}"  collapsible="false" columns="1"  showHeader="false" rendered="{!operation == 'edit'}">
+                 <apex:pagemessage strength="2" 
+                        title="{!$Label.crabb_dev__warning}: {!$Label.crabb_dev__header_contains_rule}" 
+                        rendered="true"
+                        severity="warning" >        
+                 </apex:pagemessage>
+               </apex:pageBlockSection>  
+               <apex:pageBlockSection title="{!$Label.crabb_dev__error}"  collapsible="false" columns="1"  showHeader="false" rendered="{!operation == 'delete'}">
+                 <apex:pagemessage strength="2" 
+                        title="{!$Label.crabb_dev__warning}: {!$Label.crabb_dev__heading_contains_rule_cannot_be_deleted}" 
+                        rendered="true"
+                        severity="warning" >        
+                 </apex:pagemessage>
+               </apex:pageBlockSection>
+               
+               <apex:pageBlockSection >   
+               <apex:pageBlockTable value="{!TestateVisualizate}" var="st"  id="table" title="{!$Label.crabb_dev__headings_contain_rule}" width="100%">
+                             <!-- Qui visualizziomo tutti i campi delle testate-->    
+                             <apex:variable var="count" value="{!0}"/>       
+                                        <apex:column >
+                                           <apex:facet name="header">#</apex:facet>
+                                                <apex:outputText value="{!count }"/>
+                                                <apex:variable var="count" value="{!count + 1}"/> 
+                                        </apex:column>
+                                        
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.crabb_dev__name}</apex:facet>
+                                                <apex:outputText value="{!st.Nome__c}"/>
+                                        </apex:column>
+                                        
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.crabb_dev__rule}</apex:facet>
+                                                <apex:outputText value="{!st.Activation_roles__c }"/>
+                                        </apex:column>
+                                          
+                     </apex:pageblockTable>        
+                                       
+             </apex:pageBlockSection>
+        
+        </apex:pageBlock>          
+         
+    </apex:form>
+</apex:page>

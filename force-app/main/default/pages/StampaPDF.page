@@ -1,0 +1,227 @@
+<apex:page renderAs="PDF" showHeader="false" sidebar="false" applyBodyTag="false" standardStylesheets="false" standardController="Pratica__c" extensions="StampaPDF">
+    
+    <head>
+        <style>
+            @page 
+            {
+                size: A4;
+                margin: 1,5cm;
+                /*margin: 5% 7,2%;
+                border: 1px solid #000;
+                padding: 0px;*/
+                @bottom-center {
+                    content: element(footer);
+                }
+            }
+            #container 
+            {
+                padding: 0;
+            }
+            #intestazione 
+            {
+                float: left;
+                margin: 0;
+                width: 8.5cm;
+                height: 2cm;
+                //background-color: #949494;
+            }
+            #codice-spazio 
+            {
+                width: 9.6cm;
+                height: 3cm;
+                margin-top:2.1cm;
+                float:left;
+            }
+            #codice 
+            {
+                width: 6cm;
+                height: 3cm;
+                float:left;
+                //background-color: #949494;
+                border-style:dotted;
+            }
+            #codice-indirizzo 
+            {
+                height: 3cm;
+                margin-top:2.1cm;
+                float:left;
+            }
+            #indirizzo 
+            {
+                height:1.7cm;
+                width: 8cm;
+                margin-top:0.5cm;
+                float:left;
+                //background-color: #949494;
+                font-size: 11px; 
+                font-family: arial, verdana, sans-serif;
+                border-style:dotted;
+                clear: both;
+            }
+            #comune 
+            {
+                height:0.6cm;
+                width: 8cm;
+                margin-top:0.1cm;
+                float:left;
+                //background-color: #949494;
+                font-size: 11px; 
+                font-family: arial, verdana, sans-serif;
+                border-style:dotted;
+                clear: both;
+            }
+            .mezzodiv
+            {
+                float: left;
+                font-size: 11px; 
+                font-family: arial, verdana, sans-serif;
+                //background-color: #FFF;
+                //width: 45%;
+            }
+            .bodyLetter
+            {
+                border-style:dotted;
+                float: left;
+                width: 100%;
+                margin-top:0.5cm;
+            }
+            #PMargin
+            {
+                border-style:solid;
+                width: 98.5%;
+                padding:5px;
+                border-width:1px;
+            }
+            div.footer {
+                position: running(footer);
+                width: 100%;
+                padding: 1px;
+            }
+        </style>
+    </head> 
+    
+    <body>
+        <apex:form >
+            <apex:inputHidden value="{!Pratica__c.Servizio_Fornitura__r.RecordType.Name}"/>
+            <apex:inputhidden value="{!Pratica__c.Servizio_Fornitura__r.LookupContratto__r.Azienda__c}"/>
+        </apex:form>
+        <div id="container">
+        
+            <div id="intestazione">
+                <c:IntestazioneSocieta Logo="{!Logo}" Dati="{!Intestazione}"/>
+                <!--<div class="mezzodiv">
+                    <apex:image value="{!$Resource.LogoCliente}" height="60%" width="60%"/>
+                </div>
+                <div class="mezzodiv">
+                        Elior s.p.a.{!Pratica__c.Servizio_Fornitura__r.LookupContratto__r.Azienda__c}
+                        <br/>
+                        Indirizzo
+                        <br/>
+                        CAP Località PV
+                </div>-->
+            </div>
+            <div id="codice-spazio">
+                <div id="codice">
+                    
+                </div>
+            </div>
+            <div id="codice-indirizzo">
+                <div id="indirizzo">
+                    {!Pratica__c.Account__r.Name}
+                    <br/>
+                    {!Pratica__c.Account__r.BillingStreet}
+                    <br/>
+                    {!Pratica__c.Account__r.BillingPostalCode} {!Pratica__c.Account__r.BillingCity} {!Pratica__c.Account__r.BillingState}
+                </div>
+                <div id="comune">
+                    e p.c. al comune di {!Pratica__c.Servizio_Fornitura__r.LookupContratto__r.Comune__c}
+                </div>
+            </div>
+            <div class="bodyLetter"> 
+                <p>
+                    <b>Oggetto: <u>{!OggettoPDF}</u></b>
+                </p>
+                <p>
+                    <apex:outputText value="Milano, " />
+                    <apex:outputText value="{0,date,dd/MM/yyyy}" >
+                        <apex:param value="{!Today()}"/>    
+                    </apex:outputText>
+                </p>
+                <p>
+                    Vi comunichiamo che da una verifica contabile effettuata in data 
+                    <apex:outputText value=" " />
+                    <apex:outputText value="{0,date,dd/MM/yyyy}" >
+                        <apex:param value="{!DataUltimoSaldo}"/>
+                    </apex:outputText> 
+                    risulta un debito relativo al servizio di {!Pratica__c.Servizio_Fornitura__r.Nome__c} degli alunni:
+                </p>
+                <apex:repeat value="{!lFruitori}" var="fr">
+                    <!-- <p> -->
+                        <b>{!fr.Cognome__c} {!fr.Nome__c}</b> - Badge n° <b>{!IF(OR(fr.Numero_Badge__c==null,fr.Numero_Badge__c==''),'NA',fr.Numero_Badge__c)}</b> - Codice ricarica n° <b>{!IF(OR(Pratica__c.Account__r.Codice_Ricarica__c==null,Pratica__c.Account__r.Codice_Ricarica__c==''),'NA',Pratica__c.Account__r.Codice_Ricarica__c)}</b>
+                    <!-- </p> --><br/>
+                </apex:repeat> 
+                <p>
+                    pari ad <b>€ {!Pratica__c.Residuo_Totale__c}</b> 
+                    <apex:outputText escape="false" rendered="{!Contratto.Mostra_Spese__c}"> comprensivo di <b>€ {!Pratica__c.Saldo_Spese__c}</b> per spese di recupero (8%)</apex:outputText>
+                    verificabile sul sito internet: {!Contratto.Sito_Internet__c}
+                </p>
+                <p>
+                    A fronte di ciò Vi chiediamo di provvedere al versamento a saldo <u><b>entro e non oltre  il 
+                    <apex:outputText value=" " />
+                    <apex:outputText value="{0,date,dd/MM/yyyy}" >
+                        <apex:param value="{!Today()+15}"/>
+                    </apex:outputText></b></u>.<BR/>
+                    Il saldo va effettuato solo con il sistema di pagamento <u><b>{!Pagamento}</b></u> in vigore, cioè anche per il debito pregresso bisogna versare la somma entro i tempi ed i modi che vi sono stati indicati nella lettera informativa: ricordiamo che il sistema attuale non prevede la possibilità di maturare debiti.
+                </p>
+                <apex:outputPanel rendered="{!ViewEsercenteSportello}">
+                    <p>
+                        Le ricordiamo che il versamento deve essere effettuato presso le vendite:
+                        <br/>
+                        &nbsp; &nbsp; - {!Contratto.Esercenti_e_Sportello__c}
+                        <br/> 
+                        
+                    </p>
+                </apex:outputPanel>
+                <p id="PMargin">
+                    Nell'eventualità che i pagamenti siano stati nel frattempo effettuati, Vi preghiamo di non tenere in considerazione quanto sopra.
+                </p>
+                <apex:outputPanel rendered="{!OR(ViewReferentiComunali, ViewReferentiElior)}">
+                    <p>
+                        Per ulteriori chiarimenti, potete contattare:
+                        <br/>
+                            <apex:outputPanel rendered="{!ViewReferentiComunali}">
+                            &nbsp; &nbsp; - {!Contratto.Referenti_Comunali__c}
+                            </apex:outputPanel>
+                        <br/>
+                            <apex:outputPanel rendered="{!ViewReferentiElior}">
+                            &nbsp; &nbsp; - {!Contratto.Referenti_Gruppo_Elior__c}
+                            </apex:outputPanel>
+                        <br/>
+                    </p>
+                </apex:outputPanel>
+                <p>
+                    <apex:outputField value="{!Contratto.Elenco_Esercenti_x_Lettera__c}"/> 
+                    <!--<b>
+                    Vi ricordiamo che il pagamento dei pasti è possibile attivare l'addebito diretto su conto corrente (RID) collegandosi al sito 
+                    </b><a href="www.acmeitalia.it/grs800/web14/login.asp">www.acmeitalia.it/grs800/web14/login.asp</a><b>  
+                    seguendo le istruzioni riportate.
+                    </b>-->
+                </p>
+                <p>
+                    <apex:outputField value="{!Contratto.Elenco_altre_forme_di_pagamento_x_letter__c}"/> 
+                </p>
+                <p>
+                    <apex:outputtext value="{!CampoFormattabile}" escape="false" style="white-space:pre;"/>
+                </p>
+                <div style="position:fixed; bottom:0; left:0; display: block">
+                    <apex:image value="{!$Resource.Footer_Copra}" width="100%" height="90" rendered="{!sAzienda='Copra'}"/>
+                    <apex:image value="{!$Resource.Footer_Elior}" width="100%" height="60"  rendered="{!sAzienda='Elior'}"/>
+                    <apex:image value="{!$Resource.Footer_Gemeaz}" width="100%" height="65"  rendered="{!sAzienda='Gemeaz'}"/>
+                    <apex:image value="{!$Resource.Footer_Meridia}" width="100%" height="60"  rendered="{!sAzienda='Meridia'}"/>
+                </div>
+            </div>
+        
+        </div>
+    </body>
+
+</apex:page>

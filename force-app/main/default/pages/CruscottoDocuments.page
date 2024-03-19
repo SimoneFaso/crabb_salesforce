@@ -1,0 +1,35 @@
+<apex:page language="{!lingua}" standardController="Pratica__c" extensions="CruscottoPraticaCTRL" standardStylesheets="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.min.css')}"/>
+   <!-- <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  /> -->
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+
+    <style>
+        [hidden], template{
+            display:block !important;
+        }
+    </style>
+
+    <c:KillerStyle />
+    <apex:outputPanel rendered="{!mLof[Label9]}">
+        <apex:outputPanel id="DocPanel">
+            <c:TblPage sObj="Attachment" IdParent="{!Pratica__c.Id}" sParent="Pratica"/>
+        </apex:outputPanel>
+            
+        <!-- Prova di DRAG & DROP Files-->
+        <apex:pageBlock >
+            <apex:facet name="header">
+                <div class="panel panel-primary">
+                    <div class="panel-heading "> {!$Label.CRABB_DEV__Upload_new_documents}</div>
+                </div>
+            </apex:facet>
+            <c:FileUpload parentId="{!Pratica__c.Id}"/>
+        </apex:pageBlock>
+    </apex:outputPanel>
+</apex:page>

@@ -1,0 +1,69 @@
+<apex:page language="{!lingua}" standardController="Pratica__c" extensions="CruscottoPraticaCTRL" standardStylesheets="false">
+
+    <!--<apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrap-themecrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/css/bootstrap.min.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/js/bootstrap.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap337/js/bootstrap.min.js')}"/>-->
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.js')}"/>
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.4.custom/css/theme/jquery-ui-1.10.4.custom.min.css')}"  />-->
+
+    <style>
+        [hidden], template{
+            display:block !important;
+        }
+    </style>
+
+    <c:KillerStyle />
+
+    <apex:outputPanel rendered="{!mLof[Label10]}">
+        <apex:pageBlock >
+            <apex:facet name="header">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">{!$Label.CRABB_DEV__Strategy_Summary}</div>
+                </div>
+            </apex:facet>
+            <apex:outputPanel id="StratEsito">
+                <apex:outputtext value="{!sEsito}"/>
+            </apex:outputPanel>
+            <br/>
+            <br/>
+            <apex:outputPanel id="stratMessage" rendered="{! !(bStrategia)}">
+                <apex:outputLabel >{!$Label.CRABB_DEV__Dossier_not_Associated_with_Strategy}</apex:outputLabel>
+            </apex:outputPanel>
+            <div id="tblStrategia"> 
+                <apex:dataTable value="{!lStrat}" var="lstr" rendered="{!bStrategia}">
+                    <apex:column >
+                        <apex:outputText value="{!lstr.vCampo}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:outputText value="{!lstr.vCondizione}"/>
+                    </apex:column><!---->
+                    <apex:column >
+                        <apex:outputText value="{!lstr.vStrat}"/>
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:outputText value="{!lstr.vIngresso}"/>
+                    </apex:column>
+                    <apex:column id="tStrat3">
+                        <apex:outputText value="{!lstr.vReale}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:image url="/img/msg_icons/confirm16.png" rendered="{!lstr.bControl}"/>
+                        <apex:image url="/img/msg_icons/error16.png" rendered="{! !(lstr.bControl)}"/>
+                    </apex:column>
+                </apex:dataTable>
+            </div>
+        </apex:pageBlock>
+    </apex:outputPanel>
+</apex:page>

@@ -1,0 +1,1097 @@
+<apex:page showHeader="true" sidebar="false" controller="ConfigurationStrategiaCTRL" docType="html-5.0">
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+    <style type="text/css">
+
+        .modal-dialog{
+            width: 50% !important;
+        }
+
+        .modal-body{
+            background-image: -webkit-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+            background-image:      -o-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#f2dede), to(#ebcccc));
+            background-image:         linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2dede', endColorstr='#ffebcccc', GradientType=0);
+            background-repeat: repeat-x;
+        }
+
+        .cduclass{
+            border-radius: 15px 0px 0px 15px !important;
+            background-color: #D2D2D2 !important;
+        }
+
+        .cdiclass{
+            border-radius: 0px 15px 15px 0px !important;
+            background-color: #ebcccc !important;
+        }
+
+        .jumpclass{
+            border-radius: 15px 15px 0px 0px !important;
+            /*background-image: linear-gradient(to bottom, #f2dede 0%, #fff956 100%) !important;*/
+            background-color: #fff956 !important;
+        }
+
+        .offer{
+            background:#fff;
+            color: black;
+            border:1px solid #ddd;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin: 15px 0;
+            overflow:hidden;
+            width: 200px;
+            border-radius: 15px 15px 15px 15px;
+        }
+        .offer:hover {
+            -webkit-transform: scale(1.1); 
+            -moz-transform: scale(1.1); 
+            -ms-transform: scale(1.1); 
+            -o-transform: scale(1.1); 
+            transform:rotate scale(1.1); 
+            -webkit-transition: all 0.4s ease-in-out; 
+            -moz-transition: all 0.4s ease-in-out; 
+            -o-transition: all 0.4s ease-in-out;
+            transition: all 0.4s ease-in-out;
+            background:#f68b1f url(images/ui-bg_glass_20_f68b1f_1x400.png) 50% 50% repeat-x;
+            /*color: white;*/
+            cursor: default;
+        }
+        .offer-radius{ border-radius:7px; }
+        .offer-danger { border-color: #d9534f; }
+        .offer-success { border-color: #5cb85c; }
+        .offer-default { border-color: #999999; }
+        .offer-primary { border-color: #428bca; }
+        .offer-info { border-color: #5bc0de; }
+        .offer-warning { border-color: #f0ad4e; }
+        .offer-content{ padding:0 20px 10px; }
+
+        .offerdisabled{
+            background:#fff;
+            color: #000000;
+            border:1px solid #ddd;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin: 15px 0;
+            overflow:hidden;
+            width: 200px;
+            border-radius: 15px 15px 15px 15px;
+        }
+
+        .offer-disabled{
+            background-color: #D2D2D2;
+            cursor: not-allowed !important;
+            border-color: black;
+        }
+
+        @media (min-width: 487px) {
+            .container { max-width: 250px; }
+            .col-sm-6 { width: 10%; }
+        }
+        @media (min-width: 900px) {
+            .container { max-width: 10%; }
+            .col-md-4 { width: 33.33333333333333%; }
+        }
+
+        @media (min-width: 1200px) {
+            .container { max-width: 10%; }
+            .col-lg-3 { width: 25%; }
+        }
+
+        .google-visualization-orgchart-node{
+            background-image: linear-gradient(to bottom, #dff0d8 0%, #d0e9c6 100%);
+            color: #3c763d !important;
+            border: 0px;
+        }
+        .float-container {
+            border: 3px solid #fff;
+            padding: 20px;
+        }
+
+        .float-child {
+            width: 50%;
+            float: left;
+            padding: 20px;
+
+        }
+
+    </style>
+
+    <apex:form >
+
+        <apex:actionFunction action="{!createTestata}" name="createTestata" reRender="messages" oncomplete="document.getElementById('newTbutton').disabled = false;$('.loadingSpanTestata').css('display','none'); $('#testataModal').modal('hide');">
+            <apex:param value="" name="newTestataName" assignTo="{!newTestataName}" id="newTestataName"/>
+            <apex:param value="" name="newTestataDescr" assignTo="{!newTestataDescr}" id="newTestataDescr"/>
+            <apex:param value="" name="newTestataVers" assignTo="{!newTestataVers}" id="newTestataVers"/>
+            <apex:param value="" name="newTestataPrior" assignTo="{!newTestataPrior}" id="newTestataPrior"/>
+            <apex:param value="" name="selectedTipoStratTestata" assignTo="{!selectedTipoStratTestata}" id="selectedTipoStratTestata"/>
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!createCDI}" name="createCDI" reRender="messages,cdipanel" oncomplete="document.getElementById('newCDIbutton').disabled = false; $('.loadingSpanCDI').css('display','none'); $('#cdimodal').modal('hide');">
+            <apex:param value="" name="newCDIName" assignTo="{!newCDIName}" id="newCDIName"/>
+            <apex:param value="" name="newCDIVers" assignTo="{!newCDIVers}" id="newCDIVers"/>
+            <apex:param value="" name="newCDIPrior" assignTo="{!newCDIPrior}" id="newCDIPrior"/>
+            <apex:param value="" name="newCDIRules" assignTo="{!newCDIRules}" id="newCDIRules"/>
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!createCDU}" name="createCDU" reRender="messages,cdupanel" oncomplete="document.getElementById('newCDUbutton').disabled = false; $('.loadingSpanCDU').css('display','none'); $('#cdumodal').modal('hide');">
+            <apex:param value="" name="newCDUName" assignTo="{!newCDUName}" id="newCDUName"/>
+            <apex:param value="" name="newCDUDescr" assignTo="{!newCDUDescr}" id="newCDUDescr"/>
+            <apex:param value="" name="newCDUPrior" assignTo="{!newCDUPrior}" id="newCDUPrior"/>
+            <apex:param value="" name="newCDUEsito" assignTo="{!newCDUEsito}" id="newCDUEsito"/>
+            <apex:param value="" name="newCDUeec" assignTo="{!newCDUeec}" id="newCDUeec"/>
+            <apex:param value="" name="newCDURules" assignTo="{!newCDURules}" id="newCDURules"/>
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!createStep}" name="createStep" reRender="messages" oncomplete="document.getElementById('newStepbutton').disabled = false; $('.loadingSpanStep').css('display','none'); $('#stepmodal').modal('hide');">
+            <apex:param value="" name="newSname" assignTo="{!newSname}" id="newSname"/>
+            <apex:param value="" name="newSdescr" assignTo="{!newSdescr}" id="newSdescr"/>
+            <apex:param value="" name="newSprior" assignTo="{!newSprior}" id="newSprior"/>
+            <apex:param value="" name="newSsla" assignTo="{!newSsla}" id="newSsla"/>
+            <apex:param value="" name="newSslapresent" assignTo="{!newSslapresent}" id="newSslapresent"/>
+            <apex:param value="" name="newSfinal" assignTo="{!newSfinal}" id="newSfinal"/>
+            <apex:param value="" name="selectedAttivitaPadre" assignTo="{!selectedAttivitaPadre}" id="selectedAttivitaPadre"/>
+            <apex:param value="" name="selectedFase" assignTo="{!selectedFase}" id="selectedFase"/>
+            <apex:param value="" name="selectedTipologia" assignTo="{!selectedTipologia}" id="selectedTipologia"/>
+            <apex:param value="" name="selectedTipoAtt" assignTo="{!selectedTipoAtt}" id="selectedTipoAtt"/>
+            <apex:param value="" name="selectedSottotipo" assignTo="{!selectedSottotipo}" id="selectedSottotipo"/>
+            <apex:param value="" name="selectedRuleStep" assignTo="{!selectedRuleStep}" id="selectedRuleStep"/>
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!createJump}" name="createJump" reRender="messages,jumppanel" oncomplete="document.getElementById('newJumpbutton').disabled = false; $('.loadingSpanJump').css('display','none'); $('#jumpmodal').modal('hide');">
+            <apex:param value="" name="newJname" assignTo="{!newJname}" id="newJname"/>
+            <apex:param value="" name="newJdescr" assignTo="{!newJdescr}" id="newJdescr"/>
+            <apex:param value="" name="selectedJumpFrom" assignTo="{!selectedJumpFrom}" id="selectedJumpFrom"/>
+            <apex:param value="" name="selectedJumpTo" assignTo="{!selectedJumpTo}" id="selectedJumpTo"/>
+            <apex:param value="" name="selectedEsito" assignTo="{!selectedEsito}" id="selectedEsito"/>
+            <apex:param value="" name="isAutomaticJump" assignTo="{!isAutomaticJump}" id="isAutomaticJump"/>
+            <apex:param value="" name="newJprior" assignTo="{!newJprior}" id="newJprior"/>
+            <apex:param value="" name="selectedRuleJump" assignTo="{!selectedRuleJump}" id="selectedRuleJump"/>
+        </apex:actionFunction>
+
+        <div id="balancecontainer" class="crabbpackage">
+
+            <div class="page-header">
+                <h1><span class="bi bi-clipboard-plus" style="color: #EB5E28"></span> {!$Label.StrategyCreation}</h1>
+            </div>
+
+            <apex:pageMessages id="messages"/>
+
+            <div class="container-fluid">
+                <div class="row">
+
+                    <div class="col-xs-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading" align="center">
+                                <h3>{!$Label.NewItem}</h3>
+                            </div>
+                            <div class="panel-body" align="center">
+                                <apex:commandLink onclick="$('#testataModal').modal('show');return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;">
+                                    <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 15px 15px 15px 15px;text-align: center;background-color: #ffbc59; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                        <strong>{!$Label.crabb_dev__heading}</strong>
+                                    </div>
+                                </apex:commandLink>
+                                <apex:outputPanel layout="none" rendered="{!AND(idTestata != null,idTestata != '')}">
+                                    <apex:commandLink onclick="$('#cdimodal').modal('show');return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;">
+                                        <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 0px 15px 15px 0px;text-align: center;background-color: #ebcccc;box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                            <strong>CDI</strong>
+                                        </div>
+                                    </apex:commandLink>
+                                    <apex:commandLink onclick="$('#cdumodal').modal('show');return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;">
+                                        <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 15px 0px 0px 15px;text-align: center;background-color: #D2D2D2;box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                            <strong>CDU</strong>
+                                        </div>
+                                    </apex:commandLink>
+                                    <apex:commandLink onclick="$('#stepmodal').modal('show');return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;">
+                                        <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 0px 0px 0px 0px;text-align: center;background-color: #d0e9c6;box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                            <strong>Step</strong>
+                                        </div>
+                                    </apex:commandLink>
+                                    <apex:commandLink onclick="$('#jumpmodal').modal('show');return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;">
+                                        <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 15px 15px 0px 0px;text-align: center;background-color: #fff956;box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                            <strong>Jump</strong>
+                                        </div>
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                                <apex:outputPanel layout="none" rendered="{!OR(idTestata = null,idTestata = '')}">
+                                    <apex:commandLink onclick="return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;cursor: not-allowed;">
+                                        <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 0px 15px 15px 0px;text-align: center;background-color: #D2D2D2;box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                            <strong>CDI</strong>
+                                        </div>
+                                    </apex:commandLink>
+                                    <apex:commandLink onclick="return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;cursor: not-allowed;">
+                                        <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 15px 0px 0px 15px;text-align: center;background-color: #D2D2D2;box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                            <strong>CDU</strong>
+                                        </div>
+                                    </apex:commandLink>
+                                    <apex:commandLink onclick="return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;cursor: not-allowed;">
+                                        <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 0px 0px 0px 0px;text-align: center;background-color: #D2D2D2;box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                            <strong>Step</strong>
+                                        </div>
+                                    </apex:commandLink>
+                                    <apex:commandLink onclick="return false;" style="text-decoration: none;color: black;display: table-cell;padding: 15px 15px 15px 15px;cursor: not-allowed;">
+                                        <div style="line-height: 35px;width:80px;height: 35px;border:1px solid #000;border-radius: 15px 15px 0px 0px;text-align: center;background-color: #D2D2D2;box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);">
+                                            <strong>Jump</strong>
+                                        </div>
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="float-container">
+                    <apex:outputPanel id="cdipanel">
+                        <div class="col-6 float-child">
+                            <div class="panel panel-info">
+                                <div class="panel-heading" align="center">
+                                    <h3>{!$Label.EntryConditions}</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <apex:repeat value="{!cdiList}" var="cdi">
+                                        <div class="offer offer-default cdiclass" style="display: inline-block;" align="center">
+                                            <div class="offer-content">
+                                                <span>
+                                                    <h5><strong><br /><apex:outputText value="{!cdi.Nome__c}"/></strong></h5>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </apex:repeat>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="cdupanel">
+                        <div class="col-6 float-child">
+                            <div class="panel panel-info">
+                                <div class="panel-heading" align="center">
+                                    <h3>{!$Label.ExitConditions}</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <apex:repeat value="{!cduList}" var="cdu">
+                                        <div class="offer offer-default cduclass" style="display: inline-block;" align="center">
+                                            <div class="offer-content">
+                                                <span>
+                                                    <h5><strong><br /><apex:outputText value="{!cdu.Nome__c}"/></strong></h5>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </apex:repeat>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading" align="center">
+                                <h3>{!$Label.Diagram}</h3>
+                            </div>
+                            <div class="panel-body" style="background-color: #FFFFFF !important;">
+                            
+                                <c:OrgChartGoogle DRows="{!chartString}"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <apex:outputPanel id="jumppanel">
+                        <div class="col-xs-12">
+                            <div class="panel panel-info">
+                                <div class="panel-heading" align="center">
+                                    <h3>Jump</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="panel-body">
+                                        <apex:repeat value="{!jumpList}" var="jump">
+                                            <div class="offer offer-default jumpclass" style="display: inline-block;" align="center">
+                                                <div class="offer-content">
+                                                    <span>
+                                                        <h5><strong><br /><apex:outputText value="{!jump.Nome__c}"/></strong></h5>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </apex:repeat>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+        
+                    <!--<div id="testataModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body" align="center">
+                                    <h4 class="modal-title">{!$Label.NewHeading}</h4>
+                                    <br /><br/>
+                                    <h5>{!$Label.Name} : <input id="newTnameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.StrategyType} : 
+                                        <apex:selectList value="{!selectedTipoStratTestata}" size="1" multiselect="false" styleClass="form-control seltst" style="border-left: 5px solid red;">
+                                            <apex:selectOptions value="{!tipoStratTestataOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>{!$Label.Description} : <input id="newTdescid" value="" size="30" class="form-control" /></h5>
+                                    <br />
+                                    <h5>{!$Label.Version} : <input id="newTversid" type="number" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>Priority : <input id="newTpriorid" type="number" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="newTbutton" onclick="document.getElementById('newTbutton').disabled = true; $('.loadingSpanTestata').css('display','inline'); newTestata();" >
+                                        <span id="loadingSpanTestata">
+                                            <img class="loadingSpanTestata" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                                        SAVE
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+
+                                    <script type="text/javascript">
+                                        function newTestata(){
+                                            //var tname = $('#newTnameid')[0].value;
+                                            var tnameJS = encodeHTML($('#newTnameid')[0].value);
+                                            //var tdescr = $('#newTdescid')[0].value;
+                                            var tdescrJS = encodeHTML($('#newTnameid')[0].value);
+                                            var tvers = $('#newTversid')[0].value;
+                                            var tprior = $('#newTpriorid')[0].value;
+                                            var tstrat = document.getElementsByClassName('seltst')[0].value;
+                                            createTestata(tnameJS,tdescrJS,tvers,tprior,tstrat);
+                                        }
+
+                                        function encodeHTML(str){
+                                            return str.replace(/([\u00A0-\u9999<>&])(.|$)/g, function(full, char, next) {
+                                              if(char !== '&' || next !== '#'){
+                                                if(/[\u00A0-\u9999<>&]/.test(next))
+                                                  next = '&#' + next.charCodeAt(0) + ';';
+
+                                                return '&#' + char.charCodeAt(0) + ';' + next;
+                                              }
+
+                                              return full;
+                                            });
+                                        }
+                                    </script>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cdimodal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body" align="center">
+                                    <h4 class="modal-title">{!$Label.new} {!$Label.entryconditions} :</h4>
+                                    <br /><br/>
+                                    <h5>{!$Label.Name} : <input id="newCDInameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.rule} : 
+                                        <apex:selectList value="{!selectedRuleCDI}" size="10" multiselect="true" styleClass="form-control selrccdi">
+                                            <apex:selectOptions value="{!ruleCDIOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>{!$Label.version} : <input id="newCDIversid" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>Priority : <input id="newCDIpriorid" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="newCDIbutton" onclick="document.getElementById('newCDIbutton').disabled = true; $('.loadingSpanCDI').css('display','inline'); newCDI();">
+                                        <span id="loadingSpanCDI">
+                                            <img class="loadingSpanCDI" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                                        SAVE
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+
+                                    <script type="text/javascript">
+                                        function newCDI(){
+                                            var cdiname = $('#newCDInameid')[0].value;
+                                            var cdivers = $('#newCDIversid')[0].value;
+                                            var cdiprior = $('#newCDIpriorid')[0].value;
+                                            var x = document.getElementsByClassName('selrccdi')[0].selectedOptions;
+                                            var cdirules = '';
+                                            for(var i=0;i<x.length;i++){
+                                                cdirules += x[i].value + ';';
+                                            }
+                                            cdirules = cdirules.substring(0,cdirules.length-1);
+
+                                            createCDI(cdiname,cdivers,cdiprior,cdirules);
+                                        }
+                                    </script>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cdumodal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body" align="center">
+                                    <h4 class="modal-title">{!$Label.new} {!$Label.exitconditions} :</h4>
+                                    <br /><br/>
+                                    <h5>{!$Label.name} : <input id="newCDUnameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>{!$Label.description} : <input id="newCDUdescrid" value="" size="30" class="form-control" /></h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.outcome} : 
+                                        <apex:selectList value="{!newCDUEsito}" size="1" multiselect="false" styleClass="form-control selcdues" style="border-left: 5px solid red;">
+                                            <apex:selectOptions value="{!esitoOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.rule} : 
+                                        <apex:selectList value="{!selectedRuleCDU}" size="10" multiselect="true" styleClass="form-control selrccdu">
+                                            <apex:selectOptions value="{!ruleCDUOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>Priority : <input id="newCDUpriorid" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>{!$Label.exitclose} : <input id="newCDUeecid" type="checkbox" value="" size="30" /></h5>
+                                    <br />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="newCDUbutton" onclick="document.getElementById('newCDUbutton').disabled = true; $('.loadingSpanCDU').css('display','inline'); newCDU();">
+                                        <span id="loadingSpanCDU">
+                                            <img class="loadingSpanCDU" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                                        SAVE
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+
+                                    <script type="text/javascript">
+                                        function newCDU(){
+                                            var cduname = $('#newCDUnameid')[0].value;
+                                            var cdudescr = $('#newCDUdescrid')[0].value;
+                                            var cduprior = $('#newCDUpriorid')[0].value;
+                                            var cduesito = document.getElementsByClassName('selcdues')[0].value;
+                                            var cdueec = $('#newCDUeecid')[0].checked;
+                                            var yy = document.getElementsByClassName('selrccdu')[0].selectedOptions;
+                                            var cdurules = '';
+                                            for(var i=0;i<yy.length;i++){
+                                                cdurules += yy[i].value + ';';
+                                            }
+                                            cdurules = cdurules.substring(0,cdurules.length-1);
+
+                                            createCDU(cduname,cdudescr,cduprior,cduesito,cdueec,cdurules);
+                                        }
+                                    </script>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="stepmodal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body" align="center">
+                                    <h4 class="modal-title">{!$Label.New} Step :</h4>
+                                    <br /><br/>
+                                    <h5>{!$Label.name} : <input id="newSnameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>{!$Label.description} : <input id="newSdescrid" value="" size="30" class="form-control" /></h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.activity} {!$Label.parent} : 
+                                        <apex:selectList value="{!selectedAttivitaPadre}" size="1" multiselect="false" styleClass="form-control selattpadre">
+                                            <apex:selectOptions value="{!attivitaPadreList}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.phase} : 
+                                        <apex:selectList value="{!selectedFase}" size="1" multiselect="false" styleClass="form-control selfase" style="border-left: 5px solid red;">
+                                            <apex:selectOptions value="{!faseList}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.type} : 
+                                        <apex:selectList value="{!selectedTipologia}" size="1" multiselect="false" styleClass="form-control seltipol" style="border-left: 5px solid red;">
+                                            <apex:selectOptions value="{!tipologiaList}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.activity} {!$Label.type} : 
+                                        <apex:selectList value="{!selectedTipoAtt}" size="1" multiselect="false" styleClass="form-control seltipatt" style="border-left: 5px solid red;">
+                                            <apex:selectOptions value="{!tipoAttList}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.activity} {!$Label.subtype} : 
+                                        <apex:selectList value="{!selectedSottotipo}" size="1" multiselect="false" styleClass="form-control selsotto" style="border-left: 5px solid red;">
+                                            <apex:selectOptions value="{!sottotipoList}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.rule} : 
+                                        <apex:selectList value="{!selectedRuleStep}" size="10" multiselect="true" styleClass="form-control selrstep">
+                                            <apex:selectOptions value="{!ruleStepOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>Priority : <input id="newSpriorid" type="number" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>SLA : <input id="newSslaid" value="" size="30" class="form-control" /></h5>
+                                    <br />
+                                    <h5>Is SLA present : <input id="newSissid" type="checkbox" value="" size="30" align="center" /></h5>
+                                    &nbsp;
+                                    <h5>Is Final : <input id="newSfinid" type="checkbox" value="" size="30" align="center" /></h5>
+                                    <br /><br/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="newStepbutton" onclick="document.getElementById('newStepbutton').disabled = true; $('.loadingSpanStep').css('display','inline'); newStep();">
+                                        <span id="loadingSpanStep">
+                                            <img class="loadingSpanStep" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                                        SAVE
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+
+                                    <script type="text/javascript">
+                                        function newStep(){
+                                            var sname = $('#newSnameid')[0].value;
+                                            var sdescr = $('#newSdescrid')[0].value;
+                                            var sprior = $('#newSpriorid')[0].value;
+                                            var sslap = $('#newSissid')[0].checked;
+                                            var sfinal = $('#newSfinid')[0].checked;
+                                            var ssla = $('#newSslaid')[0].value;
+                                            var sattp = document.getElementsByClassName('selattpadre')[0].value;
+                                            var sfase = document.getElementsByClassName('selfase')[0].value;
+                                            var stipol = document.getElementsByClassName('seltipol')[0].value;
+                                            var stipatt = document.getElementsByClassName('seltipatt')[0].value;
+                                            var ssotto = document.getElementsByClassName('selsotto')[0].value;
+                                            var z = document.getElementsByClassName('selrstep')[0].selectedOptions;
+                                            var srules = '';
+                                            for(var i=0;i<z.length;i++){
+                                                srules += z[i].value + ';';
+                                            }
+                                            srules = srules.substring(0,srules.length-1);
+
+                                            createStep(sname,sdescr,sprior,ssla,sslap,sfinal,sattp,sfase,stipol,stipatt,ssotto,srules);
+                                        }
+                                    </script>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="jumpmodal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body" align="center">
+                                    <h4 class="modal-title">{!$Label.new} Jump :</h4>
+                                    <br /><br/>
+                                    <h5>{!$Label.name} : <input id="newJnameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br />
+                                    <h5>{!$Label.description} : <input id="newJdescrid" value="" size="30" class="form-control" /></h5>
+                                    <br />
+                                    <h5>
+                                        Jump From : 
+                                        <apex:selectList value="{!selectedJumpFrom}" size="1" multiselect="false" styleClass="form-control seljfrom" style="border-left: 5px solid red;">
+                                            <apex:selectOptions value="{!jumpFromOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        Jump To : 
+                                        <apex:selectList value="{!selectedJumpTo}" size="1" multiselect="false" styleClass="form-control seljto" style="border-left: 5px solid red;">
+                                            <apex:selectOptions value="{!jumpToOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.outcome} : 
+                                        <apex:selectList value="{!selectedEsito}" size="1" multiselect="false" styleClass="form-control seljesito">
+                                            <apex:selectOptions value="{!esitoOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>
+                                        {!$Label.rule} : 
+                                        <apex:selectList value="{!selectedRuleJump}" size="10" multiselect="true" styleClass="form-control selrjump">
+                                            <apex:selectOptions value="{!ruleJumpOptions}"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br />
+                                    <h5>Is AutomaticJump : <input id="newJiajid" type="checkbox" value="" size="30" align="center" /></h5>
+                                    <br /><br />
+                                    <h5>Priority : <input id="newJpriorid" type="number" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                                    <br /><br />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="newJumpbutton" onclick="document.getElementById('newJumpbutton').disabled = true; $('.loadingSpanJump').css('display','inline'); newJump();">
+                                        <span id="loadingSpanJump">
+                                            <img class="loadingSpanJump" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                                        SAVE
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+
+                                    <script type="text/javascript">
+                                        function newJump(){
+                                            var jname = $('#newJnameid')[0].value;
+                                            var jdescr = $('#newJdescrid')[0].value;
+                                            var jfrom = document.getElementsByClassName('seljfrom')[0].value;
+                                            var jto = document.getElementsByClassName('seljto')[0].value;
+                                            var jesito = document.getElementsByClassName('seljesito')[0].value;
+                                            var jauto = $('#newJiajid')[0].checked;
+                                            var jprior = $('#newJpriorid')[0].value;
+                                            var w = document.getElementsByClassName('selrjump')[0].selectedOptions;
+                                            var jrules = '';
+                                            for(var i=0;i<w.length;i++){
+                                                jrules += w[i].value + ';';
+                                            }
+                                            jrules = jrules.substring(0,jrules.length-1);
+
+                                            createJump(jname,jdescr,jfrom,jto,jesito,jauto,jprior,jrules);
+                                        }
+                                    </script>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+        <div id="testataModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">{!$Label.NewHeading}</h4>
+                        <br /><br/>
+                        <h5>{!$Label.Name} : <input id="newTnameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>
+                            {!$Label.StrategyType} :
+                            <apex:selectList value="{!selectedTipoStratTestata}" size="1" multiselect="false" styleClass="form-control seltst" style="border-left: 5px solid red;">
+                                <apex:selectOptions value="{!tipoStratTestataOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>{!$Label.Description} : <input id="newTdescid" value="" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>{!$Label.Version} : <input id="newTversid" type="number" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>Priority : <input id="newTpriorid" type="number" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="newTbutton" onclick="document.getElementById('newTbutton').disabled = true; $('.loadingSpanTestata').css('display','inline'); newTestata();" >
+                                        <span id="loadingSpanTestata">
+                                            <img class="loadingSpanTestata" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                            SAVE
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CANCEL</button>
+
+                        <script type="text/javascript">
+                                        function newTestata(){
+                                            //var tname = $('#newTnameid')[0].value;
+                                            var tnameJS = encodeHTML($('#newTnameid')[0].value);
+                                            //var tdescr = $('#newTdescid')[0].value;
+                                            var tdescrJS = encodeHTML($('#newTdescid')[0].value);
+                                            var tvers = $('#newTversid')[0].value;
+                                            var tprior = $('#newTpriorid')[0].value;
+                                            var tstrat = document.getElementsByClassName('seltst')[0].value;
+                                            createTestata(tnameJS,tdescrJS,tvers,tprior,tstrat);
+                                        }
+
+                                        function encodeHTML(str){
+                                            return str.replace(/([\u00A0-\u9999<>&])(.|$)/g, function(full, char, next) {
+                                              if(char !== '&' || next !== '#'){
+                                                if(/[\u00A0-\u9999<>&]/.test(next))
+                                                  next = '&#' + next.charCodeAt(0) + ';';
+
+                                                return '&#' + char.charCodeAt(0) + ';' + next;
+                                              }
+
+                                              return full;
+                                            });
+                                        }
+                                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cdimodal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">{!$Label.new} {!$Label.entryconditions} :</h4>
+                        <br /><br/>
+                        <h5>{!$Label.Name} : <input id="newCDInameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>
+                            {!$Label.rule} :
+                            <apex:selectList value="{!selectedRuleCDI}" size="10" multiselect="true" styleClass="form-control selrccdi">
+                                <apex:selectOptions value="{!ruleCDIOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>{!$Label.version} : <input id="newCDIversid" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>Priority : <input id="newCDIpriorid" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="newCDIbutton" onclick="document.getElementById('newCDIbutton').disabled = true; $('.loadingSpanCDI').css('display','inline'); newCDI();">
+                                        <span id="loadingSpanCDI">
+                                            <img class="loadingSpanCDI" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                            SAVE
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CANCEL</button>
+
+                        <script type="text/javascript">
+                                        /*function newCDI(){
+                                            var cdiname = $('#newCDInameid')[0].value;
+                                            var cdivers = $('#newCDIversid')[0].value;
+                                            var cdiprior = $('#newCDIpriorid')[0].value;
+                                            var x = document.getElementsByClassName('selrccdi')[0].selectedOptions;
+                                            var cdirules = '';
+                                            for(var i=0;i<x.length;i++){
+                                                cdirules += x[i].value + ';';
+                                            }
+                                            cdirules = cdirules.substring(0,cdirules.length-1);
+
+                                            createCDI(cdiname,cdivers,cdiprior,cdirules);
+                                        }*/
+                                        function newCDI(){
+                                            //var cdiname = $('#newCDInameid')[0].value;
+                                            var cdinameJS = encodeHTML($('#newCDInameid')[0].value);
+                                            var cdivers = $('#newCDIversid')[0].value;
+                                            var cdiprior = $('#newCDIpriorid')[0].value;
+                                            var x = document.getElementsByClassName('selrccdi')[0].selectedOptions;
+                                            var cdirules = '';
+                                            for(var i=0;i<x.length;i++){
+                                                cdirules += x[i].value + ';';
+                                            }
+                                            cdirules = cdirules.substring(0,cdirules.length-1);
+
+                                            createCDI(cdinameJS,cdivers,cdiprior,cdirules);
+                                        }
+                                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cdumodal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">{!$Label.new} {!$Label.exitconditions} :</h4>
+                        <br /><br/>
+                        <h5>{!$Label.name} : <input id="newCDUnameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>{!$Label.description} : <input id="newCDUdescrid" value="" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>
+                            {!$Label.outcome} :
+                            <apex:selectList value="{!newCDUEsito}" size="1" multiselect="false" styleClass="form-control selcdues" style="border-left: 5px solid red;">
+                                <apex:selectOptions value="{!esitoOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            {!$Label.rule} :
+                            <apex:selectList value="{!selectedRuleCDU}" size="10" multiselect="true" styleClass="form-control selrccdu">
+                                <apex:selectOptions value="{!ruleCDUOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>Priority : <input id="newCDUpriorid" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>{!$Label.exitclose} : <input id="newCDUeecid" type="checkbox" value="" size="30" /></h5>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="newCDUbutton" onclick="document.getElementById('newCDUbutton').disabled = true; $('.loadingSpanCDU').css('display','inline'); newCDU();">
+                                        <span id="loadingSpanCDU">
+                                            <img class="loadingSpanCDU" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                            SAVE
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CANCEL</button>
+
+                        <script type="text/javascript">
+                                        /*function newCDU(){
+                                            var cduname = $('#newCDUnameid')[0].value;
+                                            var cdudescr = $('#newCDUdescrid')[0].value;
+                                            var cduprior = $('#newCDUpriorid')[0].value;
+                                            var cduesito = document.getElementsByClassName('selcdues')[0].value;
+                                            var cdueec = $('#newCDUeecid')[0].checked;
+                                            var yy = document.getElementsByClassName('selrccdu')[0].selectedOptions;
+                                            var cdurules = '';
+                                            for(var i=0;i<yy.length;i++){
+                                                cdurules += yy[i].value + ';';
+                                            }
+                                            cdurules = cdurules.substring(0,cdurules.length-1);
+
+                                            createCDU(cduname,cdudescr,cduprior,cduesito,cdueec,cdurules);
+                                        }*/
+                                        function newCDU(){
+                                            //var cduname = $('#newCDUnameid')[0].value;
+                                            var cdunameJS = encodeHTML($('#newCDUnameid')[0].value);
+                                            //var cdudescr = $('#newCDUdescrid')[0].value;
+                                            var cdudescrJS = encodeHTML($('#newCDUdescrid')[0].value);
+                                            var cduprior = $('#newCDUpriorid')[0].value;
+                                            var cduesito = document.getElementsByClassName('selcdues')[0].value;
+                                            var cdueec = $('#newCDUeecid')[0].checked;
+                                            var yy = document.getElementsByClassName('selrccdu')[0].selectedOptions;
+                                            var cdurules = '';
+                                            for(var i=0;i<yy.length;i++){
+                                                cdurules += yy[i].value + ';';
+                                            }
+                                            cdurules = cdurules.substring(0,cdurules.length-1);
+
+                                            createCDU(cdunameJS,cdudescrJS,cduprior,cduesito,cdueec,cdurules);
+                                        }
+                                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="stepmodal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">{!$Label.New} Step :</h4>
+                        <br /><br/>
+                        <h5>{!$Label.name} : <input id="newSnameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>{!$Label.description} : <input id="newSdescrid" value="" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>
+                            {!$Label.activity} {!$Label.parent} :
+                            <apex:selectList value="{!selectedAttivitaPadre}" size="1" multiselect="false" styleClass="form-control selattpadre">
+                                <apex:selectOptions value="{!attivitaPadreList}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            {!$Label.phase} :
+                            <apex:selectList value="{!selectedFase}" size="1" multiselect="false" styleClass="form-control selfase" style="border-left: 5px solid red;">
+                                <apex:selectOptions value="{!faseList}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            {!$Label.type} :
+                            <apex:selectList value="{!selectedTipologia}" size="1" multiselect="false" styleClass="form-control seltipol" style="border-left: 5px solid red;">
+                                <apex:selectOptions value="{!tipologiaList}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            {!$Label.activity} {!$Label.type} :
+                            <apex:selectList value="{!selectedTipoAtt}" size="1" multiselect="false" styleClass="form-control seltipatt" style="border-left: 5px solid red;">
+                                <apex:selectOptions value="{!tipoAttList}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            {!$Label.activity} {!$Label.subtype} :
+                            <apex:selectList value="{!selectedSottotipo}" size="1" multiselect="false" styleClass="form-control selsotto" style="border-left: 5px solid red;">
+                                <apex:selectOptions value="{!sottotipoList}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            {!$Label.rule} :
+                            <apex:selectList value="{!selectedRuleStep}" size="10" multiselect="true" styleClass="form-control selrstep">
+                                <apex:selectOptions value="{!ruleStepOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>Priority : <input id="newSpriorid" type="number" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>SLA : <input id="newSslaid" value="" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>Is SLA present : <input id="newSissid" type="checkbox" value="" size="30" align="center" /></h5>
+                        &nbsp;
+                        <h5>Is Final : <input id="newSfinid" type="checkbox" value="" size="30" align="center" /></h5>
+                        <br /><br/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="newStepbutton" onclick="document.getElementById('newStepbutton').disabled = true; $('.loadingSpanStep').css('display','inline'); newStep();">
+                                        <span id="loadingSpanStep">
+                                            <img class="loadingSpanStep" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                            SAVE
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CANCEL</button>
+
+                        <script type="text/javascript">
+                                        /*function newStep(){
+                                            var sname = $('#newSnameid')[0].value;
+                                            var sdescr = $('#newSdescrid')[0].value;
+                                            var sprior = $('#newSpriorid')[0].value;
+                                            var sslap = $('#newSissid')[0].checked;
+                                            var sfinal = $('#newSfinid')[0].checked;
+                                            var ssla = $('#newSslaid')[0].value;
+                                            var sattp = document.getElementsByClassName('selattpadre')[0].value;
+                                            var sfase = document.getElementsByClassName('selfase')[0].value;
+                                            var stipol = document.getElementsByClassName('seltipol')[0].value;
+                                            var stipatt = document.getElementsByClassName('seltipatt')[0].value;
+                                            var ssotto = document.getElementsByClassName('selsotto')[0].value;
+                                            var z = document.getElementsByClassName('selrstep')[0].selectedOptions;
+                                            var srules = '';
+                                            for(var i=0;i<z.length;i++){
+                                                srules += z[i].value + ';';
+                                            }
+                                            srules = srules.substring(0,srules.length-1);
+
+                                            createStep(sname,sdescr,sprior,ssla,sslap,sfinal,sattp,sfase,stipol,stipatt,ssotto,srules);
+                                        }*/
+                                        function newStep(){
+                                            //var sname = $('#newSnameid')[0].value;
+                                            var snameJS = encodeHTML($('#newSnameid')[0].value);
+                                            //var sdescr = $('#newSdescrid')[0].value;
+                                            var sdescrJS = encodeHTML($('#newSdescrid')[0].value);
+                                            var sprior = $('#newSpriorid')[0].value;
+                                            var sslap = $('#newSissid')[0].checked;
+                                            var sfinal = $('#newSfinid')[0].checked;
+                                            var ssla = $('#newSslaid')[0].value;
+                                            var sattp = document.getElementsByClassName('selattpadre')[0].value;
+                                            var sfase = document.getElementsByClassName('selfase')[0].value;
+                                            var stipol = document.getElementsByClassName('seltipol')[0].value;
+                                            var stipatt = document.getElementsByClassName('seltipatt')[0].value;
+                                            var ssotto = document.getElementsByClassName('selsotto')[0].value;
+                                            var z = document.getElementsByClassName('selrstep')[0].selectedOptions;
+                                            var srules = '';
+                                            for(var i=0;i<z.length;i++){
+                                                srules += z[i].value + ';';
+                                            }
+                                            srules = srules.substring(0,srules.length-1);
+
+                                            createStep(snameJS,sdescrJS,sprior,ssla,sslap,sfinal,sattp,sfase,stipol,stipatt,ssotto,srules);
+                                        }
+                                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="jumpmodal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">{!$Label.new} Jump :</h4>
+                        <br /><br/>
+                        <h5>{!$Label.name} : <input id="newJnameid" value="" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br />
+                        <h5>{!$Label.description} : <input id="newJdescrid" value="" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>
+                            Jump From :
+                            <apex:selectList value="{!selectedJumpFrom}" size="1" multiselect="false" styleClass="form-control seljfrom" style="border-left: 5px solid red;">
+                                <apex:selectOptions value="{!jumpFromOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            Jump To :
+                            <apex:selectList value="{!selectedJumpTo}" size="1" multiselect="false" styleClass="form-control seljto" style="border-left: 5px solid red;">
+                                <apex:selectOptions value="{!jumpToOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            {!$Label.outcome} :
+                            <apex:selectList value="{!selectedEsito}" size="1" multiselect="false" styleClass="form-control seljesito">
+                                <apex:selectOptions value="{!esitoOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>
+                            {!$Label.rule} :
+                            <apex:selectList value="{!selectedRuleJump}" size="10" multiselect="true" styleClass="form-control selrjump">
+                                <apex:selectOptions value="{!ruleJumpOptions}"/>
+                            </apex:selectList>
+                        </h5>
+                        <br />
+                        <h5>Is AutomaticJump : <input id="newJiajid" type="checkbox" value="" size="30" align="center" /></h5>
+                        <br /><br />
+                        <h5>Priority : <input id="newJpriorid" type="number" value="0" size="30" class="form-control" style="border-left: 5px solid red;" /></h5>
+                        <br /><br />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="newJumpbutton" onclick="document.getElementById('newJumpbutton').disabled = true; $('.loadingSpanJump').css('display','inline'); newJump();">
+                                        <span id="loadingSpanJump">
+                                            <img class="loadingSpanJump" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>
+                            SAVE
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CANCEL</button>
+
+                        <script type="text/javascript">
+                                        /*function newJump(){
+                                            var jname = $('#newJnameid')[0].value;
+                                            var jdescr = $('#newJdescrid')[0].value;
+                                            var jfrom = document.getElementsByClassName('seljfrom')[0].value;
+                                            var jto = document.getElementsByClassName('seljto')[0].value;
+                                            var jesito = document.getElementsByClassName('seljesito')[0].value;
+                                            var jauto = $('#newJiajid')[0].checked;
+                                            var jprior = $('#newJpriorid')[0].value;
+                                            var w = document.getElementsByClassName('selrjump')[0].selectedOptions;
+                                            var jrules = '';
+                                            for(var i=0;i<w.length;i++){
+                                                jrules += w[i].value + ';';
+                                            }
+                                            jrules = jrules.substring(0,jrules.length-1);
+
+                                            createJump(jname,jdescr,jfrom,jto,jesito,jauto,jprior,jrules);
+                                        }*/
+                                        function newJump(){
+                                            //var jname = $('#newJnameid')[0].value;
+                                            var jnameJS = encodeHTML($('#newJnameid')[0].value);
+                                            //var jdescr = $('#newJdescrid')[0].value;
+                                            var jdescrJS = encodeHTML($('#newJdescrid')[0].value);
+                                            var jfrom = document.getElementsByClassName('seljfrom')[0].value;
+                                            var jto = document.getElementsByClassName('seljto')[0].value;
+                                            var jesito = document.getElementsByClassName('seljesito')[0].value;
+                                            var jauto = $('#newJiajid')[0].checked;
+                                            var jprior = $('#newJpriorid')[0].value;
+                                            var w = document.getElementsByClassName('selrjump')[0].selectedOptions;
+                                            var jrules = '';
+                                            for(var i=0;i<w.length;i++){
+                                                jrules += w[i].value + ';';
+                                            }
+                                            jrules = jrules.substring(0,jrules.length-1);
+
+                                            createJump(jnameJS,jdescrJS,jfrom,jto,jesito,jauto,jprior,jrules);
+                                        }
+                                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </apex:form>
+
+</apex:page>

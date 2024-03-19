@@ -1,0 +1,39 @@
+<!--
+ - Created by Matteo on 05/08/2020.
+ -->
+
+<!-- Crabb Esiti Massivi Tipologia Accordion -->
+<template>
+
+    <lightning-accordion-section  label={labelAccordion} >
+        <!--<template if:true={showIconDisabled}>
+            <lightning-icon class="iconLight" size="small"  icon-name="action:approval"></lightning-icon>
+        </template>
+        <template if:false={showIconDisabled}>
+            <lightning-icon size="small" icon-name="action:close"></lightning-icon>
+        </template>-->
+        <div class="slds-grid slds-wrap" style="padding-top:10px;">
+            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1">
+                <div class="slds-col slds-grid slds-wrap slds-size_1-of-2 slds-align_absolute-center tileContainer" onclick={openModalChooseReport}>
+                    <lightning-tile  label="" class="slds-p-around_small tile" >
+                        {labelTile}
+                    </lightning-tile>
+                </div>
+            </div>
+            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-p-top_medium">
+                <template for:each={mapData} for:item="dataContent">
+                    <div key={dataContent.sottotipo} class="slds-col slds-grid slds-wrap slds-size_1-of-4 slds-p-around_small slds-align_absolute-center tileContainer"
+                         onclick={openModalChooseReport}>
+                        <lightning-tile  label="" class="slds-p-around_small tile" >
+                            <div class="slds-badge"><b>{dataContent.owner}</b></div><br/>
+                            <b>{dataContent.totCount}</b><br/>
+                            <b>{dataContent.giorni}</b> gg
+                        </lightning-tile>
+                    </div>
+                </template>
+            </div>
+
+        </div>
+
+    </lightning-accordion-section>
+</template>

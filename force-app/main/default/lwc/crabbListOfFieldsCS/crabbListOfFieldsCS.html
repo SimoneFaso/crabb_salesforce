@@ -1,0 +1,341 @@
+<template>
+    <div class="slds-card">
+        <div if:true={spinner}>
+            <lightning-spinner alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <div if:true={pageData} id="balancecontainer" class="">
+            <div class="slds-page-header">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <lightning-icon icon-name={iconName} class="slds-m-right_x-small "></lightning-icon>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1>
+                                            <span class="slds-page-header__title slds-truncate">{pageData.title} </span>
+                                        </h1>
+                                    </div>
+                                </div>
+                                <p class="slds-page-header__name-meta">{pageData.subTitle}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div align="center" class="slds-p-around_small">
+                <lightning-button variant="brand"
+                                  label="Save" title="Save"
+                                  onclick={save}></lightning-button>
+
+                <a class="slds-button slds-button_brand slds-m-left_x-small" if:true={isPDF}
+                   href={changeLogoPageURL} target="_blank">Change Logo</a>
+                <a class="slds-button slds-button_brand slds-m-left_x-small" if:true={isPDF}
+                   href={previewPageURL} target="_blank">Preview</a>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-p-around_small ">
+                <div class="slds-col">
+                    <lightning-combobox if:false={isTab}
+                                        label="Select Object"
+                                        value={selectedObj}
+                                        placeholder="None"
+                                        options={pageData.listObject}
+                                        onchange={setSelectedObj}></lightning-combobox>
+
+                    <lightning-combobox if:true={isTab}
+                                        label="Select Tab"
+                                        value={selectedTO}
+                                        placeholder="None"
+                                        options={pageData.listTabObjOptions}
+                                        onchange={retrieveTabObj}></lightning-combobox>
+
+                </div>
+                <div class="slds-col">
+
+                    <lightning-combobox if:false={isTab}
+                                        label="Select Field"
+                                        value={selectedField}
+                                        placeholder="None"
+                                        options={pageData.listFields}
+                                        onchange={setSelectedField}></lightning-combobox>
+
+
+                    <lightning-combobox if:true={isTab}
+                                        label="Select Field"
+                                        value={selectedOF}
+                                        placeholder="None"
+                                        options={pageData.listObjFieldOptions}
+                                        onchange={setSelectedOF}></lightning-combobox>
+
+                </div>
+                <div class="slds-col">
+
+                    <lightning-input type="checkbox" label="Set Is Visible" variant="label-stacked" if:false={isTab}
+                                     checked={selectedVisible} onclick={setSelectedVisible}></lightning-input>
+
+                    <lightning-input type="checkbox" label="Set Is Visible" variant="label-stacked" if:true={isTab}
+                                     checked={selectedTOFvisible} onclick={setSelectedTOFvisible}></lightning-input>
+
+                </div>
+                <div class="slds-col">
+                    <lightning-button style="color: white;line-height: 1.875rem;" variant="brand" label="Add"
+                                      title="Add" disabled={disabledAdd} onclick={add}></lightning-button>
+                </div>
+            </div>
+
+            <div class="slds-p-around_small">
+                <div id="currentrelation" if:true={isTab}>
+                    <table class="slds-table_bordered slds-no-row-hover
+            slds-max-medium-table_stacked-horizontal tableStyle" id="tab_logic">
+                        <thead>
+                        <tr>
+                            <th width="5%"></th>
+                            <th><i>Object Name</i></th>
+                            <th><i>Field Name</i></th>
+                            <th><i>Is Visible</i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template for:each={pageData.listLOF} for:item="lof">
+                            <tr key={lof.Id}>
+                                <td>
+                                    <button class="slds-button" onclick={showRows} name={lof.Id}>
+                                        <lightning-icon class="slds-p-left_x-small" if:true={lof.showRows}
+                                                        icon-name="utility:preview" size="xx-small"
+                                                        variant="success"></lightning-icon>
+                                    </button>
+                                </td>
+                                <td class={lof.class}>{lof.CRABB_DEV__Field__c}</td>
+                                <td class={lof.class}></td>
+                                <td class={lof.class}>
+                                    <lightning-input disabled={lof.disabled}  name={lof.Id} onchange={setVisible}
+                                                     class="slds-p-around_x-small"
+                                                     variant="label-hidden" type="checkbox"
+                                                     checked={lof.CRABB_DEV__Show__c}></lightning-input>
+                                </td>
+                            </tr>
+                            <template for:each={lof.rows} for:item="rowItem">
+                                <tr key={rowItem.Id} class="slds-hide" data-id={lof.Id}>
+                                    <td>
+                                        <button class="slds-button" onclick={deleteRow}
+                                                data-id={rowItem.Id}
+                                                data-object={rowItem.CRABB_DEV__Object__c}
+                                                data-field={rowItem.CRABB_DEV__Field__c}
+                                                data-tab={lof.CRABB_DEV__Field__c}>
+                                            <lightning-icon class="slds-p-left_x-small"
+                                                            icon-name="utility:clear" variant="error"
+                                                            size="xx-small"></lightning-icon>
+                                        </button>
+                                    </td>
+                                    <td style="border: 1pt solid #b6b5b5;">
+                                        {rowItem.CRABB_DEV__Object__c}
+                                    </td>
+                                    <td style="border: 1pt solid #b6b5b5;">
+                                        {rowItem.CRABB_DEV__Field_Label__c}
+                                    </td>
+                                    <td style="border: 1pt solid #b6b5b5;">
+                                        <lightning-input class="slds-p-around_x-small" name={rowItem.Id}
+                                                         variant="label-hidden" type="checkbox" onchange={setTabFieldVisible}
+                                                         checked={rowItem.CRABB_DEV__Show__c}></lightning-input>
+                                    </td>
+                                </tr>
+                            </template>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="currentrelation1" if:true={isCSV}>
+
+                    <table class="slds-table_bordered slds-table_striped slds-no-row-hover
+            slds-max-medium-table_stacked-horizontal tableStyle" id="tab_logic1">
+                        <thead>
+                        <tr>
+                            <th width="5%"></th>
+                            <th><i>Object API Name</i></th>
+                            <th><i>Field API Name</i></th>
+                            <th><i>Order</i></th>
+                            <th><i>Is Visible</i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template for:each={pageData.listLOF} for:item="lof">
+                            <tr key={lof.Id}>
+                                <td>
+                                    <button class="slds-button" onclick={deleteRow}
+                                            data-id={lof.Id}
+                                            data-object={lof.object} data-field={lof.field}>
+                                        <lightning-icon class="slds-p-left_x-small"
+                                                        icon-name="utility:clear" variant="error"
+                                                        size="xx-small"></lightning-icon>
+                                    </button>
+                                </td>
+                                <td>
+                                    {lof.object}
+                                </td>
+                                <td>
+                                    {lof.field}
+                                </td>
+                                <td>
+                                    <lightning-input class="slds-p-around_x-small" name={lof.Id}
+                                                     variant="label-hidden" type="number" onchange={setOrder}
+                                                     value={lof.order}></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input class="slds-p-around_x-small" name={lof.Id}
+                                                     variant="label-hidden" type="checkbox" onchange={setVisible}
+                                                     checked={lof.CRABB_DEV__Show__c}></lightning-input>
+                                </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="currentrelation2" if:true={isPDF}>
+
+                    <div>
+                        <h3 class="slds-text-heading_large slds-text-title_bold">
+                            {labels.Dossier_Information_Section}
+                        </h3>
+                        <br/>
+                        <table class="slds-table_bordered slds-table_striped slds-no-row-hover
+            slds-max-medium-table_stacked-horizontal tableStyle" id="tab_logic2">
+                            <thead>
+                            <tr>
+                                <th width="5%"></th>
+                                <th><i>Object Name</i></th>
+                                <th><i>Field Name</i></th>
+                                <th><i>Order</i></th>
+                                <th><i>Is Visible</i></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template for:each={pageData.listLOF} for:item="info">
+                                <template if:true={info.isTable1}>
+                                    <tr key={info.Id}>
+                                        <td>
+                                            <button class="slds-button" onclick={deleteRow}
+                                                    data-id={info.Id}
+                                                    data-object={info.object} data-field={info.field}>
+                                                <lightning-icon class="slds-p-left_x-small"
+                                                                icon-name="utility:clear" variant="error"
+                                                                size="xx-small"></lightning-icon>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            {info.object}
+                                        </td>
+                                        <td>
+                                            {info.fieldLabel}
+                                        </td>
+                                        <td>
+                                            <lightning-input class="slds-p-around_x-small" name={info.Id}
+                                                             type="number" variant="label-hidden" onchange={setOrder}
+                                                             value={info.order}></lightning-input>
+                                        </td>
+                                        <td>
+                                            <lightning-input class="slds-p-around_x-small" name={info.Id}
+                                                             variant="label-hidden" type="checkbox" onchange={setVisible}
+                                                             checked={info.CRABB_DEV__Show__c}></lightning-input>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="slds-m-top_medium">
+                        <h3 class="slds-text-heading_large slds-text-title_bold">{labels.Transaction_Information_Section}</h3>
+                        <br/>
+                        <table class="slds-table_bordered slds-table_striped slds-no-row-hover
+            slds-max-medium-table_stacked-horizontal tableStyle" id="tabletre">
+                            <thead>
+                            <tr>
+                                <th width="5%"></th>
+                                <th><i>Object Name</i></th>
+                                <th><i>Field Name</i></th>
+                                <th><i>Order</i></th>
+                                <th><i>Is Visible</i></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template for:each={pageData.listLOF} for:item="info">
+                                <template if:true={info.isTable2}>
+                                    <tr key={info.Id}>
+                                        <td>
+                                            <button class="slds-button" onclick={deleteRow} data-id={info.Id}
+                                                    data-object={info.object} data-field={info.field}>
+                                                <lightning-icon class="slds-p-left_x-small"
+                                                                icon-name="utility:clear" variant="error"
+                                                                size="xx-small"></lightning-icon>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            {info.object}
+                                        </td>
+                                        <td>
+                                            {info.fieldLabel}
+                                        </td>
+                                        <td>
+                                            <lightning-input class="slds-p-around_x-small" name={info.Id}
+                                                             variant="label-hidden" type="number" onchange={setOrder}
+                                                             value={info.order}></lightning-input>
+                                        </td>
+                                        <td>
+                                            <lightning-input class="slds-p-around_x-small" name={info.Id}
+                                                             variant="label-hidden" type="checkbox" onchange={setVisible}
+                                                             checked={info.CRABB_DEV__Show__c}></lightning-input>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div if:true={showDelete}>
+                <section role="alertdialog" class="slds-modal slds-fade-in-open slds-modal_prompt" aria-modal="true">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                    title="Close">
+                                <lightning-icon icon-name="utility:close" onclick={closeDelete}></lightning-icon>
+                            </button>
+                            <h2 class="slds-text-heading_medium" id="prompt-heading-id">You are deleting the record: </h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium " >
+                            <div if:true={isTab}>
+                                <lightning-input label="Tab Name" variant="label-inline"
+                                                 value={rowToDelete.tab} disabled="true"></lightning-input>
+                            </div>
+                            <div>
+                                <lightning-input label="Object" variant="label-inline"
+                                                 value={rowToDelete.object} disabled="true"></lightning-input>
+                            </div>
+                            <div>
+                                <lightning-input label="Field" variant="label-inline"
+                                                 value={rowToDelete.field} disabled="true"></lightning-input>
+                            </div>
+                            <div class="slds-align_absolute-center slds-text-heading_medium">Continue ?</div>
+                        </div>
+                        <footer class="slds-modal__footer slds-theme_default">
+                            <button class="slds-button slds-button_brand" data-id={rowToDelete.id}
+                                    onclick={removeRecord}>Yes</button>
+                            <button class="slds-button slds-button_neutral" onclick={closeDelete}>No</button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </div>
+    </div>
+</template>

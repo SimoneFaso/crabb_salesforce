@@ -1,0 +1,13 @@
+<apex:page controller="GestioneWhiteListCTRL" docType="html-5.0" >
+    
+    <apex:pageblock title="{!$Label.crabb_dev__assignremove} White List">
+        <!-- SELEZIONA L'OPERAZIONE (BLOCCO/SBLOCCO) => (METTI SU WHITE LIST/RIMUOVI DAL WHITE LIST) -->
+            <apex:form >
+                <apex:selectRadio value="{!leftselected_SelTipo}" >
+                    <apex:actionsupport status="TheStatus" event="onchange" action="{!Continua}"/>
+                    <apex:selectOptions value="{!unSelectedValues_SelTipo}"/>
+                </apex:selectRadio>
+            </apex:form>
+    </apex:pageblock>
+    
+</apex:page>

@@ -1,0 +1,17 @@
+<!--
+ - Created by msala on 04/05/2020.
+ -->
+
+<!-- Crabb Pratica Ageing -->
+<template>
+    <div class="LayoutContainer" style="padding-left: 25px;">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-grid slds-wrap slds-size_3-of-8">
+                <c-crabb-column-chart chart-title={istogramma.titolo} chart-size={istogramma.size} if:true={istogramma} chart-data={istogramma.serie}></c-crabb-column-chart>
+            </div>
+            <div class="slds-col slds-grid slds-wrap slds-size_4-of-8">
+                <lightning-datatable hide-checkbox-column if:true={istogramma} key-field="descrizione" data={istogramma.serie} columns={columns} ></lightning-datatable>
+            </div>
+        </div>
+    </div>
+</template>

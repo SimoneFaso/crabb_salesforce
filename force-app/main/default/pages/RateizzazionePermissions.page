@@ -1,0 +1,3 @@
+<apex:page standardController="Rateizzazione__c" extensions="PermissionAccessCtrl">
+    <c:PermissionAccess />
+</apex:page>

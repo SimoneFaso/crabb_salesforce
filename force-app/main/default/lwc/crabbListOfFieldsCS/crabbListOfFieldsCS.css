@@ -1,0 +1,10 @@
+.tableStyle [lightning-input_input-host] {
+    max-width: 250px;
+}
+.tableStyle .slds-button:focus {
+    box-shadow: none;
+}
+.greenCell{
+    background: #82C168 !important;
+    font-weight: bold;
+}

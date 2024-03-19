@@ -1,0 +1,59 @@
+<!--
+ - Created by Matteo on 11/06/2020.
+ -->
+
+<apex:page id="PDRDetailPdf" controller="PDFDetailPdfCtrl" renderAs="pdf">
+    <apex:outputPanel rendered="{!filePath != ''}" layout="none">
+        <div align="center">
+            <apex:image id="theImage" width="200" url="{!filePath}" />
+        </div>
+        <br /><br />
+    </apex:outputPanel>
+    <apex:pageBlock title="{!$Label.crabb_dev__repayment_plan}">
+        <apex:pageBlockSection title="{!$Label.crabb_dev__information}" columns="1" >
+
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$Label.crabb_dev__code}" style="padding: 10px 10px 10px 10px;" escape="false"/>
+                <apex:outputField value="{!pdr.Name}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$Label.crabb_dev__dossier}" style="padding: 10px 10px 10px 10px;" escape="false"/>
+                <apex:outputField value="{!pdr.Pratica__r.Name}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$Label.crabb_dev__stipulated_date} {!$Label.crabb_dev__repayment_plan}" style="padding: 10px 10px 10px 10px;" escape="false"/>
+                <apex:outputField value="{!pdr.Data_Stipula_Piano__c}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$Label.crabb_dev__total} {!$Label.crabb_dev__amount}" style="padding: 10px 10px 10px 10px;" escape="false"/>
+                <apex:outputField value="{!pdr.Importo_Totale__c}" />
+            </apex:pageBlockSectionItem>
+
+            <apex:pageBlockSectionItem rendered="{!pdr.Calcola_Interessi__c}" >
+                <apex:outputLabel value="{!$Label.crabb_dev__deferralinterest}" style="padding: 10px 10px 10px 10px;" escape="false"/>
+                <apex:outputtext value="{0,number,0.00%}">
+                    <apex:param value="{!pdr.Interessi_di_Dilazione__c }"/>
+                </apex:outputtext>
+
+            </apex:pageBlockSectionItem>
+
+            <apex:pageBlockSectionItem rendered="{!pdr.Calcola_Interessi__c}" >
+                <apex:outputLabel value="{!$Label.crabb_dev__defaultinterest}" style="padding: 10px 10px 10px 10px;" escape="false"/>
+                <apex:outputtext value="{0,number,0.00%}">
+                    <apex:param value="{!pdr.Interessi_di_Mora__c }"/>
+                </apex:outputtext>
+<!--                <apex:outputField value="{!pdr.Interessi_di_Mora__c }" />-->
+            </apex:pageBlockSectionItem>
+
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+    <apex:pageBlock title="{!$Label.crabb_dev__installmentplan}">
+        <apex:pageBlockTable width="70%" value="{!rate}" var="item" border="1"  style="text-align: center;" >
+            <apex:column value="{!item.Stato__c}"/>
+            <apex:column value="{!item.Data_Scadenza_Rata__c}"/>
+            <apex:column value="{!item.Importo_Rata__c}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

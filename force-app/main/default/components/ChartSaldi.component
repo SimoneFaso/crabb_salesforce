@@ -1,0 +1,20 @@
+<apex:component >
+
+    <apex:attribute name="ChartSaldi" description="Lista dei dati da rappresentare nel grafico" type="ChrtSaldi[]" required="true"/>
+    <apex:attribute name="MinRes" description="Valore minimo da visualizzare in ascissa" type="Decimal" required="true"/>
+    <apex:attribute name="MaxRes" description="Valore massimo da visualizzare in ascissa" type="Decimal" required="true"/>
+    <apex:attribute name="Steps" description="Numero di tacche" type="Integer" required="true"/>
+    <apex:attribute name="TitoloGenerale" description="Titolo Generale" type="String" required="true" />
+    <apex:attribute name="TitoloAsse1" description="Titolo dell'asse DX" type="String" required="true" /> 
+    <apex:attribute name="TitoloAsse2" description="Titolo dell'asse SX" type="String" required="true" />     
+    
+    <apex:chart height="250" width="1000" data="{!ChartSaldi}" colorSet="#AAAAFF">
+        <!--<apex:axis type="Numeric" position="right" fields="Scaduto" title="{!TitoloAsse1}" minimum="{!MinRes}" steps="{!Steps}"/>   -->
+        <apex:axis type="Category" position="bottom" fields="dataSaldo" title="{!TitoloGenerale}"/> 
+        <apex:axis type="Numeric" position="left" fields="Importo,Scaduto" margin="10" title="{!TitoloAsse2}"/>
+        <apex:barSeries colorSet="#FDDC99" orientation="vertical" axis="left" xField="dataSaldo" yField="Importo" highlight="true" title="{!TitoloAsse2}"/>
+        <apex:lineSeries axis="left" xField="dataSaldo" yField="Scaduto" markerType="circle" markerSize="5" markerFill="#ff9933" title="{!TitoloAsse1}"/>  
+        <apex:legend position="bottom"/> 
+    </apex:chart>
+    
+</apex:component>

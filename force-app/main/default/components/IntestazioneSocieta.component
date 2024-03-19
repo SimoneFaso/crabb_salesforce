@@ -1,0 +1,12 @@
+<apex:component >
+    <apex:attribute name="Logo" type="String" description="" required="True"/>
+    <apex:attribute name="Dati" type="String" description="" required="True"/>
+    
+    <div class="mezzodiv">
+        <apex:image alt="" value="{!URLFOR($Resource.LogoAziende,Logo)}" height="60%" width="60%"/>
+    </div>
+    <div class="mezzodiv">
+        <apex:outputLabel escape="false" value="{!Dati}"/>
+    </div>
+    
+</apex:component>

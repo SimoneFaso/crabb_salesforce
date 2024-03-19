@@ -1,0 +1,48 @@
+<apex:component allowDML="true">
+    <!-- Attribute Definitions -->
+    <apex:attribute name="BorderColor" type="String" required="true" description=""></apex:attribute>
+    <apex:attribute name="Width" type="String" required="true" description=""></apex:attribute>
+    <apex:attribute name="Height" type="String" required="true" description=""></apex:attribute>
+    <apex:attribute name="BackColor" type="String" required="true" description=""></apex:attribute>
+    <apex:attribute name="BackColor" type="String" required="true" description=""></apex:attribute>
+    <apex:attribute name="BorderSize" type="String" required="true" description=""></apex:attribute>
+    <apex:attribute name="ImageUrl" type="String" required="false" description=""></apex:attribute>
+    <apex:attribute name="Message" type="String" required="false" description=""></apex:attribute>
+    <apex:attribute name="messageStyle" type="String" required="false" description="Message inline style"></apex:attribute>
+    <apex:attribute name="BorderStyle" type="String" required="false" description="Message box border style: solid, outset, inset, etc"></apex:attribute>
+    
+    <style>
+        #overlay {
+         visibility: show;
+         position: fixed;
+         left: 25px;
+         top: 25px;
+         width:100%;
+         height:100%;
+         text-align:center;
+         z-index: 1000;
+         background:rgba(255,153,51,0.5);
+         //background-image: url(/resource/1393255756000/CredMan__GreyBackground);
+        }
+        
+        #overlay div {
+         width:300px;
+         margin: 100px auto;
+         background-color: #fff;
+         border:1px solid #000;
+         padding:15px;
+         text-align:center;
+        }
+        
+       
+    </style>
+    
+    <div id="overlay" >
+         <div>
+             <img src="{!ImageUrl}"/>
+              <p style="{!messageStyle}">{!Message}</p>
+         </div>
+    </div>
+    
+    
+</apex:component>

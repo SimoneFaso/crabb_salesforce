@@ -1,0 +1,68 @@
+<apex:page docType="html-5.0" controller="TaskSemiAutomaticiCTRL" sidebar="false">
+    <c:KillerStyle />
+    <style type="text/css">
+        .Summary{
+                width: 250px;
+                padding: 12px;
+                background-color: #f68b1f; 
+                border: 1px solid  #57B4D1;
+                opacity:0.65;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                color:white;
+                }
+        
+        .fixed{ position:fixed; top:5px; }
+    </style>
+    <apex:form >
+        <apex:pageBlock title="{!$Label.CRABB_DEV__Filters}" rendered="{!Step <> 2}">
+            <apex:pageMessage title="{!$Label.CRABB_DEV__Unauthorized_access}" summary="{!$Label.CRABB_DEV__Semi_Automatic_Task_inteface}" severity="warning" strength="3" rendered="{!Step <> 2}">
+                <apex:commandButton value="{!$Label.CRABB_DEV__Task_Semi_Automatici}" immediate="true" />
+                <apex:commandButton value="Home" immediate="true" action="/" />
+            </apex:pageMessage>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+        <apex:pageBlock title="{!$Label.CRABB_DEV__Filters}" rendered="{!Step = 2}">
+            <apex:pageMessage title="Nessun task restituito" summary="{!$Label.CRABB_DEV__No_record_found}" severity="warning" strength="3" rendered="{!Step = 2}">
+                <apex:commandButton value="{!$Label.CRABB_DEV__Back}" immediate="true" />
+            </apex:pageMessage>
+        </apex:pageBlock>
+    </apex:form>    
+  <!-- End Default Content REMOVE THIS -->
+   <script>
+        j$( "#accordion" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        j$( "#accordion2" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        jQuery(document).ready(function($) {
+        var pos = j$(window).height();
+
+        j$(window).scroll(function(){
+        if (j$(window).scrollTop() > pos){
+            j$('.Summary').addClass('fixed');
+        } else {
+            j$('.Summary').removeClass('fixed');
+        }
+        
+        
+        });
+    
+    
+        });   
+    </script>
+  
+</apex:page>

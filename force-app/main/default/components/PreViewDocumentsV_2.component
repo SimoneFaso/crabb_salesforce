@@ -1,0 +1,47 @@
+<!--
+Created: ES, 24/03/2015
+Desc: Duplicato il componente esistente, per potter aggiungere un bottone
+"Invia Documento" affianco del bottone "Preview".
+-->
+<apex:component controller="PreViewDocumentsV_2">
+	<apex:attribute name="IdPratica" type="Id" description="Id della Pratica" required="True"/>
+
+	<div class="crabbpackage">
+		<apex:outputpanel Id="IdForm">
+		 	<apex:pageBlockSection columns="4">
+		        <apex:outputpanel >	
+		        	<apex:commandLink action="{!PrendiValori}" styleClass="btn btn-primary btn-xs" rerender="IdForm" status="theStatus">Preview</apex:commandLink>
+		        	<!-- <apex:commandButton action="{!PrendiValori}" value="Preview" rerender="IdForm" status="theStatus"/> -->
+		        </apex:outputpanel>	
+				<apex:outputpanel Id="IdSelectable" rendered="{!ViewPicklist}">
+					<apex:outputlabel value="Tipo di Documento: "/>
+			        <apex:selectlist value="{!DocSelected}" size="1" style="width:200px;" >
+			        	<apex:actionsupport status="theStatus" event="onchange" action="{!CheckString}" rerender="IdForm"/>
+			            <apex:selectOptions value="{!pickTipoDocumenti}"/>
+			        </apex:selectlist>
+			    </apex:outputpanel>	
+		        <apex:outputpanel >
+		        	<apex:outputLink rendered="{!ViewButtonOpen}" styleClass="btn btn-primary btn-xs" value="/apex/StampaPDF?id={!IdPratica}&Type={!DocSelected}" target="_blank">Apri documento</apex:outputLink>
+	        	    <apex:commandLink rendered="{!ViewButtonOpen}" action="{!inviaDoc}" styleClass="btn btn-primary btn-xs" onClick="alert('Il documento è stato inviato correttamente!');">Invia Documento</apex:commandLink>
+		        </apex:outputpanel>
+		        <!--  <apex:outputpanel>
+		        </apex:outputpanel>	-->
+	        </apex:pageBlockSection>        
+	    </apex:outputpanel> 
+	    
+	    <apex:actionstatus id="theStatus"> 
+	    	<apex:facet name="start">
+	        	<c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="120px" ImageUrl="{!$Resource.Loading}" Message="Caricamento..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+	        </apex:facet>
+	    </apex:actionstatus>
+	    <script type="text/javascript">
+	        function OpenDoc(var IdPratica)
+	        {
+	        	alert(IdPratica);
+	            var newwindow = window.open('/apex/StampaPDF?id='+{!IdPratica});
+	            newwindow.focus();
+	        }
+	    </script>
+    </div>
+     
+</apex:component>

@@ -1,0 +1,33 @@
+<!--
+ - Created by Matteo on 05/08/2020.
+ -->
+
+<!-- Crabb Modal Get Report -->
+<template>
+    <div data-id="modalContainer" class="slds-hide">
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_medium"
+                 aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+            <div class="slds-modal__container" >
+                <lightning-spinner if:true={spinner} alternative-text="Loading" size="medium"></lightning-spinner>
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close" class="slds-float_right"
+                                           onclick={closeModal} alternative-text="close"></lightning-button-icon>
+
+
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Scelta report</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" style="height:70%;" id="modal-content-id-1">
+                    <lightning-combobox onchange={handleReportChange} label="Lista report" options={reportList}></lightning-combobox>
+
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick={closeModal}>
+                        Chiudi
+                    </button>
+                    <button class="slds-button slds-button_neutral" onclick={goToTablePage}>Avanti</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</template>

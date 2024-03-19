@@ -1,0 +1,96 @@
+<apex:page controller="ModificaLotti">
+    <c:KillerStyle />
+    <style type="text/css">
+        .buttom{
+            position: absolute;
+            right:    0;
+            bottom:   0;
+        } 
+    </style>
+    <apex:form >
+        <apex:pageBlock id="MainBlock" title="{!$Label.CRABB_DEV__Edit} {!$Label.CRABB_DEV__Lot}">
+            <apex:outputPanel rendered="{!affidEsiste}"  id="IdFormAffidamento">
+                <apex:outputpanel layout="block" rendered="{!initialTotal>25}">
+                    {!$Label.rowsbypage}: &nbsp;
+                    <apex:selectList value="{!recordsForPage}" size="1"  style="margin:0 auto; position:right;">
+                        <apex:selectOptions value="{!recordsForPageValues}"></apex:selectOptions>
+                    <apex:actionSupport event="onchange"  action="{!sizeTable}"  rerender="IdFormAffidamento" status="TheStatus"/>   
+                    </apex:selectList>
+                </apex:outputpanel>
+                Tot. {!$Label.CRABB_DEV__Assignment} : {!initialTotal}
+                <apex:pageBlockTable value="{!ListAffidamenti}" var="Aff" id="AffPageBlock"  width="100%">          
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.CRABB_DEV__Assignment}</apex:facet>
+                        <apex:outputLink value="/{!Aff.Id}" target="_blanc" >{!Aff.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.CRABB_DEV__Country}</apex:facet>
+                        <apex:outputText value="{!Aff.Pratica__r.Comune__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Account {!$Label.CRABB_DEV__Name}</apex:facet>
+                        <apex:outputLink value="/{!Aff.Pratica__r.Account__r.Id}">{!Aff.Pratica__r.Account__r.Name}</apex:outputLink>
+                    </apex:column> 
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.CRABB_DEV__Scaduto} {!$Label.CRABB_DEV__Pratica}</apex:facet>
+                        <apex:outputText value="{!Aff.Pratica__r.Residuo_Totale__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.CRABB_DEV__ActivationDate} {!$Label.CRABB_DEV__Pratica}</apex:facet>
+                        <apex:outputText value="{!Aff.Pratica__r.Data_Apertura__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.CRABB_DEV__Pratica}</apex:facet>
+                        <apex:outputLink value="/{!Aff.Pratica__r.Id}">{!Aff.Pratica__r.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.CRABB_DEV__Service}</apex:facet>
+                        <apex:outputText value="{!Aff.Pratica__r.Servizio_Fornitura__r.Name}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.CRABB_DEV__ExpiredDate} {!$Label.CRABB_DEV__Lot}</apex:facet>
+                        <apex:outputText value="{!Aff.Lotto__r.Data_scadenza__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Collector {!$Label.CRABB_DEV__Type}</apex:facet> 
+                        <apex:outputText value="{!Aff.Tipo_collector__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Collector {!$Label.CRABB_DEV__Name}</apex:facet>
+                        <apex:outputText value="{!Aff.Nome_Collector__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.CRABB_DEV__Actions}</apex:facet>
+                        <apex:commandLink value="{!$Label.CRABB_DEV__Withdraw}" action="{!RevocaAffido}">
+                            <apex:param name="IdAffido" value="{!Aff.Id}" assignTo="{!IdAffido}"/>
+                        </apex:commandLink> 
+                    </apex:column>
+                </apex:pageBlockTable>
+                <br/>
+                <div style="width: 100%; text-align: center">
+                    <apex:actionRegion >
+                        <apex:commandLink value="<< {!$Label.CRABB_DEV__Start}" styleClass="KillerBtn" action="{!Beginning}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                        <apex:commandLink value="< {!$Label.CRABB_DEV__Previous}" styleClass="KillerBtn" action="{!Previous}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                        <apex:commandLink value="{!$Label.CRABB_DEV__Next} >" styleClass="KillerBtn" action="{!Next}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                        <apex:commandLink value="{!$Label.CRABB_DEV__End} >>" styleClass="KillerBtn" action="{!End}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus"/>
+                    </apex:actionRegion>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!!affidEsiste}">
+                <apex:pageMessage severity="warning" strength="3" >        
+                    <apex:outputText value="{!$Label.CRABB_DEV__TheLot} {!Lotto.Name} {!$Label.CRABB_DEV__NoChangesAllowed}"/>
+                </apex:pageMessage>
+            </apex:outputPanel>
+            <apex:pageBlockButtons location="bottom" >
+                <c:AutoDisablinButton actionToInvoke="{!ReturnToLotti}" disableAll="true" buttonValue="{!$Label.CRABB_DEV__LotManagement}" buttonId="GestioneLotti" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__LotManagement}..." ></c:AutoDisablinButton>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:form id="TheStatusForm"> 
+         <apex:actionstatus id="TheStatus">
+            <apex:facet name="start">
+                <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="5%" width="5%" Message="{!$Label.CRABB_DEV__Processing}..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+            </apex:facet>
+         </apex:actionstatus>
+     </apex:form>
+</apex:page>

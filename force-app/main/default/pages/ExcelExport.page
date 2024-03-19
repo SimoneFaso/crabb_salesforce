@@ -1,0 +1,75 @@
+<apex:page standardController="Pratica__c" extensions="CtrlEstrattoContoPage" contentType="application/vnd.ms-excel#testsheet.xls" cache="true" showHeader="false" sidebar="false">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    </head>
+
+    <table border="1">
+
+        <tr align="center">
+            <td colspan="6" rowspan="3"><h1><br />{!$Label.Account_Statement} - {!DAY(TODAY())}/{!MONTH(TODAY())}/{!YEAR(TODAY())}</h1></td>
+        </tr>
+        <tr></tr>
+        <tr></tr>
+    </table>
+
+    <table>
+        <tr></tr>
+        <tr>
+        <td>
+            <strong><apex:outputText value="{!$Label.crabb_dev__information}" rendered="{!showInfo}" /></strong>
+        </td>
+        </tr>
+        <tr></tr>
+    </table>
+
+    <table border="1">
+        <apex:repeat value="{!fieldsPratList}" var="f" rendered="{!showInfo}">
+            <tr>
+                <td align="left">
+                    <strong>{!fieldsLabel[f]}</strong>
+                </td>
+                <td align="center">
+                    {!currentPratica[f]}
+                </td>
+            </tr>
+        </apex:repeat>
+        
+    </table>
+
+    <table border="0">
+        <tr></tr>
+        <tr>
+            <td>
+                <strong>{!$Label.Transaction}</strong>
+            </td>
+        </tr>
+        <tr></tr>
+    </table>
+
+    <table border="1">
+        <tr align="center">
+            <apex:repeat value="{!fieldsMovList}" var="f">
+        
+                <td>
+                    <strong>{!fieldsLabel[f]}</strong>
+                </td>
+
+            </apex:repeat>
+        </tr>
+
+        <apex:repeat value="{!movList}" var="m" rendered="{!showMovList}">
+            <tr align="center">
+            <apex:repeat value="{!fieldsMovList}" var="f">
+
+                <td algin="center">
+                    {!m[f]}
+                </td>
+
+            </apex:repeat>
+            </tr>
+        </apex:repeat>
+
+    </table>
+
+</apex:page>

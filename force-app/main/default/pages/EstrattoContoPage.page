@@ -1,0 +1,54 @@
+<apex:page showHeader="false" sidebar="false" standardController="Pratica__c" extensions="CtrlEstrattoContoPage" renderAs="pdf" readOnly="true">
+    
+    <apex:outputPanel rendered="{!showLogo && filePath != ''}" layout="none">
+        <div align="center">
+            <apex:image id="theImage" width="200" url="{!filePath}" />
+        </div>
+        <br /><br />
+    </apex:outputPanel>
+
+    <apex:pageBlock title="{!$Label.crabb_dev__account_statement} - {!$Label.crabb_dev__updated_at} {!timeNow} {!$Label.crabb_dev__on} {!dateNow}" >
+
+        <apex:pageBlockSection title="{!$Label.crabb_dev__information}" columns="1" rendered="{!showInfo}">
+
+            <apex:repeat value="{!fieldsPratList}" var="f">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!fieldsLabel[f]}" style="padding: 10px 10px 10px 10px;" escape="false"/> 
+                    <apex:outputField value="{!currentPratica[f]}" />
+                </apex:pageBlockSectionItem>
+
+            </apex:repeat>
+
+        </apex:pageBlockSection>
+
+        <br />
+        <hr />
+
+    </apex:pageBlock>
+
+    <apex:pageBlock title="{!$Label.crabb_dev__transaction}" rendered="{!showMovList}">
+
+        <!--<apex:outputLabel style="font-size: 12px;">(In <strong>nero</strong> le fatture non ancora scadute. In <font style="color: red;"><strong>rosso</strong></font> le fatture scadute.)</apex:outputLabel>-->
+        <apex:outputLabel style="font-size: 12px;">(In <strong>{!$Label.crabb_dev__black}</strong> {!$Label.crabb_dev__transactions_not_expired}. In <font style="color: red;"><strong>{!$Label.crabb_dev__red}</strong></font> {!$Label.crabb_dev__transactions_expired}.)</apex:outputLabel>
+
+        <br /><br />
+
+        <apex:pageBlockTable value="{!movList}" var="m" border="1" width="100%" style="text-align: center;">
+
+            <apex:repeat value="{!fieldsMovList}" var="f">
+                
+                <apex:column value="{!m[f]}" width="16%" style="padding: 5px 0px 5px 0px; color:red;" rendered="{!AND(m['GG_di_Scaduto__c'] != null,m['GG_di_Scaduto__c'] > 0)}">
+                    <apex:facet name="header">{!fieldsLabel[f]}</apex:facet>
+                </apex:column>
+                <apex:column value="{!m[f]}" width="16%" style="padding: 5px 0px 5px 0px;" rendered="{!m['GG_di_Scaduto__c'] == null || m['GG_di_Scaduto__c'] < 1}">
+                    <apex:facet name="header">{!fieldsLabel[f]}</apex:facet>
+                </apex:column>
+
+            </apex:repeat>
+
+        </apex:pageBlockTable>
+
+    </apex:pageBlock>
+
+</apex:page>

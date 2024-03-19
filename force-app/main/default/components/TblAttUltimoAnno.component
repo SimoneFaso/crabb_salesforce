@@ -1,0 +1,24 @@
+<apex:component >
+
+    <apex:attribute name="TipoAtt" description="Lista delle Tipologie delle attività" type="String[]" required="true"/>
+    <apex:attribute name="LastYear" description="Lista degli ultimi dodici mesi" type="String[]" required="true"/>
+    <apex:attribute name="mMesiAtt" description="Mappa Tipo Attività/Mesi" type="map" required="true"/>
+
+    <apex:pageBlock title="{!$Label.crabb_dev__lastyearactivities}">
+        <div id="tblMatrix"> 
+            <apex:dataTable value="{!TipoAtt}" var="vMesiAtt">
+                <apex:column >
+                    <apex:facet name="header"><apex:outputtext value="Tipo Attività"/></apex:facet>
+                    <apex:outputtext value="{!vMesiAtt}"/>
+                </apex:column>
+                <apex:repeat value="{!LastYear}" var="y">
+                    <apex:column >
+                        <apex:facet name="header"><apex:outputtext value="{!y}"/></apex:facet>
+                        <apex:image value="/img/msg_icons/warning24.png" rendered="{!mMesiAtt[vMesiAtt][y]>0 && mMesiAtt[vMesiAtt][y]<3}"/>
+                        <apex:image value="/img/msg_icons/error24.png" rendered="{!mMesiAtt[vMesiAtt][y]>=3}"/>
+                    </apex:column>
+                </apex:repeat>
+            </apex:dataTable>
+        </div>
+    </apex:pageBlock>
+</apex:component>

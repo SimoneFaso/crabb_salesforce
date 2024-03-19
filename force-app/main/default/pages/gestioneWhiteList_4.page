@@ -1,0 +1,56 @@
+<apex:page controller="GestioneWhiteListCTRL" docType="html-5.0">
+        
+        <apex:form id="NoRecordSToProcess">
+            <apex:pageBlock title="{!$Label.crabb_dev__page_not_reachable}" rendered="{!blankPageFlag}">    
+                <apex:pageMessage summary="{!$Label.crabb_dev__chooseaction}: {!$Label.crabb_dev__assignremove} White List." severity="info" strength="3"/>
+                <apex:pageblockButtons location="bottom"> 
+                        <apex:commandButton action="/apex/CRABB_DEV__GestioneWhiteList" id="INDIETROBOTTON"  value="{!$Label.crabb_dev__return} {!$Label.crabb_dev__to} White List" />                   
+                </apex:pageblockButtons>                 
+            </apex:pageBlock>    
+        </apex:form>
+        <apex:pageBlock title="{!IF(isPutInWhiteList, $Label.crabb_dev__assign_white_list, $Label.crabb_dev__remove_white_list)}" rendered="{! !blankPageFlag}">        
+            
+            <!-- L'ULTIMO STEP -->
+            <apex:pageblockSection >        
+                    <apex:form >
+                    
+                        <!-- PANEL PER METTERE DEI ACCOUNT SU WHITE LIST -->
+                        <apex:outputpanel Id="BloccoInsert" rendered="{! isPutInWhiteList}">
+                               <apex:outputText styleClass="Bold" Value="{!$Label.crabb_dev__expireddate} White List " />
+                               <apex:input type="date" value="{!myWhiteListLimit}" />
+                      
+                        <br/>
+
+                               <apex:outputText styleClass="Bold" Value="{!$Label.crabb_dev__reason} White List " />
+                               <apex:input type="text" value="{!RagioneWhiteList}" required="false"/>
+                        </apex:outputpanel>
+                        <br/>
+                        <br/>
+                        <apex:outputpanel rendered="{! isPutInWhiteList}">
+                            <c:AutoDisablinButton actionToInvoke="{!GestioneWHLStepSelAcct}" disableAll="true" buttonValue="{!$Label.crabb_dev__back}" buttonId="backButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__back}..." ></c:AutoDisablinButton>
+                            <c:AutoDisablinButton actionToInvoke="{!mettiInWhL}" disableAll="true" buttonValue="{!$Label.crabb_dev__add} {!$Label.crabb_dev__to} White List" buttonId="BlockButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__processing}..." ></c:AutoDisablinButton>
+                        </apex:outputpanel>
+                        
+                        <!-- Messaggio d'errore per compilare il limite di whitelist -->
+                        <apex:pageMessages /> 
+                        
+                        <!-- PANEL PER RIMUOVERE DEI ACCOUNT DAL WHITE LIST -->
+                        <apex:outputpanel Id="SbloccoInsert" rendered="{!!isPutInWhiteList}">
+                            <apex:outputText styleClass="Bold" value="{!$Label.crabb_dev__remove} White List" />
+                            <br/>
+                            <br/>
+                        </apex:outputpanel>
+                        <br/>
+                        <apex:outputpanel rendered="{!!isPutInWhiteList}">
+                            <c:AutoDisablinButton actionToInvoke="{!GestioneWHLStepSelAcct}" disableAll="true" buttonValue="{!$Label.crabb_dev__back}" buttonId="backButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__back}..." ></c:AutoDisablinButton>
+                            <c:AutoDisablinButton actionToInvoke="{!rimuoviDaWhL}" disableAll="true" buttonValue="{!$Label.crabb_dev__remove} White List" buttonId="UnblockButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__processing}..." ></c:AutoDisablinButton>
+                        </apex:outputpanel>
+                        <br/>
+                        <br/>
+                        <apex:outputText >Account {!$Label.crabb_dev__selected}: {!NumberOfSelectedRecords}</apex:outputText>
+                  </apex:form>
+            </apex:pageBlockSection> 
+            
+        </apex:pageBlock>
+        
+</apex:page>

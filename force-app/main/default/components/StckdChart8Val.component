@@ -1,0 +1,30 @@
+<!-- ---------------------------------------------------------------------------------------------------------------------
+Name:            StckdChart8Val.component
+Description:     Component used in CruscottoCliente, CruscottoClienteEmbedded, CruscottoPratica, CruscottoPraticaEmbedded,
+                 ExpiredAmountAgeing Pages to build a Stacked Chart for Ageing vs. Expired Amount
+
+Date         Version  Author               Summary of Changes
+-----------  -------  -------------------  -----------------------------------------------------------------------------
+             0.1      Matteo Sala          First Version
+05-Feb-2021  0.2      Giulia Mameli        Introduced Scaduto custom label and time ranges in English for horizontal Legend
+                                           if current_user_language != 'Italiano'
+-------------------------------------------------------------------------------------------------------------------- -->
+
+<apex:component >
+
+    <apex:attribute name="StkData" description="Lista dei dati da rappresentare nel grafico" type="StackedData[]" required="true"/>
+    <apex:attribute name="MinRes" description="Valore minimo da visualizzare in ascissa" type="Decimal" required="true"/>
+    <apex:attribute name="MaxRes" description="Valore massimo da visualizzare in ascissa" type="Decimal" required="true"/>
+    <apex:attribute name="TopSteps" description="Numero di tacche sulla linea superiore" type="Integer" required="true"/>
+    <apex:attribute name="BottomSteps" description="Numero di tacche sulla linea inferiore" type="Integer" required="true"/>
+
+    <apex:chart height="250" width="1000" data="{!StkData}" colorSet="#008000,#FFFF00,#f9e911,#FFD700,#FFA500,#FF8C00,#FF4500,#FF0000">
+        <apex:axis type="Numeric" position="bottom" fields="data21,data22,data23,data24,data25,data26,data27,data28" title="{!$Label.crabb_dev__scaduto} €" minimum="{!MinRes}" maximum="{!MaxRes}" steps="{!BottomSteps}"/>
+        <apex:axis type="Numeric" position="top" fields="data21,data22,data23,data24,data25,data26,data27,data28" title="{!$Label.crabb_dev__scaduto} €" minimum="{!MinRes}" maximum="{!MaxRes}" steps="{!TopSteps}"/>
+        <apex:axis type="Category" position="left" fields="name" title="Ageing"/>
+        <apex:barSeries rendered="{!$Label.crabb_dev__current_user_language == 'Italiano'}" gutter="95" orientation="horizontal" axis="left" yField="name" xField="data21,data22,data23,data24,data25,data26,data27,data28" highlight="true" stacked="true" title="Fino a 10 gg,Tra 10 e 30 gg,Tra 30 e 60 gg,Tra 60 e 90 gg,Tra 90 e 120 gg,Tra 120 e 150 gg,Tra 150 e 180 gg,Più di 180 gg"/>
+        <apex:barSeries rendered="{!$Label.crabb_dev__current_user_language != 'Italiano'}" gutter="95" orientation="horizontal" axis="left" yField="name" xField="data21,data22,data23,data24,data25,data26,data27,data28" highlight="true" stacked="true" title="Up to 10 dd,Btw 10 and 30 dd,Btw 30 and 60 dd,Btw 60 and 90 dd,Btw 90 and 120 dd,Btw 120 and 150 dd,Btw 150 and 180 dd,More than 180 dd"/>
+        <apex:legend position="bottom"/>
+    </apex:chart>
+    
+</apex:component>

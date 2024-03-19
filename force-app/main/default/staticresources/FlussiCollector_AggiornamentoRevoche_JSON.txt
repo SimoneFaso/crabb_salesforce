@@ -1,0 +1,91 @@
+{
+    "_____Nome della colonna nel file CSV": {
+        "____Oggetto dove si trova il campo di interesse": "_____Nome del campo da scrivere nel CSV"
+    },
+    "_____headerAndPositions": {
+        "1": "HEADER_TIPO_FILE",
+        "2": "HEADER_NUMERO_LOTTO",
+        "3": "HEADER_TIPO_AFFIDAMENTO",
+        "4": "HEADER_TIPO_COLLECTOR",
+        "5": "HEADER_ID_COLLECTOR",
+        "6": "HEADER_DATA_ELABORAZIONE",
+        "7": "HEADER_CONTRATTO_ID",
+        "8": "HEADER_ACCOUNT_ID",
+        "9": "HEADER_SERVIZIO_ID",
+        "10": "HEADER_PRATICA_ID",
+        "11": "HEADER_AFFIDAMENTO_ID",
+        "12": "ACCOUNT_NOME",
+        "13": "DATA_SCADENZA_AFFIDAMENTO_PRATICA",
+        "14": "SCADUTO_AFFIDATO_FINALE",
+        "15": "DATA_SCADUTO_AFFIDATO_FINALE",
+        "16": "DATA_REVOCA_AFFIDAMENTO",
+        "17": "CAUSALE_REVOCA_AFFIDAMENTO",
+        "18": "NOTA_REVOCA"
+    },
+    "HEADER_TIPO_FILE": {
+        "NO_OGGETTO": "AGGIORNAMENTO_REVOCHE"
+    },
+    "HEADER_NUMERO_LOTTO": {
+        "Affidamento": "codice_lotto__c"
+    },
+    "HEADER_TIPO_AFFIDAMENTO": {
+        "Affidamento": "Tipo__c"
+    },
+    "HEADER_DATA_SCADENZA_LOTTO": {
+        "Affidamento": "Data_scadenza_lotto__c"
+    },
+    "HEADER_TIPO_COLLECTOR": {
+        "Affidamento": "Tipo_collector__c"
+    },
+    "HEADER_ID_COLLECTOR": {
+        "Affidamento": "Flow_codice_collector__c"
+    },
+    "HEADER_DATA_ELABORAZIONE": {
+        "Affidamento": "Flow_data_elaborazione__c"
+    },
+    "HEADER_CONTRATTO_ID": {
+        "Affidamento": "Flow_Name_Contratto__c"
+    },
+    "HEADER_ACCOUNT_ID": {
+        "Affidamento": "Flow_Codice_Account__c"
+    },
+    "HEADER_SERVIZIO_ID": {
+        "Affidamento": "Flow_Servizio_Codice__c"
+    },
+    "HEADER_FRUITORE_ID": {
+        "Fruitore": "Name"
+    },
+    "HEADER_PRATICA_ID": {
+        "Affidamento": "FLow_codice_pratica__c"
+    },
+    "HEADER_AFFIDAMENTO_ID": {
+        "Affidamento": "Name"
+    },
+    "CONTRATTO_COMUNE": {
+        "Affidamento": "Flow_Contratto_Comune__c"
+    },
+    "ACCOUNT_TIPOLOGIA": {
+        "Affidamento": "Flow_account_type__c"
+    },
+    "ACCOUNT_NOME": {
+        "Affidamento": "Flow_Account_Name__c"
+    },
+    "DATA_SCADENZA_AFFIDAMENTO_PRATICA": {
+        "Affidamento": "Flow_data_scadenza_affidamento__c"
+    },
+    "SCADUTO_AFFIDATO_FINALE": {
+        "Affidamento": "Scaduto_finale__c"
+    },
+    "DATA_SCADUTO_AFFIDATO_FINALE": {
+        "Affidamento": "Flow_data_scaduto_affidamento_finale__c"
+    },
+    "DATA_REVOCA_AFFIDAMENTO": {
+        "Affidamento": "Flow_revoca_affidamento__c"
+    },
+    "CAUSALE_REVOCA_AFFIDAMENTO": {
+        "Affidamento": "Esito_Lavorazione__c"
+    },
+    "NOTA_REVOCA": {
+        "Affidamento": "Flow_affidamento_note__c"
+    }
+}

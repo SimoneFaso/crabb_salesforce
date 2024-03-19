@@ -1,0 +1,142 @@
+<!--
+ - Created by User on 09/09/2021.
+ -->
+
+<!-- Crabb Table Esiti Massivi -->  
+<template>
+    <template if:true={isLoading}>
+
+        <div style="height:50px">
+            <lightning-spinner
+                    alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+
+    </template>
+
+    <template if:true={isOutcomesNeeded}>
+        <div class="slds-page-header">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <lightning-combobox
+                            name="progress"
+                            value={value}
+                            options={getFinalEsitiList}
+                            label={labels.EsitiMassiviCooseOutcome}
+                            onchange={handleComboChange}
+                            required>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col">
+                    <p> {labels.EsitiMassiviOutcomeType}</p>
+                    <div class="slds-box slds-box_x-small">
+                        {selectedValueCombobox}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div class="ldt">
+        <lightning-datatable if:true={isDataPopulated}
+                         key-field="Id"
+                         onrowselection={handleRowSelected}
+                         column-widths-mode="auto"
+                         columns={columnsTable}
+                         sorted-by={sortBy}
+                         selected-rows={rowSelection}
+                         sorted-direction={sortDirection}
+                         onsort={doSorting}
+                         data={pagedData}>
+        </lightning-datatable>
+    </div> 
+    
+    <br>
+
+
+    <div class="slds-box slds-box_small">
+        <div class="slds-grid slds-grid_align-spread">
+            <div class="slds-col">
+                <lightning-combobox
+                        name="progress"
+                        label={labels.EsitiMassiviElementsForPage}
+                        value={numberOfRecordsForPage}
+                        options={recordForPageOptions}
+                        onchange={handlerecordForPage}>
+                </lightning-combobox>
+            </div>
+
+            <div class="slds-col slds-p-vertical_small">
+                <div class="slds-p-left_medium">
+                    {labels.EsitiMassiviSelectedRows} {selectedRowsCount}
+                </div>
+            </div>
+
+            <div class="slds-col slds-p-vertical_small">
+                <lightning-button
+                        class="slds-m-right_x-small"
+                        label={labels.EsitiMassiviSelectAllButton}
+                        icon-name="utility:check"
+                        onclick={selectAllDossiers}>
+                </lightning-button>
+
+                <lightning-button
+                        class="slds-m-right_x-small"
+                        label={labels.EsitiMassiviDeselectAllButton}
+                        icon-name="utility:close"
+                        icon-position="right"
+                        onclick={deselectAllDossiers}>
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <footer class="slds-modal__footer" >
+        <lightning-layout horizontal-align="space">
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <lightning-button
+                        label={labels.EsitiMassiviFirstPageButton}
+                        icon-name="utility:jump_to_left"
+                        onclick={handleButtonFirstPage}
+                        disabled={disabledFirstPageButton}>
+                </lightning-button>
+            </lightning-layout-item>
+
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <lightning-button
+                        label={labels.EsitiMassiviPreviousPageButton}
+                        icon-name="utility:chevronleft"
+                        onclick={handleButtonPrevious}
+                        disabled={disabledPreviousPageButton}> 
+                </lightning-button>
+            </lightning-layout-item>
+
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                Page {currentPage} of {totalPage}
+            </lightning-layout-item>
+
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <lightning-button
+                        label={labels.EsitiMassiviNextPageButton}
+                        icon-name="utility:chevronright"
+                        icon-position="right"
+                        onclick={handleButtonNext}
+                        disabled={disabledNextPageButton}>
+                </lightning-button>
+            </lightning-layout-item>
+            
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <lightning-button
+                        label={labels.EsitiMassiviLastPageButton}
+                        icon-name="utility:jump_to_right"
+                        icon-position="right"
+                        onclick={handleButtonLastPage}
+                        disabled={disabledLastPageButton}>
+                </lightning-button>
+            </lightning-layout-item>
+        </lightning-layout>
+    </footer>
+
+</template>

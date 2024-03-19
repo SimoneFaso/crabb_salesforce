@@ -1,0 +1,18 @@
+<!--
+ - Created by Matteo on 04/08/2020.
+ -->
+
+<!-- Crabb Dynamic Table -->
+<template>
+    <lightning-spinner if:true={isLoading}  ></lightning-spinner>
+    <lightning-card >
+
+        <lightning-datatable if:true={isDataPopulated} key-field={tableKey}
+                             columns={columns}
+                             sorted-by={sortBy}
+                             sorted-direction={sortDirection}
+                             onsort={doSorting}
+                             data={data}>
+        </lightning-datatable>
+    </lightning-card>
+</template>

@@ -1,0 +1,193 @@
+<!--
+ - Created by User on 11/07/2022.
+ -->
+
+<!-- Crabb Affidamento Massivo Lng -->
+<template>
+    <!-- Spinner -->
+    <lightning-spinner if:true={isLoading} ></lightning-spinner>
+
+    <lightning-card class="" style="color: #ce2228;" title={labels.BulkAssignmentTitle}>
+        <!-- Title & Buttons -->
+        <slot name="Indietro" slot="actions">
+            <template if:true={isIndietro}>
+                <lightning-button
+                        label={labels.EsitiMassiviButtonIndietro}
+                        icon-name="utility:back"
+                        style="background-color: #ce2228;"
+                        onclick={ProcediStepPrec}>
+                </lightning-button>
+            </template>
+            <template if:false={isIndietro}>
+                <lightning-button
+                        disabled="true"
+                        label={labels.EsitiMassiviButtonIndietro}
+                        icon-name="utility:back"
+                        style="background-color: #ce2228;"
+                        onclick={ProcediStepPrec}>
+                </lightning-button>
+            </template>
+        </slot>
+        <slot name="Avanti" slot="actions">
+            <template if:true={isAvanti}>
+                <lightning-button
+                        label={labels.EsitiMassiviButtonProcedi}
+                        icon-name="utility:forward"
+                        icon-position="right"
+                        style="background-color: #ce2228;"
+                        onclick={ProcediStepSucc}>
+                </lightning-button>
+            </template>
+            <template if:false={isAvanti}>
+                <lightning-button
+                        disabled="true"
+                        label={labels.EsitiMassiviButtonProcedi}
+                        icon-name="utility:forward"
+                        icon-position="right"
+                        style="background-color: #ce2228;"
+                        onclick={ProcediStepSucc}>
+                </lightning-button>
+            </template>
+        </slot>
+
+        <span style="width:80%;padding-top: 20px;padding-bottom: 20px;">
+            <lightning-progress-indicator current-step={sP} type="base" variant="base" >
+                <lightning-progress-step label={labels.Affido_Massivo_Step_1} value="1"></lightning-progress-step>
+                <lightning-progress-step label={labels.Affido_Massivo_Step_2} value="2"></lightning-progress-step>
+                <lightning-progress-step label={labels.Affido_Massivo_Step_3} value="3"></lightning-progress-step>
+                <lightning-progress-step label={labels.Affido_Massivo_Step_4} value="4"></lightning-progress-step>
+                <lightning-progress-step label={labels.Affido_Massivo_Step_5} value="5"></lightning-progress-step>
+                <lightning-progress-step label={labels.Affido_Massivo_Step_6} value="6"></lightning-progress-step>
+            </lightning-progress-indicator>
+        </span>
+        <p class="slds-p-horizontal_small" style="color: black;padding-top: 15px;">
+            <!-- Step 1 - Assignment Type and List View Selection -->
+            <template if:true={isStep1} >
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <template if:true={isTS} class="">
+                            <lightning-radio-group name="Tipologia Task:"
+                                                   label={labels.EsitiMassiviSelectType}
+                                                   options={TaskType}
+                                                   onchange={getSelectionTS}
+                                                   type="radio">
+                            </lightning-radio-group>
+                        </template>
+                        <template if:false={isTS} class="">
+                            {labels.EsitiMassiviNoTypeFound}
+                        </template>
+                    </div>
+                    <div class="slds-col">
+                        <template if:true={isLV} class="">
+                            <lightning-radio-group name="List View:"
+                                                   label={labels.EsitiMassiviSelectDossierListView}
+                                                   options={ListView}
+                                                   onchange={getSelectionLV}
+                                                   type="radio">
+                            </lightning-radio-group>
+                        </template>
+                        <template if:false={isLV} class="">
+                            {labels.EsitiMassiviNoListViewFound}
+                        </template>
+                    </div>
+                </div>
+            </template>
+            <!-- Step 2 - Record count summary -->
+            <template if:true={isStep2}>
+                <template if:true={isEmpty}>
+                    {labels.EsitiMassiviSelectionContains} {countQuery} {labels.EsitiMassiviRecord}. {labels.EsitiMassiviBackToMod}
+                </template>
+                <template if:false={isEmpty}>
+                    {labels.EsitiMassiviYourSelection} <b>{optionSelected}</b> {labels.EsitiMassiviContains} {countQuery} {labels.EsitiMassiviRecord}. <BR/>
+                    {labels.EsitiMassiviProceedToDetails}
+                    {labels.EsitiMassiviMaxOutcomeInfo} {maxRecords} {labels.EsitiMassiviRecord}.
+                </template>
+            </template>
+            <!-- Step 3 - Dossier records selection -->
+            <template if:true={isStep3}>
+                <c-crabb-table-esiti-massivi table-records={totalRecordList} parent-retrieved-rows={selectedRows} tipo-sottotipo={optionSelected} onsetisactivebutton={setIsActiveButtonHandle} onsetisactivebuttonselectall={setIsActiveButtonHandleSelectAll} onsetisactivebuttondeselectall={setIsActiveButtonHandleDeselectAll}> </c-crabb-table-esiti-massivi>
+            </template>
+            <!-- Step 4 - Collectors & Algorithm selection -->
+            <template if:true={isStep4}>
+                <lightning-dual-listbox name                    = "Collectors"
+                                        label                   = "Select Collectors"
+                                        source-label            = "Available"
+                                        selected-label          = "Selected"
+                                        field-level-help        = "Select the collectors you want to assign dossiers to"
+                                        options                 = {options}
+                                        onchange                = {handleChange}
+                                        size                    = "3">
+                </lightning-dual-listbox>
+                <!--<div class="slds-box" >
+                    <p>Selected values are: {selected}</p>
+                </div>-->
+                <BR/>
+                <lightning-datatable
+                        if:true                 = {isCollectorSelected}
+                        key-field               = "Collector"
+                        column-widths-mode      = "auto"
+                        columns                 = {collectorColumns}
+                        data                    = {collectorsData}
+                        onsave                  = {handleSave}
+                        draft-values            = {collectorDraftValues}
+                        hide-checkbox-column    = "true"
+                        show-row-number-column  = "false">
+                </lightning-datatable>
+                <BR/>
+                <lightning-radio-group name="Algoritmo:"
+                                       label="Scegli l'algoritmo:"
+                                       options={AlgType}
+                                       value="RR"
+                                       onchange={AlgSelection}
+                                       type="radio">
+                </lightning-radio-group>
+            </template>
+            <!-- Step 5 - Summary -->
+            <template if:true={isStep5}>
+                <!--Summary:<BR>{sData}<BR>{selected}<BR>{Algoritmo}<BR>{retrievedRows}-->
+                <h3><b>Summary:</b></h3>
+                <br/>
+                <lightning-datatable
+                        if:true                 = {isSummary}
+                        key-field               = "Collector"
+                        column-widths-mode      = "auto"
+                        columns                 = {distributionColumns}
+                        data                    = {distributionData}
+                        hide-checkbox-column    = "true"
+                        show-row-number-column  = "false">
+                </lightning-datatable>
+            </template>
+            <!-- Step 6 - End -->
+            <template if:true={isStep6}>
+                <div class="col-xs-12">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading" style="color: black;"><strong> {labels.PreAssignment_in_Creation}</strong></div>
+                        <div class="panel-body">
+                            <h5>{labels.TheTableShows} <br/> {labels.YouCanWorkThemLater} <a href="/apex/GestioneAffidamenti" target="_blank">{labels.ManageLotAssignement}</a> {labels.OrProcessThemNow} <br/>{labels.OnceTheAssignmentsHaveBeenCreated}</h5>
+                        </div>
+                    </div>
+                </div>
+                <BR/>
+                <lightning-datatable
+                        if:true                 = {isPreLotti}
+                        key-field               = "PreLot"
+                        column-widths-mode      = "auto"
+                        columns                 = {preLottoColumns}
+                        data                    = {preLottiData}
+                        hide-checkbox-column    = "true"
+                        show-row-number-column  = "false">
+                </lightning-datatable>
+                <BR/>
+                <div style="text-align:center;">
+                    <lightning-button
+                            label={labels.workpreassignments}
+                            icon-name="utility:product_transfer_state"
+                            icon-position="right"
+                            style="background-color: #ce2228;"
+                            onclick={navigateToVFPage}>
+                    </lightning-button>
+                </div>
+            </template>
+        </p>
+    </lightning-card>
+</template>

@@ -1,0 +1,175 @@
+<apex:page controller="BloccoSbloccoCTRL" docType="html-5.0">
+
+    <c:KillerStyle />
+        
+    <head> 
+    <style type="text/css">
+        .Summary{
+                width: 250px;
+                padding: 12px;
+                background-color: #f68b1f; 
+                border: 1px solid  #57B4D1;
+                opacity:0.65;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                color:white;
+                }
+        
+        .fixed{
+                position:fixed;
+                top:5px;
+                }       
+                    
+    </style>
+    </head>
+        <apex:form id="NoRecordSToProcess">
+            <apex:pageBlock title="{!$Label.CRABB_DEV__Page_not_reachable}" rendered="{!blankPageFlag}">    
+                <apex:pageMessage summary="{!$Label.CRABB_DEV__Choose_type_of_operation_Lock_Unlock}" severity="info" strength="3"/>
+                <apex:pageblockButtons location="bottom"> 
+                        <apex:commandButton action="/apex/CRABB_DEV__Amministrazione" id="INDIETROBOTTON"  value="{!$Label.CRABB_DEV__Management}" />                   
+                </apex:pageblockButtons>                 
+            </apex:pageBlock>    
+        </apex:form>        
+        
+        <apex:pageBlock title="{!IF(isBlocco, $Label.CRABB_DEV__Lock_Dossier, $Label.CRABB_DEV__Unlock_Dossier)}" rendered="{!ciSonoPraticheDaLavorare && !blankPageFlag}">        
+            
+            <!-- IL SEZIONE DEI FILTRI -->
+            <apex:pageblockSection columns="1" >
+                    <apex:outputPanel id="Filtri" title="{!$Label.CRABB_DEV__Dossier_Filters}:" >
+                    <div id="accordion" style="width:650px">
+                        <h3 class="AccTitle" >{!$Label.Contract}</h3>
+                        <div>
+                            <c:Selectable Index="1" Selezione_Sinistra="{!originalValues_IdContratto}" Selezione_Destra="{!originalValues_IdContratto}" Titolo1="{!$Label.CRABB_DEV__Contract_ID}" Titolo2="{!$Label.CRABB_DEV__Contract_ID}" Titolo3="{!$Label.CRABB_DEV__Selected_Contract}:" SelInvoke="{!UpdateListe}"/>
+                        </div>
+                        <h3 class="AccTitle" >{!$Label.CRABB_DEV__Countries}</h3>
+                        <div>
+                            <c:Selectable Index="2" Selezione_Sinistra="{!originalValues_Comuni}" Selezione_Destra="{!originalValues_Comuni}" Titolo1="{!$Label.CRABB_DEV__Countries}" Titolo2="{!$Label.CRABB_DEV__Countries}" Titolo3="{!$Label.CRABB_DEV__Countries} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                        </div>
+                        <h3 class="AccTitle" >{!$Label.Service}</h3>
+                        <div>
+                            <c:Selectable Index="3" Selezione_Sinistra="{!originalValues_Servizio}" Selezione_Destra="{!originalValues_Servizio}" Titolo1="{!$Label.CRABB_DEV__Service_codes}" Titolo2="{!$Label.CRABB_DEV__Service_codes}" Titolo3="{!$Label.CRABB_DEV__Service} {!$Label.CRABB_DEV__Selected} :" SelInvoke="{!UpdateListe}"/>
+                        </div>
+                        <h3 class="AccTitle" >{!$Label.CRABB_DEV__RiskClass}</h3>
+                        <div>
+                            <c:Selectable Index="5" Selezione_Sinistra="{!originalValues_CdR}" Selezione_Destra="originalValues_CdR" Titolo1="{!$Label.CRABB_DEV__RiskClass}" Titolo2="{!$Label.CRABB_DEV__RiskClass}" Titolo3="{!$Label.CRABB_DEV__RiskClass} {!$Label.CRABB_DEV__Selected}:" SelInvoke="{!UpdateListe}"/>
+                        </div>
+                        <h3 class="AccTitle" style="display:{!if(IsBlocco,"true","none")}" >{!$Label.Dossier_Status}</h3>
+                        <div style="display:{!if(IsBlocco,"true","none")}">
+                           <c:Selectable Index="4" Selezione_Sinistra="{!originalValues_Stato}" Selezione_Destra="{!originalValues_Stato}" Titolo1="{!$Label.CRABB_DEV__Status}" Titolo2="{!$Label.CRABB_DEV__Status}" Titolo3="{!$Label.CRABB_DEV__Selected_Status}:" SelInvoke="{!UpdateListe}"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <apex:form >
+                        <apex:outputPanel id="IdForm">
+                            <table style="border:0; table-layout:fixed">
+                                <tr>
+                                    <td><b>{!$Label.CRABB_DEV__Expired}:</b></td>
+                                    <td>
+                                        <apex:input value="{!ScadutoDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                    </td>
+                                    <td>
+                                        <apex:input value="{!ScadutoA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>{!$Label.CRABB_DEV__Expired_Consolidated}:</b></td>
+                                    <td>
+                                        <apex:input value="{!ScadutoConsolidatoDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                    </td>
+                                    <td>
+                                        <apex:input value="{!ScadutoConsolidatoA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td><b>{!$Label.CRABB_DEV__Expired_Expenses}:</b></td>
+                                    <td>
+                                        <apex:input value="{!ScadutoSpeseDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                    </td>
+                                    <td>
+                                        <apex:input value="{!ScadutoSpeseA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                    </td>
+                                </tr> 
+                                <tr>
+                                    <td><b>{!$Label.CRABB_DEV__Balance}:</b></td>
+                                    <td>
+                                        <apex:input value="{!SaldoDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                    </td>
+                                    <td>
+                                        <apex:input value="{!SaldoA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>{!$Label.CRABB_DEV__Consolidated_Balance}:</b></td>
+                                    <td>
+                                        <apex:input value="{!SaldoConsolidatoDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                    </td>
+                                    <td>
+                                        <apex:input value="{!SaldoConsolidatoA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>{!$Label.CRABB_DEV__Expenses_Balance}:</b></td>
+                                    <td>
+                                        <apex:input value="{!SaldoSpeseDa}"  type="text">{!$Label.CRABB_DEV__From}</apex:input>
+                                    </td>
+                                    <td>
+                                        <apex:input value="{!SaldoSpeseA}" type="text" >{!$Label.CRABB_DEV__To}</apex:input>
+                                    </td>
+                                </tr>
+                            </table>
+                             <br/>            
+                            <apex:outputpanel id="ErrorMessagesId"> 
+                                <apex:pageMessages rendered="{!ErrorValidateDecimal}"/>
+                            </apex:outputpanel>
+                            <apex:commandButton action="{!QueryPratiche}" value="{!$Label.CRABB_DEV__FIlter}"/>
+                        </apex:outputPanel>
+                    </apex:form>
+                </apex:outputPanel>
+            </apex:pageblockSection>
+            
+        </apex:pageBlock>    
+                                       
+        <!-- QUESTO BLOCK, IMPEDISCE L'UTENTE DI ESEGUIRE OPERAZIONE INADEGUATI(PRECAUTION) -->
+        <apex:form id="TheStatusForm"> 
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus>
+        </apex:form>
+        
+        <script>
+        j$( "#accordion" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        j$( "#accordion2" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: true, 
+            active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });
+        
+        jQuery(document).ready(function($) {
+        var pos = j$(window).height();
+
+        j$(window).scroll(function(){
+        if (j$(window).scrollTop() > pos){
+            j$('.Summary').addClass('fixed');
+        } else {
+            j$('.Summary').removeClass('fixed');
+        }
+        
+        
+        });
+    
+    
+        });   
+    </script>
+</apex:page>

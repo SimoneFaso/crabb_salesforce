@@ -1,0 +1,176 @@
+	{
+    "_____Nome della colonna nel file CSV": {
+        "____Oggetto dove si trova il campo di interesse": "_____Nome del campo da scrivere nel CSV"
+    },
+	"_____headerAndPositions": {
+        "1": "HEADER_TIPO_FILE",
+		"2": "HEADER_NUMERO_LOTTO",
+        "3": "HEADER_TIPO_COLLECTOR",
+		"4": "HEADER_ID_COLLECTOR",
+		"5": "HEADER_DATA_ELABORAZIONE",
+		"6": "HEADER_CONTRATTO_ID",
+        "7": "HEADER_ACCOUNT_ID",
+		"8": "HEADER_SERVIZIO_ID",
+		"9": "HEADER_FRUITORE_ID",
+		"10": "ACCOUNT_TIPOLOGIA",
+		"11": "ACCOUNT_NOME",
+		"12": "ACCOUNT_CODICE_FISCALE",
+		"13": "ACCOUNT_MF",
+		"14": "ACCOUNT_CON_TELEFONO1",
+		"15": "ACCOUNT_CON_TELEFONO2",
+		"16": "ACCOUNT_CON_TELEFONO3",
+		"17": "ACCOUNT_CON_SMS",
+		"18": "ACCOUNT_CON_EMAIL",
+		"19": "ACCOUNT_CON_EMAIL_SOLLECITO",
+		"20": "ACCOUNT_NOTA",
+		"21": "FRUITORE_TIPOLOGIA",
+		"22": "FRUITORE_NOME",
+		"23": "FRUITORE_COGNOME",
+		"24": "FRUITORE_MF",
+		"25": "FRUITORE_SCUOLA",
+		"26": "FRUITORE_FRUIZIONE",
+		"27": "FRUITORE_FREQUENZA",
+		"28": "FRUITORE_NOTA",
+		"29": "INDIRIZZO_RESIDENZA_INDIRIZZO",
+		"30": "INDIRIZZO_RESIDENZA_COMUNE",
+		"31": "INDIRIZZO_RESIDENZA_CAP",
+		"32": "INDIRIZZO_RESIDENZA_PROVINCIA",
+		"33": "INDIRIZZO_DOMICILIO_INDIRIZZO",
+		"34": "INDIRIZZO_DOMICILIO_COMUNE",
+		"35": "INDIRIZZO_DOMICILIO_CAP",
+		"36": "INDIRIZZO_DOMICILIO_PROVINCIA"		
+    },
+	"HEADER_TIPO_FILE": {
+        "NO_OGGETTO": "AGGIORNAMENTO_ANAGRAFICO"
+    },
+	"HEADER_NUMERO_LOTTO": {
+        "Affidamento": "codice_lotto__c"
+    },
+    "HEADER_TIPO_AFFIDAMENTO": {
+        "Affidamento": "Tipo__c"
+    },
+	"HEADER_DATA_SCADENZA_LOTTO": {
+        "Affidamento": "Data_scadenza_lotto__c"
+    },
+	"HEADER_TIPO_COLLECTOR": {
+        "Affidamento": "Tipo_collector__c"
+    },
+	"HEADER_ID_COLLECTOR": {
+        "Affidamento": "Flow_codice_collector__c"
+    },
+	"HEADER_DATA_ELABORAZIONE": {
+        "Affidamento": "Flow_data_elaborazione__c"
+    },
+	"HEADER_CONTRATTO_ID": {
+        "Affidamento": "Flow_Id_Contratto__c"
+    },
+	"HEADER_ACCOUNT_ID": {
+        "Affidamento": "Flow_Codice_Account__c"
+    },
+	"HEADER_SERVIZIO_ID": {
+        "Affidamento": "Flow_Servizio_Codice__c"
+    },
+	"HEADER_FRUITORE_ID": {
+        "Fruitore": "Name"
+    },
+	"HEADER_PRATICA_ID": {
+        "Affidamento": "FLow_codice_pratica__c"
+    },
+	"HEADER_AFFIDAMENTO_ID": {
+        "Affidamento": "ID"
+    },
+	"CONTRATTO_COMUNE": {
+        "Affidamento": "Flow_Contratto_Comune__c"
+    },
+	"ACCOUNT_TIPOLOGIA": {
+        "Affidamento": "Flow_account_type__c"
+    },
+	"ACCOUNT_NOME": {
+        "Affidamento": "Flow_Account_Name__c"
+    },
+	"ACCOUNT_CODICE_FISCALE": {
+        "Affidamento": "Flow_Account_Codice_Fiscale__c"
+    },
+	"ACCOUNT_MF": {
+        "Affidamento": "Flow_Account_MF__c"
+    },
+	"ACCOUNT_CON_TELEFONO1": {
+        "Affidamento": "Flow_Account_Nr1_Tel__c"
+    },
+	"ACCOUNT_CON_TELEFONO2": {
+        "Affidamento": "Flow_Account_Nr2_Tel__c"
+    },
+	"ACCOUNT_CON_TELEFONO3": {
+        "Affidamento": "Flow_Account_Nr3_Tel__c"
+    },
+	"ACCOUNT_CON_SMS": {
+        "Affidamento": "Flow_Account_Con_SMS__c"
+    },
+	"ACCOUNT_CON_EMAIL": {
+        "Affidamento": "Flow_Account_Con_Mail__c"
+    },
+	"ACCOUNT_CON_EMAIL_SOLLECITO": {
+        "Affidamento": "Account_Con_Email_Sollecito__c"
+    },
+	"ACCOUNT_NOTA": {
+        "Affidamento": "Flow_Account_Note__c"
+    },
+	"SERVIZIO_SCADUTO_AFFIDATO_INIZIALE": {
+        "Affidamento": "Scaduto_iniziale__c"
+    },
+	"SERVIZIO_DATA_SCADENZA_AFFIDAMENTO_PRATICA": {
+        "Affidamento": "Data_fine_affidamento_prevista__c"
+    },
+	"FRUITORE_TIPOLOGIA": {
+        "Fruitore": "Flow_Fruitore_tipo__c"
+    },
+	"FRUITORE_NOME": {
+        "Fruitore": "Nome__c"
+    },
+	"FRUITORE_COGNOME": {
+        "Fruitore": "Cognome__c"
+    },
+	"FRUITORE_MF": {
+        "Fruitore": "MF__c"
+    },
+	"FRUITORE_SCUOLA": {
+        "Fruitore": "Scuola__c"
+    },
+	"FRUITORE_FRUIZIONE": {
+        "Fruitore": "Fruizione__c"
+    },
+	"FRUITORE_FREQUENZA": {
+        "Fruitore": "Frequenza__c"
+    },
+	"FRUITORE_NOTA": {
+        "Fruitore": "Flow_note__c"
+    },
+	"INDIRIZZO_RESIDENZA_TOPONIMO": {
+        "Affidamento": "Flow_account_residenza_Via__c"
+    },
+	"INDIRIZZO_RESIDENZA_INDIRIZZO": {
+        "Affidamento": "Flow_account_residenza_Via__c"
+    },
+	"INDIRIZZO_RESIDENZA_COMUNE": {
+        "Affidamento": "Flow_account_residenza_comune__c"
+    },
+	"INDIRIZZO_RESIDENZA_CAP": {
+        "Affidamento": "Flow_account_residenza_cap__c"
+    },
+	"INDIRIZZO_RESIDENZA_PROVINCIA": {
+        "Affidamento": "Flow_account_residenza_provincia__c"
+    },
+	"INDIRIZZO_DOMICILIO_INDIRIZZO": {
+        "Affidamento": "Flow_account_domicilio_via__c"
+    },
+	"INDIRIZZO_DOMICILIO_COMUNE": {
+        "Affidamento": "Flow_account_domicilio_comune__c"
+    },
+	"INDIRIZZO_DOMICILIO_CAP": {
+        "Affidamento": "Flow_account_domicilio_cap__c"
+    },
+	"INDIRIZZO_DOMICILIO_PROVINCIA": {
+        "Affidamento": "Flow_account_domicilio_provincia__c"
+    }
+
+}

@@ -1,0 +1,160 @@
+<!--
+ - Created by MatteoSala on 28/09/2021.
+ -->
+
+<!-- Crabb Esiti Massivi Lng -->
+<template>
+    <lightning-spinner if:true={isLoading} ></lightning-spinner>
+    
+    <lightning-card class="" style="color: #ce2228;" title={labels.EsitiMassiviBulkOutcomes}>
+
+        <slot name="Indietro" slot="actions">
+            <template if:true={isIndietro}>
+                <lightning-button
+                        label={labels.EsitiMassiviButtonIndietro}
+                        icon-name="utility:back"
+                        style="background-color: #ce2228;"
+                        onclick={ProcediStepPrec}>
+                </lightning-button>
+            </template>
+            <template if:false={isIndietro}>
+                <lightning-button
+                        disabled="true"
+                        label={labels.EsitiMassiviButtonIndietro}
+                        icon-name="utility:back"
+                        style="background-color: #ce2228;"
+                        onclick={ProcediStepPrec}>
+                </lightning-button>
+            </template>
+        </slot>
+        <slot name="Avanti" slot="actions">
+            <template if:true={isAvanti}>
+                <lightning-button
+                        label={labels.EsitiMassiviButtonProcedi}
+                        icon-name="utility:forward"
+                        icon-position="right"
+                        style="background-color: #ce2228;"
+                        onclick={ProcediStepSucc}>
+                </lightning-button>
+            </template>
+            <template if:false={isAvanti}>
+                <lightning-button
+                        disabled="true"
+                        label={labels.EsitiMassiviButtonProcedi}  
+                        icon-name="utility:forward"
+                        icon-position="right"
+                        style="background-color: #ce2228;"
+                        onclick={ProcediStepSucc}>
+                </lightning-button>
+            </template>
+        </slot>
+
+        <p class="slds-p-horizontal_small" style="color: black;">
+            <template if:true={isStep1} class="">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <template if:true={isTS} class="">
+                            <lightning-radio-group name="Tipologia Task:"
+                                                   label={labels.EsitiMassiviSelectType}
+                                                   options={TaskType}
+                                                   onchange={getSelectionTS}
+                                                   type="radio">
+                            </lightning-radio-group>
+                        </template>
+                        <template if:false={isTS} class="">
+                            {labels.EsitiMassiviNoTypeFound}
+                        </template>
+                    </div>
+                    <div class="slds-col">
+                        <template if:true={isLV} class="">
+                            <lightning-radio-group name="List View:"
+                                                   label={labels.EsitiMassiviSelectDossierListView}
+                                                   options={ListView}
+                                                   onchange={getSelectionLV}
+                                                   type="radio">
+                            </lightning-radio-group>
+                        </template>
+                        <template if:false={isLV} class="">
+                            {labels.EsitiMassiviNoListViewFound}
+                        </template>
+                    </div>
+                </div>
+            </template>
+            <template if:true={isStep2}>
+                <template if:true={isEmpty}>
+                    {labels.EsitiMassiviSelectionContains} {countQuery} {labels.EsitiMassiviRecord}. {labels.EsitiMassiviBackToMod}
+                </template>
+                <template if:false={isEmpty}>
+                    {labels.EsitiMassiviYourSelection} <b>{optionSelected}</b> {labels.EsitiMassiviContains} {countQuery} {labels.EsitiMassiviRecord}. <BR/>
+                    {labels.EsitiMassiviProceedToDetails}
+                    {labels.EsitiMassiviMaxOutcomeInfo} {maxRecords} {labels.EsitiMassiviRecord}. 
+                </template> 
+            </template>
+            <template if:true={isStep3}>
+                <c-crabb-table-esiti-massivi is-outcomes-needed table-records={totalRecordList} parent-retrieved-rows={selectedRows} tipo-sottotipo={optionSelected} onsetisactivebutton={setIsActiveButtonHandle} onsetisactivebuttonselectall={setIsActiveButtonHandleSelectAll} onsetisactivebuttondeselectall={setIsActiveButtonHandleDeselectAll}> </c-crabb-table-esiti-massivi>
+            </template>
+            <template if:true={isStep4}>
+                <p>{labels.EsitiMassiviYourSelection} <b>{selectedRecordList.length}</b> {labels.EsitiMassiviRecordToOutcome} <b>{finalOutcome}</b> ({finalOutcomeType}).</p>
+                <p>{labels.EsitiMassiviStartProcess}</p>
+                <br> <br>
+                <lightning-button icon-name="utility:download"
+                                  label="Download CSV"
+                                  title="Download CSV File"
+                                  onclick={downloadCSVFile}>
+                </lightning-button>
+            </template>
+            <template if:true={isStep5}>
+                <template if:true={isProcessing}>
+                    <p class="slds-box slds-text-heading_small" style="background-color: #FFFCE5;">
+                        <lightning-icon size="small" icon-name="utility:info" alternative-text="info!" title="info" style="padding-right: 2rem;"></lightning-icon>
+                        {labels.EsitiMassiviClickToUpdateInfo}
+                    </p>
+                </template>
+                <template if:false={isProcessing}>
+                    <p class="slds-box slds-text-heading_small" style="background-color: #e2ffd7;">
+                        <lightning-icon size="small" icon-name="utility:check" alternative-text="check!" title="check" style="padding-right: 2rem;"></lightning-icon>
+                        {labels.EsitiMassiviOperationComplete} 
+                    </p>
+                </template>
+
+                <br>
+
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped">
+
+                    <tr class="slds-text-title_caps">
+                        <th scope="col"> <div class="slds-truncate" style="font-weight: bold;">  Total (batch scope) items </div> </th>
+                        <th scope="col"> <div class="slds-truncate" style="font-weight: bold;">  Processed (batch scope) items </div> </th>
+                        <th scope="col"> <div class="slds-truncate" style="font-weight: bold;">  Batch status </div> </th>
+                        <th scope="col"> <div class="slds-truncate" style="font-weight: bold;">  Number of errors </div> </th>
+                    </tr>
+                    <tr class="slds-text-title_caps">
+                        <th scope="col"> <div class="slds-truncate"> {TotalJobItems} </div> </th>
+                        <th scope="col"> <div class="slds-truncate"> {JobItemsProcessed} </div> </th>
+                        <th scope="col"> <div class="slds-truncate"> {batchStatus} </div> </th>
+                        <th scope="col"> <div class="slds-truncate"> {NumberOfErrors} </div> </th>
+                    </tr>
+                </table>
+
+                <br> <br>
+
+                <lightning-button
+                        label={labels.EsitiMassiviRefreshButton}
+                        icon-position="right"
+                        icon-name="utility:refresh"
+                        onclick={refreshBatchInformation}
+                        disabled={disableRefreshButton}
+                        style="background-color: #ce2228;">
+                </lightning-button>
+
+                <template if:false={isProcessing}>
+                    <lightning-button disabled={disableCloseProcedureButton} label={labels.EsitiMassiviCloseButton} style="background-color: #ce2228;" onclick={closeProcedure}></lightning-button>
+                </template>
+            </template>
+        </p>
+
+    </lightning-card>
+    <!--<lightning-card if:true={isStep2} class="" >
+        <c-crabb-table-esiti-massivi table-records={filteredDossiers} tipo-sottotipo={tipoSottotipoKey}></c-crabb-table-esiti-massivi>
+    </lightning-card>
+    <c-crabb-modal-get-report onsenddossierids={goToSecondStep}  onhide={hidemodal} ></c-crabb-modal-get-report>-->
+</template>

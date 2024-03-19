@@ -1,0 +1,103 @@
+<apex:component allowDML="true">
+
+    <apex:attribute name="actionToInvoke" type="ApexPages.Action" required="false" description="The action (optional if rerender is specified)" />
+    <apex:attribute name="rerender" type="String" required="false" description="Rerender (optional if action is specified)" />
+    <apex:attribute name="buttonValue" type="String" required="true" description="The label of the button (required)" />
+    <apex:attribute name="buttonValueDisabled" type="String" required="false" description="The label of the button when disabled (optional)" />    
+    <apex:attribute name="buttonId" type="String" required="true" description="The id of the button (required)" />
+    <apex:attribute name="styleClass" type="String" required="false" description="Optional css class" />
+    <apex:attribute name="disableAll" type="Boolean" required="false" description="If true, when the button is clicked all buttons are disabled (default: false)" default="false" />
+    <apex:attribute name="disabled" type="Boolean" required="false" description="If true the button is disabled (default: false)" default="false" />
+    <apex:attribute name="onclick" type="String" required="false" description="The JavaScript invoked if the onclick event occurs"  />
+    
+    
+    
+    <script type="text/javascript">var runFancy = true;</script>
+        <!--[if IE]>
+        <script type="text/javascript">
+            runFancy = false;
+            //any other IE specific stuff here
+        </script>
+        <![endif]-->
+        <script>
+
+        function {!buttonId}disable(event) {
+        if(runFancy){
+            event.preventDefault();}
+
+            var element = document.getElementById("{!$Component.btn}");
+            {!IF(buttonValueDisabled != NULL, "element.value = '" & buttonValueDisabled & "';", "")}
+           if({!disableAll}) {
+            {!buttonId}disableAll();
+         } else {  
+              if(runFancy ){
+              element.setAttribute("disabled",  "true");
+              }else{
+              element.disabled = true; 
+             } 
+             element.className = element.className.replace(/(^btn$)|( btn$)|(btn )/, ' btnDisabled ');                   
+         }
+       
+           return true;
+            }
+     
+        
+        function {!buttonId}enable(event) {
+        if(runFancy){
+            event.preventDefault();}
+            var element = document.getElementById("{!$Component.btn}")
+            element.value = "{!buttonValue}";
+          if({!disableAll}) {
+              {!buttonId}enableAll();
+          } else {
+                element.removeAttribute("disabled");
+                element.className = element.className.replace('btnDisabled', 'btn');   
+           }            
+           return true;
+        }
+        
+        var {!buttonId}elements = [];
+        
+        function {!buttonId}disableAll() {        
+            var elements = document.getElementsByTagName('input');
+            for(var i = 0; i < elements.length; i++) {
+                if(elements[i].className.match(/(^btn$)|( btn$)|(btn )/)) {                    
+                    {!buttonId}elements.push(elements[i]);
+                     if(runFancy )
+                       elements[i].setAttribute("disabled",  "true");
+                      else
+                      elements[i].disabled = true;
+                    elements[i].className = elements[i].className.replace(/(^btn$)|( btn$)|(btn )/, ' btnDisabled ');        
+                }
+            }
+        }
+
+        function {!buttonId}enableAll() {        
+            for(var i = 0; i < {!buttonId}elements.length; i++) {                
+                var el = {!buttonId}elements[i];
+                el.removeAttribute("disabled");
+                el.className = el.className.replace(' btnDisabled ', ' btn ');                   
+            }
+            {!buttonId}elements = [];
+        }        
+    </script>
+    
+ <!--  <apex:actionFunction name="{!buttonId}azione" rerender="{!rerender}" action="{!actionToInvoke}" /> 
+
+    <apex:commandButton id="btn" value="{!buttonValue}" styleClass="{!styleClass}"
+     disabled="{!disabled}"  onclick="{!buttonId}disable();{!buttonId}azione()" 
+     oncomplete="{!IF(rerender != null, buttonId & 'enable(event);', '')}" /> -->
+      <apex:actionstatus id="theStatusAuto"> 
+        <apex:facet name="start">
+            <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="120px" ImageUrl="{!$Resource.Loading}" Message="Caricamento..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+            </apex:facet>
+        </apex:actionstatus>
+     <apex:actionFunction name="{!buttonId}azione" rerender="{!rerender}" status="theStatusAuto" action="{!actionToInvoke}" /> 
+    <apex:commandButton id="btn" value="{!buttonValue}"
+    styleClass="{!styleClass}" disabled="{!disabled}" 
+     onclick="{!buttonId}disable(event);{!buttonId}azione()" 
+   oncomplete="{!IF(rerender != null, buttonId & 'enable(event);', '')}"
+  />
+
+
+</apex:component>

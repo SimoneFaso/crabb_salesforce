@@ -1,0 +1,194 @@
+<apex:page StandardController="Account" extensions="CruscottoClienteCTRL">
+    <!-- *** Component con tutti gli stili di CRABB *** -->
+    <c:KillerStyle />
+    
+    <!-- *** Parte da visualizzare se non viene fornito il cliente *** -->
+    <apex:message />
+    <!--<apex:enhancedList height="400" rowsPerPage="10" listId="{!ListViewId}" customizable="true" rendered="{! !(bId)}"/>-->
+    <apex:outputText rendered="{! !(bId)}">This page needs an Account ID param to show details</apex:outputText>
+
+    <!-- *** Parte da visualizzare se viene fornito il cliente *** -->
+    <!-- *** Maschera di dettaglio del cliente *** -->
+    <apex:detail relatedList="false" subject="{!Account.Id}" title="true" rendered="{!bId}" inlineEdit="true"/>
+     
+    <!-- <apex:outputPanel rendered="{!(bId)}">
+        <apex:form >
+            <apex:actionRegion >
+                <apex:commandButton value="Invia Mail di Sollecito" action="{!Sollecito}"/>
+            </apex:actionRegion>
+            <apex:inputHidden value="{!Account.Invio_Sollecito__c}"/>
+            <Br/>
+            <Br/>
+        </apex:form>
+    </apex:outputPanel>  -->
+    
+    
+
+    
+    <!-- *** Tab del cruscotto *** -->    
+    <apex:outputpanel rendered="{!(bId)}">
+        
+        
+        <div id="crabbtabs">
+            <ul>
+                <li>
+                    <a href="#tabs-1">{!IF( Account.Mondo_Scuola__c , 'Andamento Saldi Ultimi 120gg', $Label.ExpiredAmountsAgeing)}</a>
+                </li>
+                <li><a href="#tabs-2">{!$Label.Cases}</a></li>
+                <li><a href="#tabs-3">{!$Label.Services}</a></li>
+                <li><a href="#tabs-11">{!$Label.End_Users}</a></li>
+                <li><a href="#tabs-4">{!$Label.Addresses}</a></li>
+                <li><a href="#tabs-5">{!$Label.Balance}</a></li>
+                <li><a href="#tabs-13">{!$Label.Takings}</a></li>
+                <li><a href="#tabs-12">{!$Label.Consolidated_Account_Statement}</a></li>
+                <li><a href="#tabs-6">{!$Label.RepaymentPlans}</a></li>
+                <li><a href="#tabs-8">{!$Label.Activities}</a></li>
+                <li><a href="#tabs-9">{!$Label.Documentation}</a></li>
+                <li><a href="#tabs-10">Chatter</a></li>
+            </ul>
+            
+            <!--<div id="tabs-1" >
+                <div style="display:{!IF( Account.Mondo_Scuola__c , 'None', '')}">
+                    <apex:pageblock title="Aeging Scaduto" id="StackedChart">
+                        <apex:pageBlockSection >
+                            <c:StckdChart8Val StkData="{!StkData}" MinRes="0" MaxRes="{!MaxRes}" TopSteps="5" BottomSteps="10"/>
+                        </apex:pageBlockSection>
+                        <apex:pageblockSection >
+                            <c:Chart2Val ChartData="{!pieData}" MinRes="0" MaxRes="100" Steps="5" TitoloGenerale="Ageing" TitoloAsse1="# Movimenti" TitoloAsse2="Scaduto €"/>
+                        </apex:pageblockSection>
+                    </apex:pageblock>
+                    <c:RiepilogoScaduto ChartData="{!pieData}"/>
+                </div>
+            </div>-->
+            <div id="tabs-1" >
+                <div>
+                    <apex:outputPanel rendered="{! !(Account.Mondo_Scuola__c)}">
+                        <apex:pageblock title="{!$Label.CRABB_DEV__Ageing_Expired}" id="StackedChart">
+                            <apex:pageBlockSection >
+                                <c:StckdChart8Val StkData="{!StkData}" MinRes="0" MaxRes="{!MaxRes}" TopSteps="5" BottomSteps="10"/>
+                            </apex:pageBlockSection>
+                            <apex:pageblockSection >
+                                <c:Chart2Val ChartData="{!PieData}" MinRes="0" MaxRes="100" Steps="5" TitoloGenerale="{!$Label.CRABB_DEV__month}" TitoloAsse1="{!$Label.CRABB_DEV__Expired}" TitoloAsse2="!$Label.Amount2"/>
+                            </apex:pageblockSection>
+                        </apex:pageblock>
+                        <c:RiepilogoScaduto ChartData="{!pieData}"/>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)}">
+                        <c:ChartSaldi ChartSaldi="{!ChrtSaldi}" MinRes="0" MaxRes="100" Steps="5" TitoloGenerale="{!$Label.CRABB_DEV__month}" TitoloAsse1="{!$Label.CRABB_DEV__Expired}" TitoloAsse2="{!$Label.CRABB_DEV__Total}"/>
+                        <apex:outputPanel rendered="{!ChrtSaldi = null}">
+                            <div class="ui-widget ui-state-error" style="width:500px;text-align:center;margin-right:auto;margin-left:auto;padding:16px;"><!--styleClass="ui-state-error"-->
+                                <apex:outputText >{!$Label.CRABB_DEV__No_information_120_days}</apex:outputText>
+                            </div>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <div id="tabs-2">
+                <c:TblPage sObj="Pratica__c" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div>
+            <div id="tabs-3">
+                <c:TblPage sObj="Servizio__c" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div>
+            <div id="tabs-4">
+                <c:TblPage sObj="Contact" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div>
+            <div id="tabs-5">
+                <!-- <c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="Saldo"/> -->
+                <apex:pageBlock title="{!$Label.CRABB_DEV__Summary}" id="TabAff">
+                    <apex:outputpanel id="TblPanel" >
+                        <div class="ui-widget ui-accordion">
+                            <apex:outputpanel > <h3 class="ui-widget-header ui-accordion-header ui-state-active">{!$Label.CRABB_DEV__records} {!ChrtSaldi.size} </h3></apex:outputpanel>
+                            <div class="ui-widget-content ui-accordion-content">
+                                <apex:pageBlockTable value="{!ChrtSaldi}" var="saldo">
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.CRABB_DEV__Balance_Date}</apex:facet>
+                                        <apex:outputText value="{!saldo.dataSaldo}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.CRABB_DEV__Expired}</apex:facet>
+                                        <apex:outputText value="{!saldo.Scaduto} €"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.CRABB_DEV__Amount2}</apex:facet>
+                                        <apex:outputText value="{!saldo.Importo} €"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.CRABB_DEV__Expenses_Balance}</apex:facet>
+                                        <apex:outputText value="{!saldo.SaldoSpese} €"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.CRABB_DEV__Integration_Date}</apex:facet>
+                                        <apex:outputText value="{!saldo.DataIntegrazione}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.CRABB_DEV__Transaction_Type} SWH</apex:facet>
+                                        <apex:outputText value="{!saldo.TipoMovimentoSWH}"/>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                </apex:pageBlock>
+            </div>
+            <div id="tabs-13">    
+                <c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="Incasso"/>
+            </div>
+            <div id="tabs-12">
+                <div>
+                    Ciao
+                    <apex:outputPanel rendered="{! !(Account.Mondo_Scuola__c)}">
+                        EC<c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="EC"/>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!(Account.Mondo_Scuola__c)}">
+                        <c:TblPage sObj="Movimento__c" IdParent="{!Account.Id}" sParent="Cliente" NomeParent="Consolidato"/>
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <div id="tabs-6">
+                <c:TblPage sObj="Piano_di_Rientro__c" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div>
+            <div id="tabs-8">
+                <div id="visualization"></div>
+
+                <script type="text/javascript">
+                    // DOM element where the Timeline will be attached
+                var container = document.getElementById('visualization');
+            
+                // Create data 
+                var data = {!JSENCODE(HTMLENCODE(TLTask))}; 
+                /*[
+                  {id: 0, content: 'item 0', start: '2013-04-02'},
+                  {id: 1, content: 'item 1', start: '2013-04-20'},
+                  {id: 2, content: 'item 2', start: '2013-04-14'},
+                  {id: 3, content: 'item 3', start: '2013-04-18'},
+                  {id: 4, content: 'item 4', start: '2013-04-16', end: '2013-04-19'},
+                  {id: 5, content: 'item 5', start: '2013-04-25'},
+                  {id: 6, content: 'item 6', start: '2013-04-27'}
+                ];*/
+            
+                // Configuration for the Timeline
+                var options = {};
+            
+                // Create a Timeline
+                var timeline = new vis.Timeline(container, data, options);
+                </script>
+                
+                <!--<c:TblAttUltimoAnno TipoAtt="{!TipoAtt}" LastYear="{!LastYear}" mMesiAtt="{!mMesiAtt}"/>-->
+                <c:TblPage sObj="Task" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div>
+            <div id="tabs-9">
+                <c:TblPage sObj="Attachment" IdParent="{!Account.Id}" sParent="Cliente"/>
+                <apex:pageBlock title="{!$Label.CRABB_DEV__Upload_new_documents}">
+                    <c:FileUpload parentId="{!Account.Id}"/>
+                </apex:pageBlock>
+            </div>
+            <div id="tabs-10">
+                <chatter:feedWithFollowers entityId="{!Account.Id}" showHeader="false"/>
+            </div>
+            <div id="tabs-11">
+                <c:TblPage sObj="Servizi_Item__c" IdParent="{!Account.Id}" sParent="Cliente"/>
+            </div>
+        </div>
+           
+    </apex:outputpanel>
+</apex:page>

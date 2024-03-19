@@ -1,0 +1,206 @@
+<apex:page controller="GestioneRevocaCTRL" docType="html-5.0">
+
+    <c:KillerStyle />
+        
+    <head> 
+    <style type="text/css">
+        .Summary{
+                width: 250px;
+                padding: 12px;
+                background-color: #f68b1f; 
+                border: 1px solid  #57B4D1;
+                opacity:0.65;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                color:white;
+        }
+    </style>
+        
+    <!-- Script per gestire checkboxes -->
+    <!--<apex:includeScript value="{!$Resource.jQuery}"/>-->
+    
+    
+    
+    <script type="text/javascript">
+    
+        /*
+        * set row level checkboxes based on "all checkbox" state
+        */
+        function toggleSelectAll(checkbox){
+        
+            var $j = jQuery.noConflict();
+            
+            //all checkbox is selected
+            if(checkbox.checked){
+ 
+                //set all row level checkboxes selected
+                $j( ".contactCb" ).prop('checked', true);
+                
+            }
+            else{
+ 
+                //set all row level checkboxes de-selected
+                $j( ".contactCb" ).prop('checked', false);
+                
+            }
+            
+        }
+        
+        /*
+        * set "all checkbox" based on state of row level checkboxes
+        */
+        function toggleItem(checkbox){
+            
+            var $j = jQuery.noConflict();
+            
+            
+            var cbs = $j('.contactCb');
+            
+            //all row level checkboxes selected
+            if(cbs.filter(':not(:checked)').length==0){
+                
+                //set "all checkbox" selected
+                $j("input[id$=selectAll]").prop('checked', true);
+                
+            }
+            else{
+                
+                //set "all checkboxes" de-selected
+                $j("input[id$=selectAll]").prop('checked', false);
+                
+            }
+                        
+        }
+                
+        function confirmAction(promptText){
+        
+            var r=confirm(promptText)
+            if (r==true){
+                return true;
+            }
+            else{
+                return false;
+            }
+                    
+        }  
+    
+    </script>    
+    <style type="text/css">
+        .pbTitle {
+            white-space: nowrap;
+        }
+    </style>   
+    </head>
+    
+    <!-- NON ESISTONO AFFIDI REOCABILI -->
+    <apex:form id="NoRecordSToProcess">
+        <apex:pageBlock title="{!$Label.CRABB_DEV__WithdrawNoRecord}" rendered="{!totalSize=0}">    
+            <apex:pageMessage summary="{!$Label.CRABB_DEV__AssignmentError}." severity="info" strength="3"/>
+            <apex:pageblockButtons location="bottom"> 
+                    <apex:commandButton action="{!GestioneProrogaStep1}" id="INDIETROBOTTON"  value="{!$Label.CRABB_DEV__Back}" />                   
+            </apex:pageblockButtons>                 
+        </apex:pageBlock>    
+    </apex:form>
+    
+    <!-- SELEZIONA AFFIDI REVOCABILI -->
+    <apex:form >
+        <apex:pageBlock title="{!$Label.CRABB_DEV__Select} {!$Label.CRABB_DEV__Assignments} {!$Label.CRABB_DEV__To} {!$Label.CRABB_DEV__Withdraw}" rendered="{!TotalSize>0}">       
+            <!-- messagio di errore, quando non si sceglie nessun affido -->
+            <apex:pageMessages />    
+            
+            <apex:outputPanel rendered="{!affidEsiste}" id="IdFormAffidamento" >
+                    <apex:outputText Value="{!$Label.CRABB_DEV__FIlter} {!$Label.CRABB_DEV__Assignment}: {!totalSize}"  />
+                    <br/>                    
+                    <apex:outputLabel value="{!$Label.CRABB_DEV__SelectDeselect} {!$Label.CRABB_DEV__All} {!$Label.CRABB_DEV__Assignment}">
+                        <apex:inputcheckbox value="{!bAllSel}" id="selAllCheckId"> 
+                            <apex:actionsupport status="TheStatus" event="onchange" action="{!SelectAll}" rerender="IdFormAffidamento"/>
+                        </apex:inputcheckbox>
+                    </apex:outputLabel>
+                    <br/> 
+                    <apex:outputpanel layout="block" rendered="{!initialTotal>25}">
+                        {!$Label.RowsByPage}: &nbsp;
+                        <apex:selectList value="{!recordsForPage}" size="1"  style="margin:0 auto; position:right;">
+                            <apex:selectOptions value="{!recordsForPageValues}"></apex:selectOptions>
+                            <apex:actionSupport event="onchange"  action="{!sizeTable}"  rerender="IdFormAffidamento" status="TheStatus"/>   
+                        </apex:selectList>
+                    </apex:outputpanel>
+                    <br/><br/>
+                    <!-- La tabela da scegliere gli affidamenti-->
+                    <apex:pageBlockTable value="{!ListAffidamentiSelectable}" var="a" id="idAffTable"> 
+                        <apex:column headerValue="Select" id="colonnaCheckbox">
+                            <apex:inputCheckbox value="{!a.isSelected}" id="inputId">
+<!--                                <apex:actionsupport status="TheStatus" event="onchange" action="{!AggiornaElementoLista}" rerender="IdFormAffidamento"> 
+                                       <apex:param name="Codice_Affid" value="{!a.Aff.id}"/>
+                                       <apex:param name="isSel" value="{!a.isSelected}"/>   
+                                </apex:actionSupport> -->
+                            </apex:inputCheckbox>
+                        </apex:column> 
+                            <apex:column value="{!a.Aff.Name}" headerValue="{!$Label.CRABB_DEV__Assignment} {!$Label.CRABB_DEV__Name}"/>
+                            <apex:column value="{!a.Aff.Lotto__c}" headerValue="{!$Label.CRABB_DEV__Lot}" />
+                            <apex:column value="{!a.Aff.Lotto__r.Agenzia_di_Recupero__c}" headerValue="Collector {!$Label.CRABB_DEV__Name}"/>
+                            <apex:column value="{!a.Aff.Pratica__c}" headerValue="{!$Label.CRABB_DEV__Pratica}" />
+                            <apex:column value="{!a.Aff.Pratica__r.Account__c}" headerValue="Account" />
+                            <apex:column value="{!a.Aff.pratica__r.Servizio_Fornitura__r.LookupContratto__r.Comune__c}" headerValue="{!$Label.CRABB_DEV__Country}"/> 
+                            <apex:column value="{!a.Aff.pratica__r.Residuo_Totale__c}" headerValue="{!$Label.CRABB_DEV__Scaduto} {!$Label.CRABB_DEV__Pratica}" />
+                            <apex:column value="{!a.Aff.Lotto__r.Agenzia_di_Recupero__r.Tipo_Collector__c}" headerValue="Collector {!$Label.CRABB_DEV__Type}"/>                            
+                            <apex:column value="{!a.Aff.pratica__r.Data_Apertura__c}" headerValue="{!$Label.CRABB_DEV__ActivationDate} {!$Label.CRABB_DEV__Pratica}"/>
+                            <apex:column value="{!a.Aff.pratica__r.Servizio_Fornitura__r.RecordType.Name}" headerValue="{!$Label.CRABB_DEV__Service}"/>
+                            <!-- <apex:column value="{!a.Aff.Giorni_di_proroga_richiesti_da_Collector__c}" headerValue="GG Proroga Richiesti"/> -->
+                            <apex:column value="{!a.Aff.Lotto__r.Data_scadenza__c}" headerValue="{!$Label.CRABB_DEV__ExpiredDate} {!$Label.CRABB_DEV__Lot}"/>
+                            <apex:column value="{!a.Aff.Data_fine_affidamento_prevista__c}" headerValue="{!$Label.CRABB_DEV__ExpiredDate} {!$Label.CRABB_DEV__Assignment}"/>
+                    </apex:pageBlockTable> 
+                    <br/>
+                    <div style="width: 100%; text-align: center">
+                            <apex:commandLink value="<< {!$Label.CRABB_DEV__Start}" styleClass="KillerBtn" action="{!Beginning}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"  />
+                            <apex:commandLink value="< {!$Label.CRABB_DEV__Previous}" styleClass="KillerBtn" action="{!Previous}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"  />
+                            <apex:commandLink value="{!$Label.CRABB_DEV__Next} >" styleClass="KillerBtn" action="{!Next}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus"  />
+                            <apex:commandLink value="{!$Label.CRABB_DEV__End} >>" styleClass="KillerBtn" action="{!End}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus" />
+                    </div>
+            </apex:outputPanel>
+            <apex:pageblockButtons > 
+                    <apex:commandButton action="{!GestioneProrogaStep1}" id="INDIETROBOTTON"  onclick="disableOnSubmit(this)" value="{!$Label.CRABB_DEV__Back}" styleClass="buttonStyle" immediate="true" status="TheStatus"/>       
+                    <apex:commandButton action="{!GestioneProrogaStep3}" value="{!$Label.CRABB_DEV__Confirm}" onclick="disableOnSubmit(this)" styleClass="buttonStyle" id="Conferma" status="TheStatus" />                   
+            </apex:pageblockButtons>
+            <!-- messagio di errore, quando non si sceglie nessun affido -->
+            <apex:pageMessages />    
+            
+            <!-- messagio che non ci sono dei affidi da revocare -->
+        </apex:pageBlock>
+      
+        </apex:form>
+        <!-- QUESTO BLOCK, IMPEDISCE L'UTENTE DI ESEGUIRE OPERAZIONE INADEGUATI(PRECAUTION) -->
+        <apex:form id="TheStatusForm"> 
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="5%" width="5%" Message="{!$Label.CRABB_DEV__Processing}" messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus> 
+        </apex:form>
+        
+        <script type="text/javascript">
+        function disableOnSubmit(input) {
+            setTimeout('disableAfterTimeout(\'' + input.id + '\');', 50);              
+        }
+        
+        function disableAfterTimeout(id) {
+            var toDisable = document.getElementById( id );
+            toDisable.disabled = 'disabled';
+            // Use the Salesforce CSS style to make the button appear disabled
+            toDisable.className = 'btnDisabled';
+          
+        }
+                            
+        jQuery(document).ready(function($) {
+            var pos = j$(window).height();
+
+            j$(window).scroll(
+                function(){
+                    if (j$(window).scrollTop() > pos){ j$('.Summary').addClass('fixed');
+                    } else { j$('.Summary').removeClass('fixed'); }
+                }
+            );
+            j$(this)
+        });   
+    </script>
+</apex:page>

@@ -1,0 +1,8 @@
+<apex:page id="page" standardController="Movimento__c">
+    <apex:pageMessage severity="ERROR"
+        strength="3"
+        title="{!$Label.crabb_dev__movement_crabb}"
+        escape="false"
+        summary="<b>{!$Label.crabb_dev__movement_creation}</b>." >
+    </apex:pageMessage>
+</apex:page>

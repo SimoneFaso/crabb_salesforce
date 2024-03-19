@@ -1,0 +1,330 @@
+<apex:page controller="AffidoCollectorCTRL" showHeader="true" sidebar="true">
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <apex:form >
+
+        <style type="text/css">
+            .modal-body{
+                background-image: -webkit-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+                background-image:      -o-linear-gradient(top, #f2dede 0%, #ebcccc 100%);
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#f2dede), to(#ebcccc));
+                background-image:         linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2dede', endColorstr='#ffebcccc', GradientType=0);
+                background-repeat: repeat-x;
+            }
+        </style>
+
+        <div id="balancecontainer" class="crabbpackage">
+            <div class="page-header">
+                <h1><span class="bi bi-columns-gap" style="color: #7AC29A"></span> {!$Label.Assignment_Collector}</h1>
+            </div>
+
+            <apex:pageMessages />
+
+            <div class="container-fluid" >
+
+                <div class="row">
+
+                    <apex:outputPanel >
+                        <div class="col-xs-3">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">Insert Name</div>
+                                <div class="panel-body">
+                                    <apex:inputText value="{!newName}" styleClass="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <apex:outputPanel id="panelItems">
+                            <div class="col-xs-3" id="panelItems">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">{!$Label.crabb_dev__insert_category}</div>
+                                    <div class="panel-body">
+                                        <apex:selectList value="{!addingCategoria}" size="1" multiselect="false" styleClass="form-control">
+                                            <apex:selectOptions value="{!categoriaOptions}"/>
+                                        </apex:selectList>
+                                        <!-- <apex:inputText value="{!newCategoria}" styleClass="form-control" /> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+
+                        <div class="col-xs-2">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">{!$Label.Insert_Duration}</div>
+                                <div class="panel-body">
+                                    <input type="number" value="{!newDurata}" class="form-control" min="0" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-3">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">{!$Label.Insert_Assignment_Type}</div>
+                                <div class="panel-body">
+                                    <apex:inputText value="{!newTipoAff}" styleClass="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <apex:commandButton styleClass="btn btn-danger" value="Add" action="{!addRecord}"/>
+                        </div>
+                        
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="currentrelation">     
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%"></th>
+                                            <th width="5%"></th>
+                                            <th><i>Name</i></th>
+                                            <th><i>{!$Label.Category}</i></th>
+                                            <th><i>{!$Label.Duration}</i></th>
+                                            <th><i>{!$Label.Assignment_Type}</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!listCollector}" var="lof">
+                                            <tr>
+                                                <td>
+                                                    <apex:outputPanel >
+                                                        <apex:commandLink onclick="$('#delId')[0].value='{!lof.Id}';console.log('{!lof.Id}');$('#nameid')[0].value='{!lof.Name}';$('#catid')[0].value='{!lof.Categoria_Collector__c}';$('#tipoid')[0].value='{!lof.Tipo_Affido__c}';$('#myModal').modal('show'); return false;">
+                                                            <span class="bi bi-x-circle warning"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <!--
+                                                    <div id="myModal" class="modal fade" role="dialog">
+                                                        <input id="delId" type="hidden" name="delId" value=""/>
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body" align="center">
+                                                                    <h4 class="modal-title">You are deleting the record :</h4>
+                                                                    <br />
+                                                                    <h5>Name : </h5><h5><input id="nameid" value="" disabled="true" size="30" /></h5>
+                                                                    <br />
+                                                                    <h5>{!$Label.category} : </h5><h5><input id="catid" value="" disabled="true" size="30" /></h5>
+                                                                    <br />
+                                                                    <h5>{!$Label.assignment} {!$Label.type} : </h5><h5><input id="tipoid" value="" disabled="true" size="30" /></h5>
+                                                                    <br /><br />
+                                                                    <h4>Continue ?</h4>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" onclick="callMethod();" data-dismiss="modal">YES</button>
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            function callMethod(){
+                                                                var x = $('#delId')[0].value;
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.AffidoCollectorCTRL.removeRecords}',
+                                                                    x,
+                                                                    function(result, event){
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+                                                    </div>
+                                                    -->
+                                                </td>
+                                                <td>
+                                                    <apex:outputPanel >
+                                                        <apex:commandLink onclick="$('#edelId')[0].value='{!lof.Id}';$('#enameid')[0].value='{!lof.Name}';document.getElementsByClassName('selcat')[0].value='{!lof.Categoria_Collector__c}';/*$('#ecatid')[0].value='{!lof.Categoria_Collector__c}';*/$('#edurid')[0].value='{!lof.Durata__c}';$('#etipid')[0].value='{!lof.Tipo_Affido__c}';$('#editModal').modal('show'); return false;">
+                                                            <span class="bi bi-pencil"></span>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <!--
+                                                    <div id="editModal" class="modal fade" role="dialog">
+                                                        <input id="edelId" type="hidden" name="edelId" value=""/>
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body" align="center">
+                                                                    <h4 class="modal-title">You are editing the record :</h4>
+                                                                    <br />
+                                                                    <h5>Name : </h5><br /><h5><input id="enameid" value="" size="80" /></h5>
+                                                                    <br /><br />
+                                                                    <h5>{!$Label.category} : </h5><br /><h5>
+                                                                        <apex:selectList value="{!selectedCategoria}" id="selCat" size="1" multiselect="false" styleClass="form-control selcat">
+                                                                            <apex:selectOptions value="{!categoriaOptions}" id="selOpt"/>
+                                                                        </apex:selectList>--><!-- <input id="ecatid" value="" size="80" /> --><!--</h5>-->
+                                                                   <!-- <br /><br />
+                                                                    <h5>{!$Label.duration} : </h5><br /><h5><input type="number" id="edurid" value="" size="80" min="0" /></h5>
+                                                                    <br /><br />
+                                                                    <h5>{!$Label.Assignment} {!$Label.Type} : </h5><br /><h5><input id="etipid" value="" size="80" /></h5>
+                                                                    <br />
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" onclick="callMethod2();" data-dismiss="modal">SAVE</button>
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            function callMethod2(){
+                                                                var eid = $('#edelId')[0].value;
+                                                                var enam = $('#enameid')[0].value;
+                                                                /*var ecat = $('#ecatid')[0].value;*/
+                                                                var ecat = document.getElementsByClassName('selcat')[0].value;
+                                                                var edur = $('#edurid')[0].value;
+                                                                var etip = $('#etipid')[0].value;
+                                                                if(edur == 'undefined' || edur == ''){
+                                                                    edur = null;
+                                                                }
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.AffidoCollectorCTRL.editRecord}',
+                                                                    eid,
+                                                                    enam,
+                                                                    ecat,
+                                                                    edur,
+                                                                    etip,
+                                                                    function(result, event){
+                                                                        if(result == ''){
+
+                                                                            return;
+                                                                        }
+
+                                                                        if(result == 'error'){
+
+                                                                            return;
+                                                                        }
+
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+                                                    </div>
+                                                -->
+                                                </td>
+                                                <td>
+                                                    {!lof.Name}
+                                                </td>
+                                                <td>
+                                                    {!lof.Categoria_Collector__c}
+                                                </td>
+                                                <td>
+                                                    {!lof.Durata__c}
+                                                </td>
+                                                <td>
+                                                    {!lof.Tipo_Affido__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div>              
+                        </div>
+                    </apex:outputPanel>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="myModal" class="modal fade" role="dialog">
+            <input id="delId" type="hidden" name="delId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">You are deleting the record :</h4>
+                        <br />
+                        <h5>Name : </h5><h5><input id="nameid" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>{!$Label.category} : </h5><h5><input id="catid" value="" disabled="true" size="30" /></h5>
+                        <br />
+                        <h5>{!$Label.assignment} {!$Label.type} : </h5><h5><input id="tipoid" value="" disabled="true" size="30" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="callMethod();" data-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                                                            function callMethod(){
+                                                                var x = $('#delId')[0].value;
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.AffidoCollectorCTRL.removeRecords}',
+                                                                    x,
+                                                                    function(result, event){
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+        </div>
+        <div id="editModal" class="modal fade" role="dialog">
+            <input id="edelId" type="hidden" name="edelId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center">
+                        <h4 class="modal-title">You are editing the record :</h4>
+                        <br />
+                        <h5>Name : </h5><br /><h5><input id="enameid" value="" size="40" /></h5>
+                        <br /><br />
+                        <h5>{!$Label.category} : </h5><br /><h5>
+                            <apex:selectList value="{!selectedCategoria}" id="selCat" size="1" multiselect="false" styleClass="form-control selcat">
+                                <apex:selectOptions value="{!categoriaOptions}" id="selOpt"/>
+                            </apex:selectList><!-- <input id="ecatid" value="" size="80" /> --></h5>
+                       <br /><br />
+                                                                    <h5>{!$Label.duration} : </h5><br /><h5><input type="number" id="edurid" value="" size="80" min="0" /></h5>
+                                                                    <br /><br />
+                                                                    <h5>{!$Label.Assignment} {!$Label.Type} : </h5><br /><h5><input id="etipid" value="" size="40" /></h5>
+                                                                    <br />
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" onclick="callMethod2();" data-dismiss="modal">SAVE</button>
+                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CANCEL</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            function callMethod2(){
+                                                                var eid = $('#edelId')[0].value;
+                                                                var enam = $('#enameid')[0].value;
+                                                                /*var ecat = $('#ecatid')[0].value;*/
+                                                                var ecat = document.getElementsByClassName('selcat')[0].value;
+                                                                var edur = $('#edurid')[0].value;
+                                                                var etip = $('#etipid')[0].value;
+                                                                if(edur == 'undefined' || edur == ''){
+                                                                    edur = null;
+                                                                }
+                                                                Visualforce.remoting.Manager.invokeAction(
+                                                                    '{!$RemoteAction.AffidoCollectorCTRL.editRecord}',
+                                                                    eid,
+                                                                    enam,
+                                                                    ecat,
+                                                                    edur,
+                                                                    etip,
+                                                                    function(result, event){
+                                                                        if(result == ''){
+
+                                                                            return;
+                                                                        }
+
+                                                                        if(result == 'error'){
+
+                                                                            return;
+                                                                        }
+
+                                                                        window.location = result;
+                                                                    }
+                                                                );
+                                                            }
+                                                        </script>
+                                                    </div>
+    </apex:form>
+
+</apex:page>

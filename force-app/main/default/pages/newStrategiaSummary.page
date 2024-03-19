@@ -1,0 +1,155 @@
+<apex:page controller="newStrategiaCTRL"  tabStyle="Strategia__c" >
+  <apex:sectionHeader title="{!$Label.crabb_dev__strategy_configuration}" subtitle="Step 4 of 4" rendered="{!type != 'STR'}"/>
+  <apex:sectionHeader title="{!$Label.crabb_dev__strategy_configuration}" subtitle="Step 3 of 3" rendered="{!type == 'STR'}"/>  
+  
+  <script>
+        function disableOnSubmit(input) {
+            setTimeout('disableAfterTimeout(\'' + input.id + '\');', 50);
+        }
+        function disableAfterTimeout(id) {
+            var toDisable = document.getElementById( id );
+            toDisable.disabled = 'disabled';
+            // Use the Salesforce CSS style to make the button appear disabled
+            toDisable.className = 'btnDisabled';
+          
+        }
+    </script>
+  
+  
+  
+  <apex:form >
+        <apex:pageBlock id="currentSiteDisplay">
+          <apex:facet name="footer">
+            <apex:outputPanel >
+     <!-- Se stiamo modificando/creando una Testata, il back del ultimo step, deve mandare nel Step 2 of 3
+                 altrimenti, stiamo modificando/creando un oggetto non Testata, e il back deve mandare nel step 3 of 4 -->     
+              <apex:commandButton action="{!step3}" value="Back" immediate="true" id="backbtn" onclick="disableOnSubmit(this);"
+                                  styleClass="btn" rendered="{!type != 'STR'}"/> 
+              <apex:commandButton action="{!step2}" value="Back" immediate="true" id="backbtn1" onclick="disableOnSubmit(this);"
+                                  styleClass="btn" rendered="{!type == 'STR'}"/>                    
+             <apex:commandButton action="{!Save}" value="Save" styleClass="btn"  id="savebtn" onclick="disableOnSubmit(this);" />  
+             <!--  <apex:actionStatus id="mySaveStatus"> 
+                        <apex:facet name="stop"> 
+                            <apex:commandButton value="Save" action="{!Save}" 
+                                                status="mySaveStatus" rerender="currentSiteDisplay"> 
+                            </apex:commandButton> 
+                        </apex:facet>
+                        <apex:facet name="start"> 
+                            <apex:commandButton value="Saving..." disabled="true" action="{!Save}" >
+                            </apex:commandButton> 
+                        </apex:facet> 
+              </apex:actionstatus>  -->                        
+            </apex:outputPanel>
+          </apex:facet>        
+          <apex:commandButton action="{!cancelButton}" value="Cancel" id="cancelbtn" onclick="disableOnSubmit(this);"
+                              styleClass="btn" immediate="true"/>
+                  <!-- GESTIONE DELLA TESTATA -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__entered_data_new_strategy}"  rendered="{!IF(type='STR',true,false)}">
+         <apex:outputField value="{!Strategia.Nome__c}" />       
+         <apex:outputField value="{!Strategia.industri_print_reference__c}"/> 
+         <apex:outputField value="{!Strategia.Versione__c}" />
+         <apex:outputField value="{!Strategia.Descrizione__c}"/> 
+         <apex:outputField value="{!Strategia.Activation_roles__c}  " />           
+      </apex:pageBlockSection>
+      
+      <!-- LE REGOLE SCELTE DAL UTENTE NEL SECONDO PASSO, NEL CREZIONE DI UNA TESTATA -->
+      <apex:pageBlockSection title="{!$Label.crabb_dev__heading_rules} :" rendered="{!type = 'STR'}" columns="1">
+              <apex:pageBlockTable value="{!SelectedRulesStep2}" var="myTestataRules" id="table" title="Rules Selected" width="100%">
+                     <apex:column width="10%"  >
+                        <apex:facet name="header">Name</apex:facet>
+                        <apex:outputText value="{!myTestataRules.Name}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Rule name</apex:facet>
+                        <apex:outputText value="{!myTestataRules.Rule_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Api field name</apex:facet>
+                        <apex:outputText value="{!myTestataRules.Api_field_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Api object name</apex:facet>
+                        <apex:outputText value="{!myTestataRules.Api_object_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Condition</apex:facet>
+                        <apex:outputText value="{!myTestataRules.Condition__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.crabb_dev__strategy_api_field_name}</apex:facet>
+                        <apex:outputText value="{!myTestataRules.Strategia_api_field_name__c  }"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header"> {!$Label.crabb_dev__notes3} </apex:facet>
+                        <apex:outputText value="{!myTestataRules.Note__c}"/>
+                    </apex:column> 
+               
+                </apex:pageBlockTable>
+      </apex:pageBlockSection>
+      <!-- GESTIONE DELLE CONDIZIONI DI INGRESSO -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__entered_data_new_strategy}"  rendered="{!IF(type='CDI',true,false)}">
+         <apex:outputField value="{!Strategia.Nome__c}" />
+         <apex:outputLabel value="Testata : {!MyTestataSTR}" />
+         <apex:outputField value="{!Strategia.industri_print_reference__c}"/> 
+         <apex:outputField value="{!Strategia.Descrizione__c}"/> 
+         <apex:outputField value="{!Strategia.Activation_roles__c  }" />
+         <apex:repeat Value="{!campiDaInserireDati}" var="Campo">
+            <apex:outputField value="{!Strategia[Campo]}"/>            
+         </apex:repeat>           
+
+      </apex:pageBlockSection>    
+
+      <!-- GESTIONE DELLE CONDIZIONI DI USCITA -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__entered_data_new_strategy}"  rendered="{!IF(type='CDU',true,false)}">
+         <apex:outputField value="{!Strategia.Nome__c}" />
+         <apex:outputLabel value="Testata : {!MyTestataSTR}" />  
+         <apex:outputField value="{!Strategia.industri_print_reference__c}"/> 
+         <apex:outputField value="{!Strategia.Descrizione__c}"/> 
+         <apex:outputField value="{!Strategia.Esito__c}"/> 
+         <apex:outputField value="{!Strategia.Activation_roles__c  }" />
+         <apex:repeat Value="{!campiDaInserireDati}" var="Campo">
+            <apex:outputField value="{!Strategia[Campo]}"/>            
+         </apex:repeat>           
+
+      </apex:pageBlockSection>  
+
+      <!-- GESTIONE DEGLI STEP -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__entered_data_new_strategy}"  rendered="{!IF(type='STEP',true,false)}">
+         
+         <apex:outputField value="{!Strategia.Nome__c}" />
+         <apex:outputLabel value="{!$Label.crabb_dev__tested} : {!MyTestataSTR}" />  
+         <apex:outputField value="{!Strategia.Descrizione__c}"/> 
+         <apex:outputField value="{!Strategia.industri_print_reference__c}"/> 
+         <apex:outputField value="{!Strategia.Attivit_Padre__c}" />
+         <apex:outputField value="{!Strategia.Tipologia__c}" />
+         <apex:outputField value="{!Strategia.Fase__c}" />
+         <apex:outputField value="{!Strategia.Tipo_attivita__c}" />
+         <apex:outputField value="{!Strategia.Sotto_tipo_attivita__c}" />
+         <apex:outputField value="{!Strategia.Activation_roles__c  }" />
+         <apex:repeat Value="{!campiDaInserireDati}" var="Campo">
+            <apex:outputField value="{!Strategia[Campo]}"/>            
+         </apex:repeat>           
+
+      </apex:pageBlockSection>  
+
+      <!-- GESTIONE DEGLI JUMP -->
+      <apex:pageBlockSection columns="2" collapsible="false" title="{!$Label.crabb_dev__entered_data_new_strategy}"  rendered="{!IF(type='JUMP',true,false)}">
+         
+         <apex:outputField value="{!Strategia.Nome__c}" />
+         <apex:outputLabel value="{!$Label.crabb_dev__tested} : {!MyTestataSTR}" />  
+         <apex:outputField value="{!Strategia.Descrizione__c}"/> 
+         <apex:outputField value="{!Strategia.industri_print_reference__c}"/> 
+         <apex:outputField value="{!Strategia.Jump_from__c}" />
+         <apex:outputField value="{!Strategia.Jump_to__c}" />
+         <apex:outputField value="{!Strategia.Activation_roles__c  }" />
+         <apex:repeat Value="{!campiDaInserireDati}" var="Campo">
+            <apex:outputField value="{!Strategia[Campo]}"/>            
+         </apex:repeat>           
+
+      </apex:pageBlockSection> 
+            
+           
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

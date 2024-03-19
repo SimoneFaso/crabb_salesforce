@@ -1,0 +1,178 @@
+{
+    "_____Nome della colonna nel file CSV": {
+        "____Oggetto dove si trova il campo di interesse": "_____Nome del campo da scrivere nel CSV"
+    },
+	"_____headerAndPositions": {
+        "1": "HEADER_TIPO_FILE",
+		"2": "HEADER_TIPO_INFORMAZIONE",
+		"3": "HEADER_NUMERO_LOTTO",
+        "4": "HEADER_TIPO_COLLECTOR",
+		"5": "HEADER_ID_COLLECTOR",
+		"6": "HEADER_DATA_ELABORAZIONE",
+		"7": "HEADER_CONTRATTO_ID",
+        "8": "HEADER_ACCOUNT_ID",
+		"9": "HEADER_SERVIZIO_ID",
+		"10": "HEADER_PRATICA_ID",
+		"11": "HEADER_AFFIDAMENTO_ID",
+		"12": "ACCOUNT_NOME",
+		"13": "SERVIZIO_SCADUTO_AFFIDATO",
+		"14": "SERVIZIO_DATA_SCADUTO_AFFIDATO",
+		"15": "DATA_SCADENZA_AFFIDAMENTO_PRATICA",
+		"16": "MOVIMENTO_ID_CRABB",
+		"17": "DATA_INCASSO",
+		"18": "TIPO_MOVIMENTO",
+		"19": "CAUSALE",
+		"20": "IMPORTO",
+		"21": "FLAG_INCASSO_UTENTE"
+    },
+	"_____headerINCASSI": {
+        "1": "HEADER_TIPO_FILE",
+		"2": "I_HEADER_TIPO_INFORMAZIONE",
+		"3": "HEADER_NUMERO_LOTTO",
+        "4": "HEADER_TIPO_COLLECTOR",
+		"5": "HEADER_ID_COLLECTOR",
+		"6": "HEADER_DATA_ELABORAZIONE",
+		"7": "HEADER_CONTRATTO_ID",
+        "8": "HEADER_ACCOUNT_ID",
+		"9": "HEADER_SERVIZIO_ID",
+		"10": "HEADER_PRATICA_ID",
+		"11": "HEADER_AFFIDAMENTO_ID",
+		"12": "ACCOUNT_NOME",
+		"13": "I_SERVIZIO_SCADUTO_AFFIDATO",
+		"14": "I_SERVIZIO_DATA_SCADUTO_AFFIDATO",
+		"15": "I_DATA_SCADENZA_AFFIDAMENTO_PRATICA",
+		"16": "I_MOVIMENTO_ID_CRABB",
+		"17": "I_DATA_INCASSO",
+		"18": "I_TIPO_MOVIMENTO",
+		"19": "I_CAUSALE",
+		"20": "I_IMPORTO",
+		"21": "I_FLAG_INCASSO_UTENTE"
+    },
+	"_____headerSALDI": {
+        "1": "HEADER_TIPO_FILE",
+		"2": "S_HEADER_TIPO_INFORMAZIONE",
+		"3": "HEADER_NUMERO_LOTTO",
+        "4": "HEADER_TIPO_COLLECTOR",
+		"5": "HEADER_ID_COLLECTOR",
+		"6": "HEADER_DATA_ELABORAZIONE",
+		"7": "HEADER_CONTRATTO_ID",
+        "8": "HEADER_ACCOUNT_ID",
+		"9": "HEADER_SERVIZIO_ID",
+		"10": "HEADER_PRATICA_ID",
+		"11": "HEADER_AFFIDAMENTO_ID",
+		"12": "ACCOUNT_NOME",
+		"13": "S_SERVIZIO_SCADUTO_AFFIDATO",
+		"14": "S_SERVIZIO_DATA_SCADUTO_AFFIDATO",
+		"15": "S_DATA_SCADENZA_AFFIDAMENTO_PRATICA",
+		"16": "S_MOVIMENTO_ID_CRABB",
+		"17": "S_DATA_INCASSO",
+		"18": "S_TIPO_MOVIMENTO",
+		"19": "S_CAUSALE",
+		"20": "S_IMPORTO",
+		"21": "S_FLAG_INCASSO_UTENTE"
+    },
+	"HEADER_TIPO_FILE": {
+        "NO_OGGETTO": "AGGIORNAMENTO_MOVIMENTI"
+    },	
+	"I_HEADER_TIPO_INFORMAZIONE":{
+		"NO_OGGETTO": "I"
+	},
+	"S_HEADER_TIPO_INFORMAZIONE":{
+		"NO_OGGETTO": "S"
+	},
+	
+	"HEADER_NUMERO_LOTTO": {
+        "Affidamento": "codice_lotto__c"
+    },
+	"HEADER_TIPO_COLLECTOR": {
+        "Affidamento": "Tipo_collector__c"
+    },
+	
+	"HEADER_ID_COLLECTOR": {
+        "Affidamento": "Flow_codice_collector__c"
+    },	
+	"HEADER_DATA_ELABORAZIONE": {
+        "Affidamento": "Flow_data_elaborazione__c"
+    },
+	
+	"HEADER_CONTRATTO_ID": {
+        "Affidamento": "Flow_Id_Contratto__c"
+    },
+	"HEADER_ACCOUNT_ID": {
+        "Affidamento": "Flow_Codice_Account__c"
+    },
+	"HEADER_SERVIZIO_ID": {
+        "Affidamento": "Flow_Servizio_Codice__c"
+    },
+	"HEADER_PRATICA_ID": {
+        "Affidamento": "FLow_codice_pratica__c"
+    },
+	"HEADER_AFFIDAMENTO_ID": {
+        "Affidamento": "Name"
+    },
+	"ACCOUNT_NOME": {
+        "Affidamento": "Flow_Account_Name__c"
+    },
+	
+	"I_SERVIZIO_SCADUTO_AFFIDATO":{
+		"NO_OGGETTO":""
+	},
+	"S_SERVIZIO_SCADUTO_AFFIDATO":{
+		"Affidamento":"Scaduto_attuale__c"
+	},
+	
+	"I_SERVIZIO_DATA_SCADUTO_AFFIDATO":{
+		"NO_OGGETTO":""
+	},
+	"S_SERVIZIO_DATA_SCADUTO_AFFIDATO":{
+		"Affidamento":"Flow_data_scaduto_attuale__c"
+	},
+	
+	"I_DATA_SCADENZA_AFFIDAMENTO_PRATICA":{
+		"Affidamento":"Data_Fine_Affidamento__c"
+	},
+	"S_DATA_SCADENZA_AFFIDAMENTO_PRATICA":{
+		"Affidamento":"Data_Fine_Affidamento__c"
+	},
+	
+	"I_MOVIMENTO_ID_CRABB":{
+		"Movimento":"Name"
+	},
+	"S_MOVIMENTO_ID_CRABB":{
+		"NO_OGGETTO":""
+	},
+	
+	"I_DATA_INCASSO":{
+		"Movimento":"Flow_data_incasso__c"
+	},
+	"S_DATA_INCASSO":{
+		"NO_OGGETTO":""
+	},
+	
+	"I_TIPO_MOVIMENTO":{
+		"Movimento":"RecordType__c"
+	},
+	"S_TIPO_MOVIMENTO":{
+		"NO_OGGETTO":""
+	},
+	
+	"I_IMPORTO":{
+		"Movimento":"Importo__c"
+	},
+	"S_IMPORTO":{
+		"NO_OGGETTO":""
+	},
+	"I_CAUSALE":{
+		"Movimento":"Causale__c"
+	},
+	"S_CAUSALE":{
+		"NO_OGGETTO":""
+	},
+	
+	"I_FLAG_INCASSO_UTENTE":{
+		"Movimento":"Flag_Incasso_Utente__c"
+	},
+	"S_FLAG_INCASSO_UTENTE":{
+		"NO_OGGETTO":""
+	}
+}

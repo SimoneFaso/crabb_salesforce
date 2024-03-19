@@ -1,0 +1,185 @@
+name;dataname
+CRABB_DEV__BatchProcess__c;FLussiCollectorManagerBatch1~FCMB1~false~~2021-02-24T08:04:49.000+0000~FLussiCollectorManagerBatch~1~90~~1~Batch~AggiornamentoAnagrafico~ ~ ~ ~ 
+CRABB_DEV__BatchProcess__c;FLussiCollectorManagerBatch0~FCMB0~false~~2021-02-24T08:04:49.000+0000~FLussiCollectorManagerBatch~0~90~~1~Batch~NuovoLottoAffidato~ ~ ~ ~ 
+CRABB_DEV__CMStagionalita__c;~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Collector_con_Tipo_Affido__c;Legale~LEGALE~60~Affido Legale~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Collector_con_Tipo_Affido__c;Credit Collection~ADR~90~Credit Collection~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__CollectorAlgoritmoConfiguration__c;~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__CostoAttivita__c;Antiriciclaggio ed antiterrorismo~All~3~Verifica antiriciclaggio ed antiterrorismo~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__CostoAttivita__c;Rintraccio~All~40~Rintraccio~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__CostoAttivita__c;Phone Collection~All~8~Phone Collection~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Fino a 10 gg~1~Italiano~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Tra 10 e 30 gg~2~Italiano~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+CRABB_DEV__Fasce_di_Rischio__c;Tra 30 e 60 gg~3~Italiano~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Tra 60 e 90 gg~4~Italiano~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Tra 90 e 120 gg~5~Italiano~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Tra 120 e 150 gg~6~Italiano~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Tra 150 e 180 gg~7~Italiano~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Più di 180 gg~8~Italiano~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Up to 10 days~1~English~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Between 10 and 30 days~2~English~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+CRABB_DEV__Fasce_di_Rischio__c;Between 30 and 60 days~3~English~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Between 60 and 90 days~4~English~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Between 90 and 120 days~5~English~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Between 120 and 150 days~6~English~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;Between 150 and 180 days~7~English~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Fasce_di_Rischio__c;More than 180 days~8~English~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;CSVNEW0000005~Anno di costituzione~YearStarted~CSV||Account~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_7~Codice Movimento esterno~Id_Movimento_Ext__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_3~Saldo~Saldo__c~Pratica__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_6~Data Scadenza~Data_Scadenza__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_8~Importo~Importo__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_1~Veicolo~Veicolo__c~Pratica__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_9~Residuo~Residuo__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FAtt0000003~~Name~Attachment~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FPdR0000012~~Stato__c~Piano_di_Rientro__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FPdR0000009~~Rate__c~Piano_di_Rientro__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_10~Codice Pratica~Name~Pratica__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FAtt0000004~~CreatedDate~Attachment~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_4~RecordType~RecordType__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_5~Data Emissione~Data_Emissione__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;Pdf_2~Account Name~Account_Name__c~Pratica__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FAtt0000002~~Id~Attachment~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FPdR0000007~~Name~Piano_di_Rientro__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FPdR0000006~~Id~Piano_di_Rientro__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FPdR0000008~~Importo_Totale__c~Piano_di_Rientro__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FPdR0000010~~Rate_Pagate__c~Piano_di_Rientro__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FPdR0000011~~Rate_Disattese__c~Piano_di_Rientro__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;CSVNEW0000002~~AccountNumber~CSV||Account~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;CSVNEW0000000~Amount~Importo__c~CSV||Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;CSVNEW0000001~Residual~Residuo__c~CSV||Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;CSVNEW0000004~Anzianità Pratica~Anzianit_Pratica__c~CSV||Pratica__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000000~~Expired Amounts Ageing~TabPrat~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000001~~Statement of Account~TabPrat~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000002~~Activities~TabPrat~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000003~~Repayment Plans~TabPrat~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000004~~Service Requests~TabPrat~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000005~~Service/Product Detail~TabPrat~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000004~~ActivityExtended__r.Fase__c~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000005~~Status~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000006~~ActivityExtended__r.Stato_Approvazione__c~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000007~~ActivityExtended__r.Esito__c~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000008~~ActivityExtended__r.Saldo_Attivit__c~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000009~~ActivityExtended__r.Costo__c~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000010~~ActivityExtended__r.SLA__c~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000011~~ActivityExtended__r.Strategia__c~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000013~~WhatId~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000014~~Description~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000006~~Assignments~TabPrat~false~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000007~~Voices~TabPrat~false~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000008~~Documentation~TabPrat~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000009~~Strategy~TabPrat~false~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;TabPrat0000010~~Chatter~TabPrat~false~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000000~~Id~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000001~~RecordType.Name~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000002~~Data_Emissione__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000003~~Data_Scadenza__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000004~~Importo__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000015~~AccountId~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000005~~Residuo__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000006~~Sollecitabile__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000007~~Write_Off__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000008~~Pratica__r.Name~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000009~~Tipo_Servizio__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FMov0000010~~Cartolarizzazione__c~Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000000~~Id~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000001~~CreatedDate~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000002~~ActivityExtended__r.Tipo__c~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FTsk0000003~~Subject~Task~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;CSVNEW0000003~Codice Movimento~Name~CSV||Movimento__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FSR0000002~~Bloccante__c~SR__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FSR0000001~~Account__c~SR__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FSR0000004~~Data_Apertura__c~SR__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__ListOfFields__c;FSR0000003~~Data_Chiusura__c~SR__c~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Ork_Logic_Version__c;New Version Enabled~false~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2019-11-22 15:11:52~Ultima_Attivit__c~Pratica__c~includes~~Attività di Chiusura~Text_1__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2018-07-17 10:04:18~Subject~Task~=~Regola per gestione Revoca Affidamenti~Task Subject~Task_Subject__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2018-07-17 12:18:37~Esito__c~Task~!=~Confronta Esito Task !=~Confronta Esito Task2~Esito__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2016-12-14 11:39:35~Modalit_Invio_Sollecito__c~Pratica__c~=~Verifica la modalità di invio della comunicazione di Sollecito~Check Modalità Invio Sollecito~Modalit_Invio_Sollecito__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R3~Tipo_contratto__c~Pratica__c~=~verifica se il tipo contratto è uguale al tipo contratto indicato in strategia~creato per Strattegia appalto~Tipo_contratto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-14 09:51:04~Residuo_Totale__c~Pratica__c~<~~Scaduto consolidato~Scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-11 14:35:24~Residuo_Totale__c~Pratica__c~>=~~scaduto maggiore uguale di~Scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-14 10:40:52~~Pratica__c~=~~E' phone SMS popolato~E_phone_SMS_popolato__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-15 10:21:42~Flag_Processo_Automatico_Mensile__c~Pratica__c~=~~Flag processo automatico mensile~Flag_Processo_Automatico_Mensile__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-11 10:34:23~Classe_di_rischio__c~Pratica__c~IsIncluded~verifica se la classe di rischio è inclusa nella classe di rischio configurata nella strategia~Classe di rischio è inclussa~Classe_di_rischio__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-11 15:46:44~Residuo_Totale__c~Pratica__c~<~~scaduto minore di Max scaduto~Max_Scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-21 09:43:01~Scelta_utente__c~Task~=~~Task: Scelta utente uguale~Scelta_utente__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-11 10:30:34~Numero_figli__c~Pratica__c~<~numero di figli minore di quello configurato nella strategia~numero di figli minore~Numero_figli__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-11 10:29:40~White_list__c~Pratica__c~=~~White list uguale a white list~White_list__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-11 10:31:29~Numero_figli__c~Pratica__c~=~numero di figli uguale a quello presente sulla strategia~Numero di figli uguale~Numero_figli__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-11 15:41:35~Anzianita_scaduto__c~Pratica__c~>~~Anzianità scaduto maggiore~Anzianita_scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-14 10:09:45~Importo_Scaduto_Consolidato__c~Pratica__c~>~~Scaduto consolidato maggiore di~Scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-09-11 09:30:29~Status~Task~=~Regola per gestione Revoca Affidamenti~Task Status~Task_Status__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R5~Metodo_di_Pagamento__c~Pratica__c~!=~Verifica che il tipo di pagamento sia diverso da quello indicato nella strategia~creato per Strattegia appalto~Metodo_di_Pagamento__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R7~Residuo_Totale__c~pratica__c~<=~Verifica che lo scaduto della pratica sia maggiore di del valore configurato sulla strategia~creato per Strattegia appalto1~Max_Scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R6~Residuo_Totale__c~Pratica__c~>=~Verifica che lo scaduto della pratica sia maggiore di del valore configurato sulla strategia~creato per Strattegia appalto~Min_Scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-02 11:48:39~Giorni_trascorsi_dall_ultima_AR__c~Pratica__c~<=~utilizzato nel salto della strategia appalto~Invio celere della AR~Giorni_trascorsi_dall_ultima_AR__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-02 11:43:56~~Pratica__c~=~questo campo serve per definire se c'è da inviare una terza raccomandata al cliente. Dipende da l flag sulla strategia~Rule per invio terza raccomanda nella strategia di Appalto~STR_Appalto_invia_terza_AR__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-01 11:58:54~Comune__c~Pratica__c~=~comune uguale a comune~Comune uguale~Comune__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-06-27 08:08:28~Comune__c~pratica__c~!=~~Comune diverso~Comune__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-11-24 13:32:01~~Pratica__c~!=~E' una condizione che per essere vera richiede che la white list della pratica sia diversa dalla white list della strategia.~White List~White_list__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-03-24 08:59:36~Scoring_Risk_Class__c~Pratica__c~=~~Scoring Risk Class~Scoring_Risk_Class__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-03-04 11:35:16~Flag_Elegibilit__c~Pratica__c~=~Condizione che verifica se il Flag Elegibilità (SR Elegibile) è TRUE~Elegibilità~Flag_Elegibilit__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-04-08 08:44:48~Account_Type__c~Pratica__c~=~~Segmentazione Cliente TOP~Tipo_Cliente__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-03-05 11:19:13~Residuo_Totale__c~Pratica__c~<~~scaduto minore di~Scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-03-05 10:51:15~Flag_Elegibilit__c~Pratica__c~!=~Condizione che verifica se il Flag Elegibilità (SR Elegibile) è FALSE~Non Elegibilità~Flag_Elegibilit__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-10-26 13:16:02~StatoAccount__c~Pratica__c~=~~CheckStatoAccount~PicklistGenericoRegoleStrat__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-10-26 14:25:08~MacroClasseaAccount__c~Pratica__c~=~~Macroclasse uguale a~PicklistGenericoRegoleStrat__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-10-26 15:32:15~Cattivo_Pagatore__c~Pratica__c~=~~Cattivo Pagatore~PicklistGenericoRegoleStrat__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2015-10-26 13:16:28~StatoAccount__c~Pratica__c~!=~~CheckStatoAccount2~PicklistGenericoRegoleStrat__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-30 14:50:57~Anzianita_scaduto__c~Pratica__c~=~~Prova Slamtt~Anzianita_scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-09 10:36:01~Email_sollecito_popolata__c~Pratica__c~=~Condizione che verifica se è popolata o meno la mail di sollecito~Verifica se è presente la mail di sollegic~Email_sollecito_popolata__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-11 10:32:20~Numero_figli__c~Pratica__c~>~Numero di figli maggiore del numero di figli configurati sulla strategia~Numero di figli maggiore~Numero_figli__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2014-07-21 10:00:52~~Task~=~Verifica che venga eseguito il task con il tipo attività scelto dall'utente~Task: tipo attività~Tipo_attivita__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R4~Residuo_Totale__c~Pratica__c~>~Verifica che lo scaduto della pratica sia maggiore di del valore configurato sulla strategia~creato per Strattegia appalto~Scaduto__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2018-07-16 12:20:53~Esito__c~Task~=~Confronta Esito Task~Confronta Esito Task~Esito__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Rule_control__c;R2018-07-06 11:35:45~Status~Task~IsIncluded~~Esito Task~Task_Subject__c~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__SALDI__c;SALDOANNO~AGOSTO~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;MaxLottizzazione~false~~2000~~AffidamentilottizzazioneCTRL -  per definire la dimensione massima di attività che si possono lavorare~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;OrkPraticaLogl~true~~~~OrkPratica~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;StatoPraticaPerEntrataInStrategia~false~~~Da Elaborare~Utilizzato per valutare se entrare in strategia o meno~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;RicercaStrategiaErrorCodeStatus~false~~~Errore in inserimento strategia su validazione regole~setEnteringInStrategiaError~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;setEnteringInStrategiaTStatus~false~~~Lavorato~OrkBL - Apex Class~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;TaskCompletedStatus~false~~~Completato~per impostare lo stato completato dei task dall'Ork~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;setEnteringInStrategiaCodeStatus~false~~~_isFirst~OrkBL - Apex Class~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;TaskInsertStatusToUpdate~false~~~Non iniziata~TaskTrigger~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;PFCSVM_fieldSeparator~false~~~","~ProcessiFlussiCSVManager per impostare il parametro fieldSeparator~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;PFCSVM_endFile~false~~~"~ProcessiFlussiCSVManager per impostare il parametro endFile~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;PFCSVM_startline~false~~~"~ProcessiFlussiCSVManager per impostare il parametro startline~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;PFCSVM_newline~false~~~" \n "~ProcessiFlussiCSVManager per impostare il parametro newLine~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;StatoPraticaBloccoPDR~false~~~Bloccata~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;MaxPraticheGestioneBloccoSblocco~false~~10000~~Controller BloccoSbloccoCTRL~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;PDRStatodiChiusura~false~~~Chiuso~Pdr Handler~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;SaveBodyAttachmentToLog~false~~2000~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;isBatchInbActive~true~~~~In the Log trigger to start the split of the files in Log~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;MaxProrogaSizeList~false~~15000~~Nella pagina GestioneProroga, per determinare se ridurre i filtri o mostrare tutti i dati dei filtri~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;LottoRevocaDaparteOperatore~false~~~Chiuso Per Forzatura~nel controller che esegue la revoca del lotto~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;AreFlowDebugInfoTurnedOn~true~~~~ProcessiFlussiCSVManager per definire se i debug sono accesi o meno~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;MaxAffidiLavorabili~false~~2000~~Usata nei controller per il gestione Proroga e Revoca, per limitare il nr dei affidi interrogabili dal DB.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;StatoPraticaBloccoManuale~false~~~Bloccata Manualmente~Usata per generare dinamicamente lo stato delle pratiche in blocco manuale.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;PDRStatoPerPDRDisatteso~false~~~Disatteso~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;MaxAccountGestioneWhiteList~false~~2000~~Usata nella pagina del gestione whiteList, per limitare il numero dei account da fare query.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;ValoreStatoPraticaPerBloccoManuale~false~~~Bloccata Manualmente~PDR trigger~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;StatoPraticaDiChiusura~false~~~Chiusa~Usato quando si esce dalla strategia in PraticaHandler~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;PraticaHandlerLogl~true~~~~Pratica Handler inserimento dei log~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;OrkBatchLogl~true~~~~OrkBatch~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;TaskHandlerLogl~true~~~~in TaskHandler class, and define if the logs must be saved or not~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;noNextJobCodeStatus~false~~~_noNextJob~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;ExecuteLoopErrorCodeStatus~false~~~Errore in verifica delle condizioni di salto automatico~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;NextStepErrorCodeStatus~false~~~Errore in verifica delle condizioni di esecuzione della next activity~Errore~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;setEnteringInStrategiaPService~false~~~newStorico~OrkBL - Apex Class~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;TaskErrorStatus~false~~~Error~definisce lo stato di errore dei task~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;MaxRevocaSizeList~false~~15000~~nella pagina di revoca list~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;PeriodicitaFlussiCollectorBatch~false~~~0 0 12 * * ?~Usata nel scheduler della classe batch del lavorazione dei flussi(FlussiCollectorManagerBatch).~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;enableLog2Object~true~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;CambioAttivitaPaginaSize~false~~200~~Usato nel controller Cambio Attivita Manuale, per impostare il numero dei record da visualizzare in una sola pagina.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;StatiTaskAperto~false~~~In corso,Non iniziata~*Attenzione, le valori devono essere separata da una solo virgola, niente spazio. Usata nel controller MandaInApprovazioneCTRL, per distinguere le class probabili per mandare in approvazione.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;MaxRecordsTaskSemiAuto~false~~3750~~Usato nella pagina TaskSemiAutomatici. Definisce il numero massimo dei record lavorabili.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;AreTaskSemiAutoLogsActive~false~~~~Usato per controllare i log di debug/error.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;TaskSemiAutoJobPending~false~~~~Usato nel controller TaskSemiAuto e nel batch del lavorazione massivo dei TaskSemiAuto~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;Ruolo Credit Manager Id~false~~~00Ew0000000kx7iEAA~Usata nel controller della pagina ApprovazioneTaskManager. Per validare l'utente che accede la pagina.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;Ruolo Operatore Credito Id~false~~~00Ew0000000kx7nEAA~Controller della pagina MandaInApprovazione. Check del utente che accede la pagina.  Deve essere un operatore, con ruolo.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;FieldsParsableToDecimal~false~~~percent,currency,double~Classe che trasforma e controlla i formati dei dati: DynIntSchemaUtil~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;FieldsParsableToString~false~~~picklist,reference,id,textarea,phone,email~DynIntSchemaUtil~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+CRABB_DEV__Tag__c;ExternalIdNomeColonna~false~~~ExternalId~Usata per il integrazione dinamico. Rapresenta il nome della colona CSV, dove si legge il external id del record.~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+CRABB_DEV__Tag__c;MaxRecordEsitiMassivi~false~~1000~~Used in CrabbEsitiMassiviLngCtrl to set the max number of records to elaborate.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

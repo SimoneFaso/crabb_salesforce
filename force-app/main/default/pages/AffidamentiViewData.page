@@ -1,0 +1,81 @@
+<!--
+-   Created:
+-
+-   Modified: ESino, 28/10/2015
+-
+-   Desc:
+-
+-   Edit Notes: 
+-   Modificato il blocktable delle pratiche per visualizzare afianco ad ogni
+-   pratica anche il ownder della pratica.
+-->
+<apex:page controller="AffidamentilottizzazioneCTRL">
+    <c:KillerStyle /> 
+    <apex:sectionHeader title="{!$Label.CRABB_DEV__Assign_to_collectors}" subtitle="Step 2 of 4"/>
+    <apex:form >
+        <apex:pageBlock title="{!$Label.CRABB_DEV__Check_Uncheck_dossier}"> 
+            <apex:pageMessage title="{!$Label.CRABB_DEV__No_record_found}" summary="{!$Label.CRABB_DEV__There_are_no_dossier}" severity="warning" strength="3" rendered="{!TotalSize=0}"/>
+            <apex:pageMessages />    
+            <apex:pageblockButtons location="Bottom"  >
+                <apex:commandButton action="{!IndietroDaViewDataAdFiltri}" id="INDIETROBOTTON" value="{!$Label.CRABB_DEV__Back}" styleClass="buttonStyle" />       
+                <apex:commandButton action="{!ProseguiAlgoritmi}" value="{!$Label.CRABB_DEV__Confirm_selection}" styleClass="buttonStyle" id="Conferma" rendered="{!TotalSize>0}"/>
+                <apex:pageMessages />  
+            </apex:pageblockButtons>  
+            
+            <apex:outputPanel id="IdFormAffidamento" rendered="{!TotalSize>0}" >
+                    <apex:outputText Value="{!$Label.CRABB_DEV__Assignment_meet_criteria} {!TotalSize}"  />
+                    <br/>
+                    <apex:outputLabel value="{!$Label.CRABB_DEV__Check_Uncheck_assignment}">
+                        <apex:inputcheckbox value="{!bAllSel}"> 
+                            <apex:actionsupport rerender="IdFormAffidamento" status="TheStatus" event="onchange"  action="{!SelectAll}" /><!---->
+                        </apex:inputcheckbox>
+                    </apex:outputLabel>
+                    <apex:outputpanel layout="block" rendered="{!TotalSize>25}">
+                        {!$Label.rowsbypage}: &nbsp;
+                        <apex:selectList value="{!recordsForPage}" size="1"  style="margin:0 auto; position:right;">
+                            <apex:selectOptions value="{!recordsForPageValues}"></apex:selectOptions>
+                        <apex:actionSupport event="onchange"  action="{!sizeTable}"  rerender="IdFormAffidamento" status="TheStatus"/>   
+                        </apex:selectList>
+                    </apex:outputpanel>
+                    <br/><br/>
+                    <!-- La tabela da scegliere gli affidamenti-->
+                    <apex:pageBlockTable value="{!listTPraticaSelectable}" var="a" id="idAffTable"> 
+                        <apex:column headerValue="Select" id="colonnaCheckbox">
+                            <apex:inputCheckbox style=".CheckBox" value="{!a.isS}" id="inputId"/>
+                        </apex:column> 
+                        <apex:column headerValue="{!$Label.CRABB_DEV__Pratica}" >
+                            <a href="/{!a.p.id}" target="_blank">{!a.p.Name}</a>                        
+                        </apex:column>
+                        <apex:column value="{!a.p.Comune__c}" headerValue="{!$Label.CRABB_DEV__Country}"/>
+                        <apex:column headerValue="Account" >
+                            <a href="/{!a.p.Account__r.id}" target="_blank">{!a.p.Account__r.Name}</a>                        
+                        </apex:column>
+                        <apex:column headerValue="{!$Label.CRABB_DEV__Contract}" >
+                            <a href="/{!a.p.Servizio_Fornitura__r.LookupContratto__r.id}" target="_blank">{!a.p.Servizio_Fornitura__r.LookupContratto__r.Id_Esterno__c}</a>                        
+                        </apex:column>                        
+                        <apex:column value="{!a.p.Residuo_Totale__c}" headerValue="{!$Label.CRABB_DEV__Scaduto} {!$Label.CRABB_DEV__Total}"/>
+                        <apex:column value="{!a.p.Anzianit_Pratica__c}" headerValue="{!$Label.CRABB_DEV__ExpiredAmountStartDate}"/>
+                        <apex:column value="{!a.p.Tipo_Servizio__c}" headerValue="{!$Label.CRABB_DEV__Service}"/>
+                        <apex:column value="{!a.p.Owner_contratto__c}" headerValue="{!$Label.CRABB_DEV__Dossier} Owner"/>
+                    </apex:pageBlockTable> 
+                    <br/>
+                    <div style="width: 100%; text-align: center">
+                            <apex:commandLink value="<< {!$Label.CRABB_DEV__Start}" styleClass="KillerBtn" action="{!Beginning}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"  />
+                            <apex:commandLink value="< {!$Label.CRABB_DEV__Previous}" styleClass="KillerBtn" action="{!Previous}" rendered="{!IsBeginningVisibility}" rerender="IdFormAffidamento" status="TheStatus"  />
+                            <apex:commandLink value="{!$Label.CRABB_DEV__Next} >" styleClass="KillerBtn" action="{!Next}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus"  />
+                            <apex:commandLink value="{!$Label.CRABB_DEV__End} >>" styleClass="KillerBtn" action="{!End}" rendered="{!IsEndVisibility}" rerender="IdFormAffidamento" status="TheStatus" />
+                    </div>
+            </apex:outputPanel>
+            
+        </apex:pageBlock> 
+    
+    </apex:form>
+    
+        <apex:form id="TheStatusForm"> 
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="5%" width="5%" Message="Attendere prego..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus> 
+        </apex:form>
+</apex:page>

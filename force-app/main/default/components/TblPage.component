@@ -1,0 +1,247 @@
+<apex:component controller="cPaginazione" allowDML="true">
+
+    <apex:message />
+
+    <apex:attribute name="sObj" description="Oggetto" type="String" required="true" assignTo="{!nomeObj}"/>
+    <apex:attribute name="IdParent" description="Oggetto" type="Id" required="true" assignTo="{!ParentId}"/>
+    <apex:attribute name="NomeParent" description="Oggetto" type="String" required="false" assignTo="{!ParentName}"/>
+    <apex:attribute name="sParent" description="Oggetto" type="String" required="true" assignTo="{!NomeParent}"/>
+    <apex:attribute name="renderPDR" description="Oggetto" type="Boolean" required="false" />
+    
+    <script type="text/javascript">
+        function showLoading(){
+            document.getElementsByClassName('loadingIconPdf')[0].style.display = 'inline';              
+        }
+
+        function hideLoading(){
+            document.getElementsByClassName('loadingIconPdf')[0].style.display = 'none';
+        }
+    </script>
+
+    <apex:pageBlock id="TabAff">
+        <apex:facet name="header">
+            <div class="panel panel-primary">
+                <div class="panel-heading">{!$Label.crabb_dev__summary}</div>
+            </div>
+        </apex:facet>
+        <apex:pageblockButtons location="top">
+            <apex:form >
+                <apex:outputPanel rendered="{!(sParent == 'MyTask')}">
+                    <apex:outputLink styleClass="KillerBtn" value="/00T/e?retURL=%2Fhome%2Fhome.jsp" target="_top">New</apex:outputLink>
+                    <apex:outputLink styleClass="KillerBtn" value="/apex/RiepilogoTask" target="_top">Cruscotto Attività</apex:outputLink>
+                    <apex:outputLink styleClass="KillerBtn" value="/apex/Amministrazione" target="_top">Amministrazione</apex:outputLink>
+                </apex:outputPanel>
+
+                <apex:outputPanel rendered="{!(sObj == 'Piano_di_Rientro__c' && renderPDR)}">
+                    <apex:outputText styleClass="KillerBtn" value="{!$Label.crabb_dev__createnewrp}"/>
+                    <apex:actionSupport status="PDR" event="onclick" action="/apex/PianoDiRientro{!IF(sParent=='Pratica','?PraticaId=' + IdParent,'')}"/>
+                    <apex:actionStatus startText="Redirecting..." id="PDR"/>
+                    &nbsp;
+                </apex:outputPanel>
+                <!--<apex:outputPanel >
+                    <apex:commandLink value="Refresh" styleClass="KillerBtn" action="{!Refresh}" rerender="TblPanel" status="Aggiorna"/>
+                    <apex:actionStatus startText="Aggiornamento in corso ..." id="Aggiorna"/>
+                    &nbsp;
+               </apex:outputPanel>-->
+                <!-- <apex:outputPanel rendered="{!(sObj == 'Piano_di_Rientro__c')}" id="buttonEmail">
+                    <apex:commandLink value="{!$Label.SendRepaymentPlans}" styleClass="KillerBtn" action="{!Email}" status="InvioMail" />
+                    <apex:actionStatus startText="Invio mail in corso ..." id="InvioMail"/>
+                </apex:outputPanel> --> 
+            </apex:form>
+        </apex:pageblockButtons>
+        <!-- Endrit Sino: Visualizza dei Affidamenti 
+        <apex:pageBlock rendered="{! (nomeObj == 'Affidamento__c')}">
+            <apex:outputPanel >
+                <apex:pageBlockTable value="{! object}" var="o">-->
+                    <!-- Altri campi dei Affidi (Secondo i specificazioni del Gestione Esiti Collector Puntuale)
+                    <apex:column >
+                        <apex:repeat value="{!lField}" var="f">
+                             <apex:facet name="header">{!$ObjectType[sObj].fields[f].label}</apex:facet>
+                             <apex:outputtext value="{!$ObjectType[sObj].fields[f].type}" rendered="{!$ObjectType[sObj].fields[f].label == 'Record Id'}"/>   
+                        </apex:repeat>  
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:outputPanel>
+        </apex:pageBlock>-->
+        {!sObj} - {!renderPDR}
+        <apex:outputpanel id="TblPanel" >
+            
+            <!--<apex:pageBlockSection title="Pagina #{!PageNumber} di {!TotalPages} - Record #{!nRecord} di {!Total_size}" columns="1" rendered="{!(Total_size>0)}">
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Nessun record trovato" columns="1" rendered="{!(Total_size<=0)}">
+            </apex:pageBlockSection>-->
+            <div class="ui-widget ui-accordion">
+                <div class="crabbpackage">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <apex:outputpanel rendered="{!(Total_size>0)}">
+                                <h5 class="panel-heading">
+                                    Pagina #{!PageNumber} di {!TotalPages} - Record #{!nRecord} di {!Total_size}
+                                </h5>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!(Total_size>=2000)}">
+                                <br /><br />
+                                <h6 class="panel-heading">
+                                    Attenzione, stai visualizzando solo 2000 record, usa il pulsante Report per vedere tutto.
+                                </h6>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!(Total_size<=0)}"> <h5 class="panel-heading">{!$Label.crabb_dev__no_records_found}</h5></apex:outputpanel>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="ui-widget-content ui-accordion-content"> -->
+                <div class="crabbpackage" >
+                    <div class="container-fluid">
+                <div class="table-responsive">
+                    <apex:pageBlockTable value="{!Object}" var="tabella" styleClass="table table-hover">
+                        <apex:repeat value="{!lField}" var="f">
+                            <!-- *** Stampa il tipo di una colonna ***
+                            <apex:column >
+                                <apex:facet name="header">{!$ObjectType[sObj].fields[f].label}</apex:facet>
+                                <apex:outputtext value="{!$ObjectType[sObj].fields[f].type}" rendered="{!If($ObjectType[sObj].fields[f].label == 'Record Id',true,false)}"/>
+                            </apex:column>
+                            -->
+                           <apex:column rendered="{!(CONTAINS(f,'.') && ((sParent=='Pratica' && !(CONTAINS(f,'Pratica'))) || sParent!='Pratica'))}">
+                                <apex:facet name="header">
+                                    <!-- {!IF(CONTAINS(f,'__r'),
+                                        $ObjectType[sObj].fields[SUBSTITUTE(LEFT(f,FIND('.',f)-1),'__r','__c')].label,
+                                        CASE(LEFT(f,FIND('.',f)-1),'RecordType',$Label.RecordTypeId,'CreatedBy',$Label.CreatedById,''))} -->
+                                    <!-- {!IF(CONTAINS(f,'__r'),
+                                        $ObjectType[SUBSTITUTE(LEFT(f,FIND('.',f)-1),'__r','__c')].fields[RIGHT(f,Len(f)-FIND('.',f))].label,
+                                        CASE(LEFT(f,FIND('.',f)-1),'RecordType',$Label.RecordTypeId,'CreatedBy',$Label.CreatedById,''))}
+                                        Servizio_Fornitura__c Servizio__c -->
+                                    <!-- {!f}
+                                    {!RIGHT(f,Len(f)-FIND('.',f))} -->
+                                    {!IF(CONTAINS(f,'__r'),
+                                        $ObjectType[
+                                            If(CONTAINS(SUBSTITUTE(LEFT(f,FIND('.',f)-1),'__r','__c'),'Servizio_Fornitura__c'),
+                                                'Servizio__c',
+                                                SUBSTITUTE(LEFT(f,FIND('.',f)-1),'__r','__c')
+                                            )].fields[RIGHT(f,Len(f)-FIND('.',f))].label,
+                                        CASE(
+                                            LEFT(f,FIND('.',f)-1),
+                                            'RecordType',
+                                            $Label.RecordTypeId,
+                                            'CreatedBy',
+                                            $Label.CreatedById,
+                                            '')
+                                        )
+                                    }
+                                </apex:facet> 
+                                <apex:outputtext value="{!Tabella[f]}" rendered="{!(LEFT(f,FIND('.',f)-1)!='Btn')}"/>
+                                <apex:outputpanel rendered="{!(RIGHT(f,LEN(f)-FIND('.',f))=='Revoca')}">
+                                    <apex:outputpanel rendered="{!tabella['Stato__c'] == 'In Corso'}">
+                                        <apex:form >
+                                            <apex:commandLink value="Revoca" styleClass="KillerBtn" action="{!RevocaAff}" rerender="TblPanel" status="Rev">
+                                                <apex:param assignTo="{!IdRev}" value="{!tabella.Id}" name="IdRevoca"/>
+                                            </apex:commandLink>
+                                            <apex:actionStatus startText="Revoca in corso ..." id="Rev"/>
+                                        </apex:form>
+                                    </apex:outputpanel>
+                                </apex:outputpanel>
+                            </apex:column> 
+                            
+                            <apex:column style="{!IF(($ObjectType[sObj].fields[f].type == 'currency') 
+                                    || ($ObjectType[sObj].fields[f].type == 'integer')
+                                    || ($ObjectType[sObj].fields[f].type == 'double'),"text-align: right;",IF($ObjectType[sObj].fields[f].type == 'boolean',"text-align: center;",""))}" 
+                                    rendered="{! (!(CONTAINS(f,'.')) && ((sParent=='Pratica' && !(CONTAINS(f,'Pratica'))) || sParent!='Pratica'))}">
+                                <apex:facet name="header">{!$ObjectType[sObj].fields[f].label}</apex:facet>
+                                <apex:outputtext escape="false" value="{!Tabella[f]}" rendered="{!(($ObjectType[sObj].fields[f].type == 'string') 
+                                    || ($ObjectType[sObj].fields[f].type == 'picklist')
+                                    || ($ObjectType[sObj].fields[f].type == 'combobox'))}"/>
+                                
+                                <apex:outputText value="{0, number,€###,##0.00}" rendered="{!($ObjectType[sObj].fields[f].type == 'currency')}">
+                                    <apex:param value="{!Tabella[f]}" /> 
+                                </apex:outputText>
+                                
+                                <apex:outputText value="{0, number, ###,##0.00}" rendered="{!(($ObjectType[sObj].fields[f].type == 'integer')
+                                    || ($ObjectType[sObj].fields[f].type == 'double') || ($ObjectType[sObj].fields[f].type == 'int'))}">
+                                    <apex:param value="{!Tabella[f]}" /> 
+                                </apex:outputText>
+                                
+                                <apex:outputText value="{0,date,dd'/'MM'/'yyyy}" rendered="{!(($ObjectType[sObj].fields[f].type == 'date') 
+                                    || ($ObjectType[sObj].fields[f].type == 'datetime'))}">
+                                    <apex:param value="{!Tabella[f]}" />
+                                </apex:outputText>
+                                
+                                <!--<apex:outputtext value="€ {!Tabella[f]}" 
+                                    rendered="{!($ObjectType[sObj].fields[f].type == 'currency')}"/>-->
+                                    
+                                <apex:image value="{!IF(Tabella[f],'/img/checkbox_checked.gif','/img/checkbox_unchecked.gif')}"
+                                    rendered="{!($ObjectType[sObj].fields[f].type == 'boolean')}"/>
+                                
+                                <apex:outputPanel rendered="{!($ObjectType[sObj].fields[f].type == 'id')}">
+                                    <!--<a class="TArea" href="/{!Tabella[f]}" target="_blank" title="{!Tabella[f]}"><apex:image value="/img/icon/forecasts24.gif"/></a>-->
+                                    <apex:outputPanel rendered="{!sObj != 'Attachment'}">
+                                        <a class="btn btn-danger btn-xs" role="button" href="{!$Site.Prefix}/{!Tabella[f]}" target="_blank" title="{!Tabella[f]}"><i class="glyphicon glyphicon-sunglasses" ></i></a>
+                                    </apex:outputPanel>
+
+                                    <!-- <apex:outputPanel rendered="{! AND(sObj == 'Attachment',NOT(CONTAINS(Tabella['Name'],'.xls'))) }">
+                                       <a class="btn btn-danger btn-xs" role="button" href="/servlet/servlet.FileDownload?file={!Tabella[f]}" target="_blank" title="{!Tabella[f]}"><i class="glyphicon glyphicon-sunglasses" ></i></a>
+                                        &nbsp;
+                                    </apex:outputPanel> -->
+                                    <apex:outputPanel rendered="{! AND(sObj == 'Attachment',CONTAINS(Tabella['Name'],'.xls')) }">
+                                       <a class="btn btn-xs" style="pointer-events: none;cursor: default;background-color: white;color: white;" role="button" href="/servlet/servlet.FileDownload?file={!Tabella[f]}" target="_blank" title="{!Tabella[f]}"><i class="glyphicon glyphicon-sunglasses" ></i></a>
+                                        &nbsp;
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{! AND(sObj == 'Attachment',NOT(CONTAINS(Tabella['Name'],'.xls'))) }">
+                                       <a class="btn btn-danger btn-xs" role="button" href="/servlet/servlet.FileDownload?file={!Tabella[f]}" target="_blank" title="{!Tabella[f]}"><i class="glyphicon glyphicon-sunglasses" ></i></a>
+                                        &nbsp;
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!sObj == 'Attachment'}">
+                                        <a class="btn btn-danger btn-xs" role="button" href="/servlet/servlet.FileDownload?file={!Tabella[f]}" download="{!Tabella[f]}" target="_blank" title="Download File"><i class="glyphicon glyphicon-save" ></i></a>
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                                
+                                <apex:outputPanel rendered="{!((Tabella[f] != '') && ($ObjectType[sObj].fields[f].type == 'textarea'))}">
+                                    <a class="TArea" href="#" title="{!Tabella[f]}"><apex:image value="/img/setup_plus.gif"/></a>
+                                </apex:outputPanel>
+                            </apex:column>
+                        </apex:repeat>
+                    </apex:pageBlockTable>
+                    <br/>
+                    <div style="width: 100%; text-align: center">
+                        <apex:form >
+                            <apex:actionRegion >
+                                <apex:outputPanel rendered="{! AND(nomeObj == 'Movimento__c',sParent == 'Pratica',idReport != '') }">
+                                    <a href="/{!idReport}?pv0=''&pv1={!praticaId}" class="btn btn-primary btn-xs" target="blank">Report</a>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{! AND(nomeObj == 'Movimento__c',sParent == 'Cliente',idReport != '') }">
+                                    <a href="/{!idReport}?pv0={!accountName}&pv1=''" class="btn btn-primary btn-xs" target="blank">Report</a>
+                                </apex:outputPanel>
+                                <apex:commandLink value="Export EC" styleClass="btn btn-primary btn-xs" rendered="{! AND(nomeObj == 'Movimento__c',sParent == 'Pratica') }" action="{!createAttachment}" rerender="TblPanel" onclick="showLoading();" oncomplete="hideLoading();">
+                                    <span id="loadingSpan">
+                                        <img class="loadingIconPdf" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                    </span>
+                                </apex:commandLink>
+                                <apex:commandLink value="<< Inizio" styleClass="btn btn-primary btn-xs" action="{!Beginning}" rendered="{! !(DisablePrevious)}" rerender="TblPanel"></apex:commandlink>
+                                <apex:commandLink value="< Precedente" styleClass="btn btn-primary btn-xs" action="{!Previous}" rendered="{! !(DisablePrevious)}" rerender="TblPanel"></apex:commandlink>
+                                <apex:commandLink value="Refresh" styleClass="btn btn-primary btn-xs" action="{!Refresh}" rerender="TblPanel" status="Aggiorna"/>
+                                <apex:actionStatus startText="Aggiornamento in corso ..." id="Aggiorna"/>
+                                <apex:commandLink value="Successiva >" styleClass="btn btn-primary btn-xs" action="{!Next}" rendered="{! !(DisableNext)}" rerender="TblPanel"></apex:commandlink>
+                                <apex:commandLink value="Fine >>" styleClass="btn btn-primary btn-xs" action="{!End}" rendered="{! !(DisableNext)}" rerender="TblPanel"></apex:commandlink>
+                            </apex:actionRegion>
+                        </apex:form>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+        </apex:outputpanel>
+    </apex:pageBlock>
+    
+     <script>
+        j$(function() {
+            j$( ".TArea" ).tooltip();
+        });
+        /*j$( ".accor" ).accordion({ 
+            heightStyle: "content", 
+            collapsible: false, 
+            //active: false, 
+            autoHeight: false, 
+            navigation: true 
+        });*/
+
+    </script>
+     
+</apex:component>

@@ -1,0 +1,13 @@
+<apex:page controller="BloccoSbloccoCTRL" docType="html-5.0">
+    
+    <apex:outputText ><b>{!$Label.crabb_dev__note_page_under_modification}</b></apex:outputText>
+    <apex:pageblock title="{!$Label.crabb_dev__lock_unlock_dossier}">
+        <!-- SELEZIONA L'OPERAZIONE (BLOCCO/SBLOCCO) -->
+            <apex:form >
+                <apex:selectRadio value="{!leftselected_SelTipo}" >
+                    <apex:actionsupport status="TheStatus" event="onchange" action="{!Continua}"/>
+                    <apex:selectOptions value="{!unSelectedValues_SelTipo}"/>
+                </apex:selectRadio>
+            </apex:form>
+    </apex:pageblock>
+</apex:page>

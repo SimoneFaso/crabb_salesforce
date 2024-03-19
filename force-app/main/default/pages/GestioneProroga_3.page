@@ -1,0 +1,46 @@
+<apex:page controller="GestioneProrogaCTRL1" docType="html-5.0">
+    <c:KillerStyle />
+    <head> 
+        <style type="text/css">
+            .Summary{ width: 250px; padding: 12px; background-color: #f68b1f; border: 1px solid  #57B4D1; opacity:0.65; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color:white; }
+            /* .fixed{ position:fixed; top:5px; }                           */
+        </style>
+    </head>
+    <APEX:FORm id="idform" > 
+        <apex:pageBlock title="{!IF(isApprova, $Label.CRABB_DEV__ApproveButton &' ' & $Label.CRABB_DEV__ExtensionRequest, $Label.CRABB_DEV__RejectButton & ' ' & $Label.CRABB_DEV__ExtensionRequest)}" rendered="{!NOT(confirmationOP)}" id="pageBlock">                       
+                <apex:pageblockButtons location="bottom" > 
+                    <apex:commandButton immediate="true" value="{!$Label.CRABB_DEV__Back}" action="{!GestioneProrogaIndietro_4_3}" />  
+                    <apex:commandbutton value="{!$Label.CRABB_DEV__Confirm}" action="{!GestioneProrogaConfirmOperation}" />       
+                </apex:pageblockButtons>                
+                
+            <!-- (4) L'ULTIMO STEP(ESEGUI OPERAZIONI SECONDO LA SCELTA DELLA APPROVA/RIFIUTA DEI AFFIDAMENTI) -->
+                <apex:pageBlockSection rendered="{!NOT(isApprova)}" Columns="1" >
+                    <apex:pageblockSection Columns="1">
+                        <!-- <apex:inputField label="Causale revoca:" value="{!tmpAff.Note_elior__c}"/> -->
+                        <apex:inputField label="{!$Label.CRABB_DEV__Reason} {!$Label.CRABB_DEV__ExtensionRequest}:" value="{!tmpAff.Note_elior__c}"/>
+                    </apex:pageblockSection>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection rendered="{!isApprova}" Columns="1" >
+                        <apex:inputField label="{!$Label.CRABB_DEV__ExtensionRequest} {!$Label.CRABB_DEV__Days}:" value="{!tmpAff.Giorni_di_proroga__c}" /> <!-- required="true" -->
+                        <apex:inputField label="{!$Label.CRABB_DEV__Reason} {!$Label.CRABB_DEV__ExtensionRequest}:" value="{!tmpAff.Note_elior__c}"/>
+                        <apex:outputText style="color: red" styleClass="bold"> 
+                            <h3>*{!$Label.CRABB_DEV__ExtensionRequestWarning}</h3>
+                        </apex:outputText>
+                </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        <!-- Feedback Panel -->
+        <apex:outputPanel >
+            <apex:pageMessages />
+        </apex:outputPanel>
+        <br/>
+        <apex:outputPanel rendered="{!confirmationOP}" id="finalMessage">
+            <apex:pageMessage rendered="{!finalTotal != 0}" severity="info" strength="3" >        
+                <apex:outputText value="{!$Label.CRABB_DEV__ProcessedSuccessfully} {!finalTotal}{!$Label.CRABB_DEV__Assignments}. {!$Label.CRABB_DEV__Return_to_Home_Page} "/><apex:outputLink value="/apex/GestioneProroga">Gestione Proroghe</apex:outputLink> <apex:outputText value=" o alla "/><a href="/">Home</a>.    
+            </apex:pageMessage>
+            <apex:pageMessage rendered="{!finalTotal = 0}" severity="info" strength="3" >        
+                <apex:outputText value="{!$Label.CRABB_DEV__AssignmentFail}. {!$Label.CRABB_DEV__Return_to_Home_Page} "/><apex:outputLink value="/apex/GestioneProroga">Gestione Proroghe</apex:outputLink> <apex:outputText value=" o alla "/><a href="/">Home</a>.    
+            </apex:pageMessage>
+        </apex:outputPanel> 
+     </apex:form>    
+</apex:page>

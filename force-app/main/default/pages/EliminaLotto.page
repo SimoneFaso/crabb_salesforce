@@ -1,0 +1,18 @@
+<apex:page controller="ModificaLotti" docType="html-5.0"  >
+    <style> 
+        .buttonStyle { width:10%; text-align:center; padding-top:4px; }
+    </style> 
+    <apex:form >
+        <apex:pageblock title="{!$Label.crabb_dev__doyouwantwithdrawass} {!Lotto.Name}" >
+            <apex:pageMessages />
+            <apex:pageBlockSection Columns="1" >
+                        <apex:inputField label="{!$Label.crabb_dev__reasonwithdrawal}" value="{!tmpAff.Note_elior__c}"/>
+            </apex:pageBlockSection>
+            <apex:pageblockbuttons location="bottom">
+                <c:AutoDisablinButton actionToInvoke="{!Indietro}" disableAll="true" buttonValue="{!$Label.crabb_dev__back}" buttonId="no" styleClass="buttonStyle" buttonValueDisabled="..." ></c:AutoDisablinButton>
+                <c:AutoDisablinButton actionToInvoke="{!RevocaLotto}" disableAll="true" buttonValue="{!$Label.crabb_dev__withdraw}" buttonId="si" styleClass="buttonStyle" buttonValueDisabled="{!$Label.crabb_dev__withdraw}..." ></c:AutoDisablinButton>
+            </apex:pageblockbuttons>
+            
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,11 @@
+<!--
+ - Created by User on 12/07/2021.
+ -->
+
+<!--
+<apex:page id="SessionId">
+    Start_Of_Session_Id{!$Api.Session_ID}End_Of_Session_Id
+</apex:page>-->
+<apex:page >
+
+</apex:page>

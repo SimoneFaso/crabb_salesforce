@@ -1,0 +1,36 @@
+<apex:component >
+
+    <apex:attribute name="DRows" description="Lista dei Campi" type="String" required="true"/>
+
+    <script type="text/javascript" src="//www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        //alert('Prova: ' + {!DRows});
+        google.load('visualization', '1.1', {packages:['orgchart']});
+        google.setOnLoadCallback(drawVisualization);
+
+        function drawVisualization() 
+        {
+            //alert('Prova: ' + {!DRows});
+            // Create and populate the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Value');
+            data.addColumn('string', 'Parent');
+            data.addColumn('string', 'ToolTip');
+            data.addRows({!DRows});
+               
+            // Create and draw the visualization.
+            var CrabbChart = new google.visualization.OrgChart(document.getElementById('gchart_div'));
+            CrabbChart.draw(data, {allowHtml:true, allowCollapse:true, size:'large'});
+            //alert('Prova: ' + CrabbChart.innerHtml);
+        }
+    </script>
+    <apex:pageBlock mode="maindetail">
+        <div class="chartFrame" id='gchart_div'></div>
+    </apex:pageBlock>
+    <!--<apex:form >
+        <apex:outputPanel onclick="drawVisualization();" styleClass="btn"> 
+            Click Me 
+        </apex:outputPanel>
+    </apex:form>-->
+
+</apex:component>

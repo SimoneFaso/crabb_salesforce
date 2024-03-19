@@ -1,0 +1,110 @@
+<apex:page controller="AffidamentilottizzazioneCTRL"  docType="html-5.0" >
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+
+    <apex:form id="form">
+        <div id="balancecontainer" class="crabbpackage">
+            <div class="page-header">
+                <h1><span class="bi bi-distribute-horizontal" style="color: #F3BB45"></span> {!$Label.EntrustToCollectors} <small>Step 4 of 4</small></h1>
+            </div>
+
+            <apex:pageMessages />
+
+            <div class="container-fluid" >
+
+                <div class="row">
+
+                    <div class="col-xs-12">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading" style="color: black;"><strong> {!$Label.PreAssignment_in_Creation}</strong></div>
+                            <div class="panel-body">
+                                <h5>{!$Label.TheTableShows} <br/> {!$Label.YouCanWorkThemLater} <a href="/apex/GestioneAffidamenti" target="_blank">{!$Label.ManageLotAssignement}</a> {!$Label.OrProcessThemNow} <br/>{!$Label.OnceTheAssignmentsHaveBeenCreated}</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th><i>{!$Label.PreAssignment_Code}</i></th>
+                                        <th><i>{!$Label.Order}</i></th>
+                                        <th><i>{!$Label.NoAssignments}</i></th>
+                                        <th><i>{!$Label.EuroEntrusted}</i></th>
+                                        <th><i>{!$Label.PreAssignment_Code}</i></th>
+                                        <th><i>{!$Label.PercEffective}</i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <apex:repeat value="{!lottiupsert}" var="l" id="idAffTable">
+                                        <tr>
+                                            <td>
+                                                {!l.Name}
+                                            </td>
+                                            <td>
+                                                {!l.Affidamenti_support_Posizione__c}
+                                            </td>
+                                            <td>
+                                                {!l.Affidamenti_support_numero_affidi__c}
+                                            </td>
+                                            <td>
+                                                {!l.Affidamenti_support_Scaduto_Affidato__c}
+                                            </td>
+                                            <td>
+                                                {!l.Affidamenti_support_Codice_prelotto__c}
+                                            </td>
+                                            <td>
+                                                {!l.Affidamenti_support_Percentuale_effettiv__c}
+                                            </td>
+                                        </tr>
+                                    </apex:repeat>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div align="center">
+                        <c:AutoDisablinButton actionToInvoke="{!goBackRiepilogoTask}" disableAll="true" buttonValue="Home" buttonId="btnHome" styleClass="btn btn-primary" buttonValueDisabled="{!$Label.crabb_dev__prelotcreating}..."></c:AutoDisablinButton>
+                        &nbsp;
+                        <c:AutoDisablinButton actionToInvoke="{!creaAffidamenti}" disableAll="true" buttonValue="{!$Label.crabb_dev__workpreassignments}" buttonId="btnConfermaDistribuzione" styleClass="btn btn-primary" buttonValueDisabled="{!$Label.crabb_dev__prelotcreating}..."></c:AutoDisablinButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </apex:form>
+
+    <!-- <apex:sectionHeader title="Affida ai collector" subtitle="Step 4 of 4"/>
+    <apex:form >
+        <apex:pageBlock title="Pre-lotti in Creazione">
+          <apex:pageMessages />
+            <p> 
+                In tabella sono presenti i Pre-lotti che sono nello stato "In Creazione". <br/> 
+                Puoi lavorarli più tardi accedendo al cruscotto di 
+                <a href="/apex/CRABB_DEV__GestioneAffidamenti" target="_blank">Gestione Affidamenti</a>
+                oppure processarli ora cliccando il bottone "Processa pre-lotti". <br/> 
+                Una volta creatti gli affidamenti, verrai notificato da una mail"
+            </p>
+            <br/> <br/> 
+            <apex:pageBlockTable value="{!lottiupsert}" var="l" id="idAffTable"> 
+                <apex:column value="{!l.Name}" headerValue="Codice pre-lotto"/>
+                <apex:column value="{!l.Affidamenti_support_Posizione__c}" headerValue="Ordine"/>
+                <apex:column value="{!l.Affidamenti_support_numero_affidi__c}" headerValue="N° Affidi"/> 
+                <apex:column value="{!l.Affidamenti_support_Scaduto_Affidato__c}" headerValue="€ Affidati"/>                        
+                <apex:column value="{!l.Affidamenti_support_Codice_prelotto__c}" headerValue="Codice prelotto"/>    
+                <apex:column value="{!l.Affidamenti_support_Percentuale_effettiv__c}" headerValue="% effettivo"/> 
+            </apex:pageBlockTable>            
+            <apex:pageBlockButtons location="bottom" >
+                <c:AutoDisablinButton actionToInvoke="/home/home.jsp" disableAll="true"  buttonValue="Home" buttonId="btnConfermaDistribuzione" styleClass="buttonStyle" buttonValueDisabled="Pre-lotti in creazione..." />
+                <c:AutoDisablinButton actionToInvoke="{!creaAffidamenti}" disableAll="true"  buttonValue="Lavora pre-lotti" buttonId="btnConfermaDistribuzione" styleClass="buttonStyle" buttonValueDisabled="Pre-lotti in creazione..." />                             
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form> -->
+</apex:page>

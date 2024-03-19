@@ -1,0 +1,395 @@
+<apex:page docType="html-5.0" controller="GestioneCostiAttivitaCTRL">
+
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrapcrabb.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/css/bootstrap-themecrabb.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/jquery351/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.crabbresponsive, '/crabb_responsive/bootstrap502/js/bootstrap.min.js')}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> </link>
+        
+    <apex:form >
+
+        <apex:actionFunction name="persMethod" action="{!confermaPersonalizza}" reRender="" oncomplete="hideLoading();">
+            <apex:param name="collector" assignTo="{!persCollector}" value=""/>
+            <apex:param name="tiposottotipo" assignTo="{!persTipoSottotipo}" value="" />
+            <apex:param name="costo" assignTo="{!persCosto}" value="" />
+        </apex:actionFunction>
+
+        <apex:actionFunction name="modMethod" action="{!confermaModifica}" reRender="" oncomplete="hideLoading();">
+            <apex:param name="idrecord" assignTo="{!idRecord}" value=""/>
+            <apex:param name="costomod" assignTo="{!costoModificato}" value=""/>
+        </apex:actionFunction>
+
+        <apex:actionFunction name="delMethod" action="{!removeRecord}" reRender="" oncomplete="hideLoading();">
+            <apex:param name="iddelete" assignTo="{!idRecord}" value=""/>
+        </apex:actionFunction>
+
+        <apex:actionFunction name="newMethod" action="{!addNewRecord}" reRender="">
+            <apex:param name="newCol" assignTo="{!newCollectorSelected}" value="" />
+            <apex:param name="newTip" assignTo="{!addingTipo}" value="" />
+            <apex:param name="newCos" assignTo="{!selectedCosto}" value="" />
+        </apex:actionFunction>
+
+        <script type="text/javascript">
+            function hideLoading(){
+                $('.loadingIconDel').css('display','none');
+                $('.loadingIconPers').css('display','none');
+                $('.loadingIconMod').css('display','none');
+            }
+        </script>
+
+        <div id="balancecontainer" class="crabbpackage">
+            <div class="page-header">
+                <h1><span class="bi bi-cash" style="color: #68B3C8"></span> {!$Label.Costi_Attivita_Title}</h1>
+            </div>
+
+            <apex:pageMessages />
+
+            <div class="container-fluid" >
+
+                <div class="row">
+
+                    <div>
+                        <apex:outputPanel id="panelItems">
+                            <div class="col-xs-3" id="panelItems">
+                                <div class="panel panel-danger">
+                                    <!--<div class="panel-heading">Select Collector</div>-->
+                                    <div class="panel-heading">{!$Label.Select_Collector}</div>
+                                    <div class="panel-body">
+                                        <apex:selectList id="colid" value="{!newCollectorSelected}" size="1" multiselect="false" styleClass="form-control clsel">
+                                            <apex:selectOptions value="{!collectorOptions}"/>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+
+                        <div class="col-xs-4">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">{!$Label.crabb_dev__insert_type}</div>
+                                <div class="panel-body">
+                                    <apex:selectList id="tipid" value="{!addingTipo}" size="1" multiselect="false" styleClass="form-control tipsel">
+                                        <apex:selectOptions value="{!tipoOptions}"/>
+                                    </apex:selectList>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <apex:outputPanel id="sottotipopanel">
+                            <div class="col-xs-3">
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading">Insert Sottotipo</div>
+                                    <div class="panel-body">
+                                        <apex:selectList id="sotid" value="{!addingSotto}" size="1" multiselect="false" styleClass="form-control sotsel">
+                                            <apex:selectOptions value="{!sottotipoOptions}"/>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel> -->
+
+                        <div class="col-xs-4">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">{!$Label.Insert_Cost}</div>
+                                <div class="panel-body">
+                                    <input id="cosid" type="number" min="0" step="any" value="{!selectedCosto}" placeholder="0,00" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <apex:commandLink styleClass="btn btn-danger" value="{!$Label.crabb_dev__add}" onclick="newFunction();" />
+                        <script type="text/javascript">
+                            function newFunction(){
+                                var tip = document.getElementsByClassName('tipsel')[0].value;
+                                var col = document.getElementsByClassName('clsel')[0].value;
+                                var cos = $('#cosid')[0].value;
+
+                                newMethod(col,tip,cos);
+                            }
+                        </script>
+
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <apex:outputPanel id="thisPanel">
+                                <table class="table" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">
+                                                <apex:selectList value="{!collectorSelected}" multiselect="false" size="1" styleClass="form-control" style="border-color: blue;">
+                                                    <apex:selectOptions value="{!collectorOptions}"/>
+                                                    <apex:actionSupport event="onchange" reRender="thisPanel"/>
+                                                </apex:selectList>
+                                                <script type="text/javascript">
+                                                    function showLoading(){
+                                                        $('[id$=tempLoad]').show();
+                                                    }
+                                                    function hideLoading(){
+                                                        $('[id$=tempLoad]').hide();
+                                                    }
+                                                </script>
+                                            </th>
+                                            <th><i>Collector</i></th>
+                                            <th><i>{!$Label.crabb_dev__activity_type}</i></th>
+                                            <th><i>{!$Label.crabb_dev__cost}</i></th>
+                                            <th><i>{!$Label.crabb_dev__actions}</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <apex:repeat value="{!allCA}" var="ca">
+                                            <apex:repeat value="{!allCA[ca]}" var="inca">
+                                                <apex:outputPanel layout="none" rendered="{!OR(collectorSelected = '',collectorSelected = null,collectorSelected = inca.Collector__c)}">
+                                                    <tr>
+                                                        <td>
+                                                            <apex:outputPanel layout="none" rendered="{!inca.Collector__c != 'All'}" >
+                                                                <apex:commandLink onclick="$('#delId')[0].value='{!inca.Id}';$('#delatt')[0].value='{!inca.Tipo_Sottotipo__c}';$('#delcosto')[0].value='{!inca.Costo__c}';$('#delcoll')[0].value='{!inca.Collector__c}';$('#delModal').modal('show'); return false;">
+                                                                    <span class="bi bi-x-circle warning"></span>
+                                                                </apex:commandLink>
+                                                            </apex:outputPanel>
+                                                            <!--
+                                                            <div id="delModal" class="modal fade" role="dialog">
+                                                                <input id="delId" type="hidden" name="delId" value=""/>
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                                                                            <h4 class="modal-title">{!$Label.Deleting_Record}</h4>
+                                                                            <br /><br />
+                                                                            <h5>{!$Label.Activity} </h5><h5><input id="delatt" value="" disabled="true" size="30" class="form-control" /></h5>
+                                                                            <br />
+                                                                            <h5>{!$Label.Cost} </h5><h5><input id="delcosto" value="" disabled="true" size="30" class="form-control" /></h5>
+                                                                            <br />
+                                                                            <h5>Collector : </h5><h5><input id="delcoll" value="" disabled="true" size="30" class="form-control" /></h5>
+                                                                            <br /><br />
+                                                                            <h4>Continue ?</h4>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button id="delBtn" type="button" class="btn btn-primary" onclick="document.getElementById('delBtn').disabled = true; callMethodDel();">
+                                                                                <span id="loadingSpanDel">
+                                                                                    <img class="loadingSpanDel" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                                                                </span>YES
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <script type="text/javascript">
+                                                                    function callMethodDel(){
+                                                                        $('.loadingSpanDel').css('display','inline');
+                                                                        var del = $('#delId')[0].value;
+                                                                        delMethod(del);
+                                                                    }
+                                                                </script>
+                                                            </div>
+                                                            -->
+                                                        </td>
+                                                        <td><apex:outputText value="{!inca.Collector__c}" /></td>
+                                                        <td><apex:outputText value="{!inca.Tipo_Sottotipo__c}" /></td>
+                                                        <!-- <td><apex:image rendered="{!IF(inca.Collector__c='All',false,true)}" value="/img/msg_icons/confirm16.png" /></td> -->
+                                                        <td><apex:outputText value="{!inca.Costo__c} €" /></td>
+                                                        <td>
+                                                            <apex:outputPanel layout="none" rendered="{!If(inca.Collector__c='All',true,false)}">
+                                                                <apex:commandLink onclick="$('#collid')[0].value='{!inca.Collector__c}';$('#attid')[0].value='{!inca.Tipo_Sottotipo__c}';$('#costid')[0].value='{!inca.Costo__c}';$('#persModal').modal('show');return false;" styleClass="btn btn-primary">{!$Label.crabb_dev__customize}</apex:commandLink>
+                                                            </apex:outputPanel>
+                                                            <apex:outputPanel >
+                                                                <apex:commandLink onclick="$('#modcollid')[0].value='{!inca.Id}';$('#modattid')[0].value='{!inca.Tipo_Sottotipo__c}';$('#modcostid')[0].value='{!inca.Costo__c}';$('#modModal').modal('show');return false;" styleClass="btn btn-success">{!$Label.crabb_dev__edit}</apex:commandLink>
+                                                            </apex:outputPanel>
+                                                        </td>
+                                                    </tr>
+                                                </apex:outputPanel>
+                                            </apex:repeat>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                    <!--
+                    <div id="persModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                                    <input id="collid" type="hidden" name="collid" value=""/>
+                                    <h4 class="modal-title">{!$Label.Customization}</h4>
+                                    <br />
+                                    <h5>{!$Label.Activity} </h5><h5><input id="attid" value="" disabled="true" class="form-control" /></h5>
+                                    <br />
+                                    <h5>{!$Label.Cost} </h5><h5><input type="number" min="0.00" id="costid" value="" size="30" class="form-control" /></h5>
+                                    <br />
+                                    <h5>Collector : </h5><br /><h5>
+                                        <apex:selectList value="{!newCollector}" id="selColl" size="1" multiselect="false" styleClass="form-control selcoll">
+                                            <apex:selectOptions value="{!newCollectorOptions}" id="selOpt"/>
+                                        </apex:selectList>
+                                    </h5>
+                                    <br /><br />
+                                    <h4>Continue ?</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="persBtn" type="button" class="btn btn-primary" onclick="document.getElementById('persBtn').disabled = true; callMethodPers();">
+                                        <span id="loadingSpanPers">
+                                            <img class="loadingSpanPers" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>YES
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            function callMethodPers(){
+                                $('.loadingSpanPers').css('display','inline');
+                                var att = $('#attid')[0].value;
+                                var cost = $('#costid')[0].value;
+                                var coll = document.getElementsByClassName('selcoll')[0].value;
+                                persMethod(coll,att,cost);
+                            }
+                        </script>
+                    </div>
+
+                    <div id="modModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                                    <input id="modcollid" type="hidden" name="collid" value=""/>
+                                    <h4 class="modal-title">{!$Label.edit} :</h4>
+                                    <br />
+                                    <h5>{!$Label.activity} : </h5><h5><input id="modattid" value="" disabled="true" class="form-control" /></h5>
+                                    <br />
+                                    <h5>{!$Label.cost} : </h5><h5><input type="number" min="0.00" id="modcostid" value="" size="30" class="form-control" /></h5>
+                                    <br /><br />
+                                    <h4>Continue ?</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="modBtn" type="button" class="btn btn-primary" onclick="document.getElementById('modBtn').disabled = true; callMethodMod();">
+                                        <span id="loadingSpanMod">
+                                            <img class="loadingSpanMod" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>YES
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            function callMethodMod(){
+                                $('.loadingSpanMod').css('display','inline');
+                                var cost = $('#modcostid')[0].value;
+                                var itemid = $('#modcollid')[0].value;
+
+                                modMethod(itemid,cost);
+                            }
+                        </script>
+                    </div>
+                -->
+                </div>
+
+            </div>
+        </div>
+
+        <div id="delModal" class="modal fade" role="dialog">
+            <input id="delId" type="hidden" name="delId" value=""/>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                        <h4 class="modal-title">{!$Label.Deleting_Record}</h4>
+                        <br /><br />
+                        <h5>{!$Label.Activity} </h5><h5><input id="delatt" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>{!$Label.Cost} </h5><h5><input id="delcosto" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>Collector : </h5><h5><input id="delcoll" value="" disabled="true" size="30" class="form-control" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="delBtn" type="button" class="btn btn-primary" onclick="document.getElementById('delBtn').disabled = true; callMethodDel();">
+                                                                                <span id="loadingSpanDel">
+                                                                                    <img class="loadingSpanDel" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                                                                </span>YES
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                                                                    function callMethodDel(){
+                                                                        $('.loadingSpanDel').css('display','inline');
+                                                                        var del = $('#delId')[0].value;
+                                                                        delMethod(del);
+                                                                    }
+                                                                </script>
+        </div>
+        <div id="persModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                        <input id="collid" type="hidden" name="collid" value=""/>
+                        <h4 class="modal-title">{!$Label.Customization}</h4>
+                        <br />
+                        <h5>{!$Label.Activity} </h5><h5><input id="attid" value="" disabled="true" class="form-control" /></h5>
+                        <br />
+                        <h5>{!$Label.Cost} </h5><h5><input type="number" min="0.00" id="costid" value="" size="30" class="form-control" /></h5>
+                        <br />
+                        <h5>Collector : </h5><br /><h5>
+                            <apex:selectList value="{!newCollector}" id="selColl" size="1" multiselect="false" styleClass="form-control selcoll">
+                                <apex:selectOptions value="{!newCollectorOptions}" id="selOpt"/>
+                            </apex:selectList>
+                        </h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="persBtn" type="button" class="btn btn-primary" onclick="document.getElementById('persBtn').disabled = true; callMethodPers();">
+                                        <span id="loadingSpanPers">
+                                            <img class="loadingSpanPers" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>YES
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                            function callMethodPers(){
+                                $('.loadingSpanPers').css('display','inline');
+                                var att = $('#attid')[0].value;
+                                var cost = $('#costid')[0].value;
+                                var coll = document.getElementsByClassName('selcoll')[0].value;
+                                persMethod(coll,att,cost);
+                            }
+                        </script>
+        </div>
+
+        <div id="modModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" align="center" style="background-image: linear-gradient(to bottom, #f2dede 0%, #ebcccc 100%);">
+                        <input id="modcollid" type="hidden" name="collid" value=""/>
+                        <h4 class="modal-title">{!$Label.edit} :</h4>
+                        <br />
+                        <h5>{!$Label.activity} : </h5><h5><input id="modattid" value="" disabled="true" class="form-control" /></h5>
+                        <br />
+                        <h5>{!$Label.cost} : </h5><h5><input type="number" min="0.00" id="modcostid" value="" size="30" class="form-control" /></h5>
+                        <br /><br />
+                        <h4>Continue ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modBtn" type="button" class="btn btn-primary" onclick="document.getElementById('modBtn').disabled = true; callMethodMod();">
+                                        <span id="loadingSpanMod">
+                                            <img class="loadingSpanMod" width="16px" height="16px" src="/img/loading32.gif" title="/img/loading32.gif" style="display: none;" />
+                                        </span>YES
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                            function callMethodMod(){
+                                $('.loadingSpanMod').css('display','inline');
+                                var cost = $('#modcostid')[0].value;
+                                var itemid = $('#modcollid')[0].value;
+
+                                modMethod(itemid,cost);
+                            }
+                        </script>
+        </div>
+    </apex:form>
+</apex:page>

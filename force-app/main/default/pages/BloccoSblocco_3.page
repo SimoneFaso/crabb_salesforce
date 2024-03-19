@@ -1,0 +1,117 @@
+<apex:page controller="BloccoSbloccoCTRL" docType="html-5.0">
+
+    <c:KillerStyle />
+        
+    <head> 
+    <style type="text/css">
+        .Summary{
+                width: 250px;
+                padding: 12px;
+                background-color: #f68b1f; 
+                border: 1px solid  #57B4D1;
+                opacity:0.65;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                color:white;
+                }
+        
+        .fixed{
+                position:fixed;
+                top:5px;
+                }       
+                    
+    </style>
+    </head>
+        
+        <apex:form id="NoRecordSToProcess">
+            <apex:pageBlock title="{!$Label.CRABB_DEV__Page_not_reachable}" rendered="{!blankPageFlag}">    
+                <apex:pageMessage summary="{!$Label.CRABB_DEV__Choose_type_of_operation_Lock_Unlock}" severity="info" strength="3"/>
+                <apex:pageblockButtons location="bottom"> 
+                        <apex:commandButton action="/apex/CRABB_DEV__Amministrazione" id="INDIETROBOTTON"  value="{!$Label.CRABB_DEV__Management}" />                   
+                </apex:pageblockButtons>                 
+            </apex:pageBlock>    
+        </apex:form>  
+        <apex:pageBlock title="{!IF(isBlocco, $Label.CRABB_DEV__Lock_Dossier, $Label.CRABB_DEV__Unlock_Dossier)}" rendered="{! !blankPageFlag}">        
+            
+            <!-- DOPO AVER PRESO GLI ACCOUNT, VISUALIZZIAMOLE TUTTE -->
+            <apex:outputPanel rendered="{!PraticheEsisti}"  id="IdFormAccount">
+                <apex:form >
+                    <apex:outputText Value="{!$Label.CRABB_DEV__Dossier_returned_by_filters} {!InitialTotal}" />
+                    <br/>
+                    <apex:outputLabel value="{!$Label.CRABB_DEV__Select_Deselect_all_Accounts}">
+                        <apex:inputcheckbox value="{!bAllSel}"> 
+                            <apex:actionsupport status="TheStatus" event="onchange" action="{!SelectAll}" rerender="IdFormAccount"/>
+                        </apex:inputcheckbox>
+                    </apex:outputLabel>
+                    <apex:pageMessages />    
+                    <br/> 
+                    <apex:outputpanel layout="block" rendered="{!initialTotal>25}">
+                        {!$Label.Number_of_Lines}: &nbsp;
+                        <apex:selectList value="{!recordsForPage}" size="1"  style="margin:0 auto; position:right;">
+                            <apex:selectOptions value="{!recordsForPageValues}"></apex:selectOptions>
+                            <apex:actionSupport event="onchange"  action="{!sizeTable}"  rerender="IdFormAccount" status="TheStatus"/>   
+                        </apex:selectList>
+                    </apex:outputpanel>
+                    <br/><br/>
+                    <!-- La tabela da scegliere le pratiche -->
+                    <apex:pageBlockTable value="{!listPraticheSelectable}" var="p"> 
+                        <apex:column headerValue="Select" id="colonnaCheckbox">
+                           <apex:inputCheckbox value="{!p.isSelected}">
+                               <apex:actionsupport status="TheStatus" event="onchange" action="{!AggiornaElementoLista}" rerender="IdFormPratiche">
+                                   <apex:param name="Codice_Pratica" value="{!p.Prat.Name}"/>
+                                   <apex:param name="isSel" value="{!p.isSelected}"/>   
+                               </apex:actionSupport>
+                           </apex:inputCheckbox> 
+                        </apex:column> 
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.CRABB_DEV__Dossier_ID}</apex:facet>
+                            <a href="/{!p.Prat.Id}" target="_blank" title="{!p.Prat.Id}"><apex:image value="/img/icon/desk24.png"/></a>
+                        </apex:column>
+                        <apex:column value="{!p.Prat.Name}" headerValue="Name"/>
+                        <apex:column value="{!p.Prat.Servizio_Fornitura__r.LookupContratto__r.Id_Esterno__c}" headerValue="{!$Label.CRABB_DEV__Contract} SWH"/>
+                        <apex:column value="{!p.Prat.Account__r.Name}" headerValue="{!$Label.CRABB_DEV__Account}"/>
+                        <apex:column value="{!p.Prat.Servizio_Fornitura__r.LookupContratto__r.Comune__c}" headerValue="{!$Label.CRABB_DEV__Country}"/>
+                        <apex:column value="{!p.Prat.Stato__c}" headerValue="{!$Label.CRABB_DEV__Status}"/>
+                        <apex:column value="{!p.Prat.Account__r.Classe_di_Rischio__c}" headerValue="{!$Label.CRABB_DEV__RiskClass}"/>
+                    </apex:pageBlockTable>
+                    <br/>
+                    <div style="width: 100%; text-align: center">
+                    <apex:actionRegion rendered="{!PraticheEsisti}">
+                        <apex:commandLink value="<< {!$Label.CRABB_DEV__Start}" styleClass="KillerBtn" action="{!Beginning}" rendered="{! IsBeginningVisibility}" rerender="IdFormAccount"></apex:commandlink>
+                        <apex:commandLink value="< {!$Label.CRABB_DEV__Previous}" styleClass="KillerBtn" action="{!Previous}" rendered="{! IsBeginningVisibility}" rerender="IdFormAccount"></apex:commandlink>
+                        <apex:commandLink value="{!$Label.CRABB_DEV__Next} >" styleClass="KillerBtn" action="{!Next}" rendered="{!IsEndVisibility}" rerender="IdFormAccount"></apex:commandlink>
+                        <apex:commandLink value="{!$Label.CRABB_DEV__End} >>" styleClass="KillerBtn" action="{!End}" rendered="{!IsEndVisibility}" rerender="IdFormAccount"></apex:commandlink>
+                    </apex:actionRegion>
+                    </div>
+                </apex:form>
+            </apex:outputPanel>
+            
+            <!-- NON ESISTONO ACCOUNT DA IMPOSTARE IL FLAG -->
+            <apex:outputPanel rendered="{!!PraticheEsisti}">
+                 <apex:pageMessage summary="{!$Label.CRABB_DEV__Not_Selectable_Accounts}" severity="info" strength="3"/>
+            </apex:outputPanel>
+            
+            <!--BOTTONI CHE CI SERVONO, SOLO C'É DA RIGUARDARE LA LOGICA NEL CONTROLLER  -->
+            <apex:pageblockButtons location="both">
+                   <apex:form >                 
+                        <!--<c:AutoDisablinButton actionToInvoke="{!GestioneWHLStepFiltri}" disableAll="true" rendered="true" buttonValue="Indietro" buttonId="IndietroButton" styleClass="buttonStyle" buttonValueDisabled="Indietro..." ></c:AutoDisablinButton> -->
+                        <c:AutoDisablinButton actionToInvoke="{!Indietro}" disableAll="true" rendered="{!(Step>=0 && Step<3)}" buttonValue="{!$Label.CRABB_DEV__Previous}" buttonId="IndietroButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Back}..." ></c:AutoDisablinButton>
+                    
+                        <c:AutoDisablinButton actionToInvoke="{!ConfermaSelezione}" disableAll="true" rendered="{!PraticheEsisti}" buttonValue="{!$Label.CRABB_DEV__Confirm_selection}" buttonId="SelectButton" styleClass="buttonStyle" buttonValueDisabled="{!$Label.CRABB_DEV__Select} {!$Label.CRABB_DEV__Pratica}.." ></c:AutoDisablinButton>                  
+                
+                    </apex:form>
+            </apex:pageblockButtons>
+            <apex:pageMessages />
+        </apex:pageBlock>
+        
+        <!-- QUESTO BLOCK, IMPEDISCE L'UTENTE DI ESEGUIRE OPERAZIONE INADEGUATI(PRECAUTION) -->
+        <apex:form id="TheStatusForm"> 
+            <apex:actionstatus id="TheStatus">
+               <apex:facet name="start">
+                   <c:LoadingStatus BackColor="#efefef" borderColor="#336699" borderSize="3" height="50px" width="160px" Message="Please wait..." messageStyle="color:darkred;font-size:11pt;font-weight:bold;"/>
+               </apex:facet>
+            </apex:actionstatus>
+        </apex:form>
+        
+</apex:page>

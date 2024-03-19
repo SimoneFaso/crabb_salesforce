@@ -1,0 +1,86 @@
+<apex:page controller="newStrategiaCTRL"  tabStyle="Strategia__c" >
+  <apex:sectionHeader title="{!$Label.crabb_dev__strategy_configuration}" subtitle="Step 3 of 4"/>
+    
+    <script>
+        function disableOnSubmit(input) {
+            setTimeout('disableAfterTimeout(\'' + input.id + '\');', 50);
+        }
+        function disableAfterTimeout(id) {
+            var toDisable = document.getElementById( id );
+            toDisable.disabled = 'disabled';
+            // Use the Salesforce CSS style to make the button appear disabled
+            toDisable.className = 'btnDisabled';
+          
+        }
+    </script>
+    
+    <apex:form >
+        <apex:pageBlock id="errorBlock" rendered="{!noRuleSelected}">
+        <!-- AVERTI L'UTENTE PER L'ID E TYPE SBAGLIATO O MANCATO IN URL -->
+         <apex:pageBlockSection title="{!$Label.crabb_dev__confirm}"  collapsible="false"  >
+                <apex:pagemessage strength="2"
+                    title="{!$Label.crabb_dev__warning_no_rules_selected}"
+                    rendered="true"
+                    severity="info" >
+                    <apex:commandButton action="{!step2}" value="Back" id="backbtn" onclick="disableOnSubmit(this);"
+                                  styleClass="btn"/>
+                    <apex:commandButton action="{!step4}" value="Next" id="nextbtn" onclick="disableOnSubmit(this);"
+                                  styleClass="btn"/>               
+                </apex:pagemessage>
+         </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!NOT(noRuleSelected)}" >
+         
+          <apex:facet name="footer">
+            <apex:outputPanel >
+              <apex:commandButton action="{!step2}" value="Back" immediate="true" id="backbtn1" onclick="disableOnSubmit(this);"
+                                  styleClass="btn"/>
+              <apex:commandButton action="{!step4}" value="Next" id="nextbtn1" onclick="disableOnSubmit(this);"
+                                  styleClass="btn"/>
+            </apex:outputPanel>
+           </apex:facet>        
+            <apex:commandButton action="{!cancelButton}" value="Cancel" id="cancelbtn" onclick="disableOnSubmit(this);"
+                              styleClass="btn" immediate="true"/>
+            <apex:pageblockSection title="{!$Label.crabb_dev__complete_the_data}" collapsible="false" columns="1" >
+            <apex:outputField value="{!strategia.Activation_roles__c}"/>
+           <apex:pageBlockTable value="{!SelectedRulesStep2}" var="sr" id="table" title="Rules Selected" width="100%">
+                    <apex:column width="10%"  >
+                        <apex:facet name="header">Name</apex:facet>
+                        <apex:outputText value="{!sr.Name}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Rule name</apex:facet>
+                        <apex:outputText value="{!sr.Rule_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Api field name</apex:facet>
+                        <apex:outputText value="{!sr.Api_field_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Api object name</apex:facet>
+                        <apex:outputText value="{!sr.Api_object_name__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Condition</apex:facet>
+                        <apex:outputText value="{!sr.Condition__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.crabb_dev__strategy_api_field_name}</apex:facet>
+                        <apex:outputText value="{!sr.Strategia_api_field_name__c  }"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header"> {!$Label.crabb_dev__fill_in_field} </apex:facet>
+                        <apex:inputField value="{!Strategia[sr.Strategia_api_field_name__c]}" required="true" />
+                    </apex:column> 
+                    <apex:column >
+                        <apex:facet name="header"> {!$Label.crabb_dev__notes3} </apex:facet>
+                        <apex:outputText value="{!sr.Note__c}"/>
+                    </apex:column> 
+                </apex:pageBlockTable> 
+                </apex:pageblockSection>
+            <apex:pageBlockSection >    
+                
+            </apex:pageblockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,3 @@
+<apex:page standardController="Flussi_Collector__c" extensions="PermissionAccessCtrl">
+    <c:PermissionAccess />
+</apex:page>

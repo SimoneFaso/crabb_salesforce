@@ -1,0 +1,46 @@
+<!--
+ - Created by msala on 05/05/2020.
+ -->
+
+<!-- Crabb Funzionalità Massive -->
+<template>
+    <!--    <lightning-card title="Funzionalità Massiva" icon-name="custom:custom42" class="slds-card_boundary">-->
+
+    <div class="slds-grid slds-gutters slds-grid_align-space">
+        <div class="slds-col slds-size_1-of-3 slds-card_boundary">
+            <lightning-card title={label.massres} icon-name="standard:timesheet_entry">
+                <div style="text-align: center;font-size: 16px;">
+                    <div>{label.masResAcc}<BR/><BR/></div>
+                    <lightning-button variant="brand" label={label.proceed} title={label.proceed} onclick={navigateToTabEM}></lightning-button>
+                </div>
+            </lightning-card>
+        </div>
+        <div class="slds-col slds-size_1-of-3 slds-card_boundary">
+            <lightning-card title={label.upcollres} icon-name="standard:sales_path">
+                <div style="text-align: center;font-size: 16px;">
+                    <div>{label.pracOutAcc}<BR/><BR/></div>
+                    <lightning-button variant="brand" label={label.proceed} title={label.proceed} onclick={navigateToTabUEC}></lightning-button>
+                </div>
+            </lightning-card>
+        </div>
+        <div class="slds-col slds-size_1-of-3 slds-card_boundary">
+            <lightning-card title={label.whitel} icon-name="standard:queue">
+                <div style="text-align: center;font-size: 16px;">
+                    <div>{label.whiLisAcc}<BR/><BR/></div>
+                    <lightning-button variant="brand" label={label.proceed} title={label.proceed} onclick={navigateToTabWL}></lightning-button>
+                </div>
+            </lightning-card>
+        </div>
+    </div>
+    <div class="slds-grid slds-gutters" style="padding-top: 25px;">
+        <div class="slds-col slds-size_1-of-3 slds-card_boundary">
+            <lightning-card title={label.affido} icon-name="standard:product_transfer_state">
+                <div style="text-align: center;font-size: 16px;">
+                    <div>{label.affidoDesc}<BR/><BR/></div>
+                    <lightning-button variant="brand" label={label.proceed} title={label.proceed} onclick={navigateToTabAff}></lightning-button>
+                </div>
+            </lightning-card>
+        </div>
+    </div>
+    <!--    </lightning-card>-->
+</template>
